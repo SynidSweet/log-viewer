@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { ChevronRight, ChevronDown } from 'lucide-react'
 
 interface JsonTreeProps {
-  data: any
+  data: unknown
   level?: number
 }
 
@@ -89,7 +89,7 @@ function ExpandableItem({
   )
 }
 
-function arrayPreview(data: any[]) {
+function arrayPreview(data: unknown[]) {
   if (data.length === 0) return '[]'
   
   const preview = data.slice(0, 2).map(item => {

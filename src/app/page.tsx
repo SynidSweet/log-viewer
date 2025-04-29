@@ -1,7 +1,6 @@
 // app/page.tsx
 import { CreateProject } from '@/components/create-project'
 import { ProjectSelector } from '@/components/project-selector'
-import Link from 'next/link'
 
 export default function Home() {
   return (

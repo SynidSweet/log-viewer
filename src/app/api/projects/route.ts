@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     
     const project = await createProject(name, description || '');
     return NextResponse.json(project, { status: 201 });
-  } catch (error) {
+  } catch (_) {
     return NextResponse.json({ error: 'Failed to create project' }, { status: 500 });
   }
 }

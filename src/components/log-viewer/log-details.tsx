@@ -82,7 +82,7 @@ export function LogDetails({ log }: LogDetailsProps) {
               })()} />
             </TabsContent>
             <TabsContent value="extended" className="flex-1 overflow-auto p-3 bg-gray-100 rounded-md">
-              <JsonTree data={log.details._extended} />
+              <JsonTree data={log.details?._extended} />
             </TabsContent>
           </Tabs>
         ) : (
