@@ -51,7 +51,7 @@ export function CreateProject({ onProjectCreated }: { onProjectCreated: () => vo
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Create Project</Button>
+        <Button variant="outline">Create Project</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

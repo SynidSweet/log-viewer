@@ -78,7 +78,8 @@ A modern, React-based log viewer application that allows you to collect, store, 
 
 3. Set up Vercel KV:
    - In your Vercel dashboard, go to "Storage"
-   - Add KV database
+   - Add KV database (now Upstash Serverless DB on marketplace)
+   - At install, choose the Redis database option
    - Connect it to your project
    - Vercel will automatically add the required environment variables
 
