@@ -15,7 +15,7 @@ export function JsonTree({ data, level = 0 }: JsonTreeProps) {
   }
   
   if (typeof data === 'string') {
-    return <span className="text-purple-500">\"{data}\"</span>
+    return <span className="text-purple-500">&quot;{data}&quot;</span>
   }
   
   if (typeof data === 'number') {
