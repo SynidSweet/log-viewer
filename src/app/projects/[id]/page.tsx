@@ -3,7 +3,13 @@ import { notFound } from 'next/navigation'
 import { getProject } from '@/lib/db'
 import { LogViewer } from '@/components/log-viewer'
 
-export default async function ProjectPage({ params }: { params: { id: string } }) {
+type Props = {
+    params: {
+      id: string
+    }
+  }
+
+export default async function ProjectPage({ params }: Props) {
   const project = await getProject(params.id)
   
   if (!project) {
