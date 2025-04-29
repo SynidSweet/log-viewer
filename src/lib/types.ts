@@ -8,8 +8,8 @@ export interface Project {
   }
 
   export interface LogDetails {
-    _extended?: any;
-    [key: string]: any;
+    _extended?: unknown;
+    [key: string]: unknown;
   }
 
   export interface LogEntry {

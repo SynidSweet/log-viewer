@@ -44,7 +44,7 @@ export async function POST(request: Request) {
         if (detailsStr) {
           try {
             details = JSON.parse(detailsStr);
-          } catch (_) {
+          } catch {
             details = detailsStr;
           }
         }

@@ -39,7 +39,7 @@ export function CreateProject({ onProjectCreated }: { onProjectCreated: () => vo
       setName('')
       setDescription('')
       onProjectCreated()
-    } catch (_) {
+    } catch {
       toast.error('Error', {
         description: 'Failed to create project'
       })
