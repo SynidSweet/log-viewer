@@ -4,10 +4,10 @@ import { getLog, updateLog, deleteLog } from '@/lib/db';
 // GET /api/logs/[id]
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: logId } = params;
+    const { id: logId } = await params;
     
     // Get the log
     const log = await getLog(logId);
@@ -26,10 +26,10 @@ export async function GET(
 // PATCH /api/logs/[id]
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: logId } = params;
+    const { id: logId } = await params;
     const updateData = await request.json();
     
     // Only allow isRead to be updated
@@ -62,10 +62,10 @@ export async function PATCH(
 // DELETE /api/logs/[id]
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: logId } = params;
+    const { id: logId } = await params;
     
     // Delete the log
     const success = await deleteLog(logId);

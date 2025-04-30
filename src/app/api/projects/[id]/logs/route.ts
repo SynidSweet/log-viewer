@@ -4,7 +4,7 @@ import { getProjectLogs } from '@/lib/db';
 // GET /api/projects/[id]/logs
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id: projectId } = await params;

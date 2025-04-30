@@ -1,0 +1,89 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Vercel Build Rules
+
+This document lists important rules to follow to ensure successful Vercel builds.
+
+## Next.js 15 Route Handlers
+
+- In Next.js 15, route handlers with dynamic parameters must treat `params` as a Promise.
+- Always use the `Promise` type for the params object and `await` it before accessing properties.
+
+```typescript
+// INCORRECT
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params; // Error: Type '{ params: { id: string; }; }' is not a valid type
+}
+
+// CORRECT
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+}
+```
+
+## ESLint Rules
+
+### @typescript-eslint/no-unused-vars
+
+- Avoid declaring variables that are not used in your code. Even error parameters in catch blocks should be excluded in the declaration unless explicitly used.
+
+```typescript
+// INCORRECT
+function example(unusedParam) {
+  const unusedVar = 'value';
+  return 'result';
+}
+
+// CORRECT
+function example() {
+  return 'result';
+}
+```
+
+### @typescript-eslint/no-explicit-any
+
+- Avoid using the `any` type as it defeats the purpose of TypeScript's type checking.
+- Always provide explicit types or use more specific types like `unknown`.
+
+```typescript
+// INCORRECT
+function processData(data: any) {
+  return data.value;
+}
+
+// CORRECT
+interface DataType {
+  value: string;
+}
+
+function processData(data: DataType) {
+  return data.value;
+}
+```
+
+### react/no-unescaped-entities
+
+- Don't use unescaped HTML entities in JSX as they can cause syntax errors.
+- Replace characters like quotes and apostrophes with their HTML entity equivalents.
+
+```tsx
+// INCORRECT
+function Example() {
+  return <p>Don't use unescaped apostrophes</p>;
+}
+
+// CORRECT
+function Example() {
+  return <p>Don&apos;t use unescaped apostrophes</p>;
+}
+
+```
