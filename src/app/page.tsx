@@ -4,8 +4,10 @@
 import { useState, useEffect } from 'react'
 import { CreateProject } from '@/components/create-project'
 import { ProjectList } from '@/components/project-list'
+import { PageSession } from '@/components/page-session'
 
-export default function Home() {
+// Main component that will be wrapped with PageSession
+function HomePage() {
   const [refreshKey, setRefreshKey] = useState(0)
   const [baseUrl, setBaseUrl] = useState('')
   
@@ -69,5 +71,14 @@ export default function Home() {
         </div>
       </div>
     </div>
+  )
+}
+
+// Export wrapped with session provider
+export default function Home() {
+  return (
+    <PageSession>
+      <HomePage />
+    </PageSession>
   )
 }

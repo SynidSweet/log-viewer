@@ -3,6 +3,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
 import { Toaster } from '@/components/ui/sonner'
+import { NavMenu } from '../components/nav-menu'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,11 +25,7 @@ export default function RootLayout({
             <Link href="/" className="text-xl font-bold">
               Log Viewer
             </Link>
-            <nav>
-              <Link href="/" className="hover:underline">
-                Home
-              </Link>
-            </nav>
+            <NavMenu />
           </div>
         </header>
         
