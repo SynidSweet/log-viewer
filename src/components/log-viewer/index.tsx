@@ -149,6 +149,10 @@ export function LogViewer({ projectId }: LogViewerProps) {
       }
       
       return true;
+    })
+    .sort((a, b) => {
+      // Sort by timestamp (oldest first)
+      return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
     });
   }, [parsedEntries, entryFilters]);
   

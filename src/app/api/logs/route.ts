@@ -16,18 +16,8 @@ function validateLogFormat(logContent: string): { valid: boolean; error?: string
       };
     }
     
-    // Validate JSON data part if it exists
-    try {
-      const parts = line.split(' - ');
-      if (parts.length > 1 && parts[1].startsWith('{')) {
-        JSON.parse(parts[1]);
-      }
-    } catch (e) {
-      return { 
-        valid: false, 
-        error: `Invalid JSON format in log: ${line}`
-      };
-    }
+    // We'll only validate the basic structure, not the content format
+    // This allows any data content after the hyphen as long as basic log structure is valid
   }
   
   return { valid: true };
