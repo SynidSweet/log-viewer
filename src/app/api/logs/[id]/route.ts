@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id: logId } = await params;
+    const { id: logId } = params;
     
     // Get the log
     const log = await getLog(logId);
@@ -29,7 +29,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id: logId } = await params;
+    const { id: logId } = params;
     const updateData = await request.json();
     
     // Only allow isRead to be updated
@@ -65,7 +65,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id: logId } = await params;
+    const { id: logId } = params;
     
     // Delete the log
     const success = await deleteLog(logId);
