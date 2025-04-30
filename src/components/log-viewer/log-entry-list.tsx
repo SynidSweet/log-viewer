@@ -1,14 +1,7 @@
 'use client'
 
 import { format } from 'date-fns'
-
-interface LogEntry {
-  id: string;
-  timestamp: string;
-  level: 'LOG' | 'WARN' | 'ERROR';
-  message: string;
-  details?: any;
-}
+import { LogEntry } from './log-entry-details'
 
 interface LogEntryListProps {
   entries: LogEntry[];

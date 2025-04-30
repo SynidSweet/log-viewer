@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { format } from 'date-fns'
 import { JsonTree } from './json-tree'
 import { Button } from '@/components/ui/button'
@@ -8,12 +7,17 @@ import { Clipboard } from 'lucide-react'
 import { toast } from 'sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-interface LogEntry {
+export interface LogDetails {
+  _extended?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+export interface LogEntry {
   id: string;
   timestamp: string;
   level: 'LOG' | 'WARN' | 'ERROR';
   message: string;
-  details?: any;
+  details?: LogDetails;
 }
 
 interface LogEntryDetailsProps {
@@ -48,7 +52,7 @@ export function LogEntryDetails({ entry, loading }: LogEntryDetailsProps) {
     ? { ...entry.details, _extended: undefined } 
     : entry.details;
   
-  const extendedDetails = hasExtended ? entry.details._extended : null;
+  const extendedDetails = hasExtended ? entry.details?._extended : null;
   
   const copyToClipboard = () => {
     const textToCopy = `[${entry.timestamp}] [${entry.level}] ${entry.message}${

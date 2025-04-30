@@ -1,7 +1,7 @@
 // lib/db.ts
 import { kv } from '@vercel/kv';
 import { nanoid } from 'nanoid';
-import { Project, LogEntry, ProjectLog } from './types';
+import { Project, ProjectLog } from './types';
 
 // Helper functions for type conversion
 function recordToProject(record: Record<string, unknown>): Project {

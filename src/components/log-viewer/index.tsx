@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { ProjectLog } from '@/lib/types'
 import { LogItem } from './log-item'
 import { LogEntryList } from './log-entry-list'
-import { LogEntryDetails } from './log-entry-details'
+import { LogEntryDetails, LogEntry, LogDetails } from './log-entry-details'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -17,14 +17,6 @@ interface LogViewerProps {
 
 // Regular expression to parse log lines
 const LOG_PATTERN = /\[(.*?)\] \[(.*?)\] (.*?)( - (.*))?$/;
-
-interface LogEntry {
-  id: string;
-  timestamp: string;
-  level: 'LOG' | 'WARN' | 'ERROR';
-  message: string;
-  details?: any;
-}
 
 // Create a cache for log content to avoid repeated fetches
 const logCache: Record<string, string> = {}
