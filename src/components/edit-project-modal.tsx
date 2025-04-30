@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Project } from '@/lib/types'
 import { toast } from 'sonner'
+import { CopyIcon, CheckIcon, EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons'
 
 interface EditProjectModalProps {
   project: Project
@@ -28,6 +29,8 @@ export function EditProjectModal({ project, onProjectUpdated, trigger }: EditPro
   const [isUpdating, setIsUpdating] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [hasLogs, setHasLogs] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [showApiKey, setShowApiKey] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -129,6 +132,15 @@ export function EditProjectModal({ project, onProjectUpdated, trigger }: EditPro
     }
   }
 
+  const copyApiKey = async () => {
+    if (project.apiKey) {
+      await navigator.clipboard.writeText(project.apiKey);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      toast.success('API key copied to clipboard');
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -178,6 +190,38 @@ export function EditProjectModal({ project, onProjectUpdated, trigger }: EditPro
                 </div>
               )}
             </div>
+          </div>
+          
+          <div className="space-y-2">
+            <label htmlFor="apiKey">API Key</label>
+            <div className="flex items-center gap-2">
+              <Input 
+                id="apiKey"
+                value={project.apiKey} 
+                readOnly
+                type={showApiKey ? "text" : "password"}
+                className="font-mono"
+              />
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="icon" 
+                onClick={() => setShowApiKey(!showApiKey)}
+                title={showApiKey ? "Hide API Key" : "Show API Key"}
+              >
+                {showApiKey ? <EyeClosedIcon className="h-4 w-4" /> : <EyeOpenIcon className="h-4 w-4" />}
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="icon" 
+                onClick={copyApiKey}
+                title="Copy API Key"
+              >
+                {copied ? <CheckIcon className="h-4 w-4" /> : <CopyIcon className="h-4 w-4" />}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">This API key is required to send logs to this project</p>
           </div>
           
           <div className="pt-2 grid grid-cols-2 gap-2">

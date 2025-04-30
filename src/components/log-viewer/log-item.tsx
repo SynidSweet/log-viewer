@@ -49,7 +49,7 @@ export function LogItem({ log, isSelected, onClick, onDelete, onToggleRead }: Lo
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="text-xs font-medium truncate max-w-[80%]">
+              <div className="text-sm font-medium truncate max-w-[80%]">
                 {log.comment || 'Unnamed log'}
               </div>
             </TooltipTrigger>

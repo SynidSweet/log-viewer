@@ -41,7 +41,7 @@ export function LogEntryList({ entries, selectedIndex, onSelectEntry }: LogEntry
             </span>
           </div>
           
-          <div className="text-xs font-medium line-clamp-2">
+          <div className="text-sm font-medium line-clamp-2">
             {entry.message}
           </div>
         </div>
