@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 console.log("NextAuth configuration loading...");
@@ -45,7 +45,7 @@ const handler = NextAuth({
     error: '/auth/error',
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       console.log("Sign in callback", { user, account });
       
       // Check if user's email is allowed
@@ -75,7 +75,7 @@ const handler = NextAuth({
     },
     async session({ session, token }) {
       if (token) {
-        session.user = token.user as any;
+        session.user = token.user as User;
       }
       return session;
     },
