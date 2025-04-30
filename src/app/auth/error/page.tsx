@@ -2,9 +2,10 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 
-export default function AuthError() {
+// Error content component that uses hooks
+function ErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
   const [errorDetails, setErrorDetails] = useState('');
@@ -43,28 +44,47 @@ export default function AuthError() {
   };
   
   return (
+    <div className="text-center">
+      <h1 className="text-2xl font-bold text-red-600">Authentication Error</h1>
+      <p className="mt-4">{getErrorMessage()}</p>
+      
+      {errorDetails && (
+        <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-md text-xs text-left">
+          <p className="font-semibold mb-1">Error details:</p>
+          <p className="break-words">{errorDetails}</p>
+        </div>
+      )}
+      
+      <div className="mt-8 flex flex-col space-y-3">
+        <Link href="/" className="text-blue-600 hover:underline">
+          Return to Home
+        </Link>
+        <Link href="/auth/signin" className="text-blue-600 hover:underline">
+          Try signing in again
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// Loading fallback
+function ErrorLoading() {
+  return (
+    <div className="text-center">
+      <h1 className="text-2xl font-bold text-gray-600">Loading...</h1>
+      <p className="mt-4">Please wait while we process your request.</p>
+    </div>
+  );
+}
+
+// Main component with Suspense boundary
+export default function AuthError() {
+  return (
     <div className="container mx-auto p-8 flex flex-col items-center justify-center min-h-[80vh]">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600">Authentication Error</h1>
-          <p className="mt-4">{getErrorMessage()}</p>
-          
-          {errorDetails && (
-            <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-md text-xs text-left">
-              <p className="font-semibold mb-1">Error details:</p>
-              <p className="break-words">{errorDetails}</p>
-            </div>
-          )}
-          
-          <div className="mt-8 flex flex-col space-y-3">
-            <Link href="/" className="text-blue-600 hover:underline">
-              Return to Home
-            </Link>
-            <Link href="/auth/signin" className="text-blue-600 hover:underline">
-              Try signing in again
-            </Link>
-          </div>
-        </div>
+        <Suspense fallback={<ErrorLoading />}>
+          <ErrorContent />
+        </Suspense>
       </div>
     </div>
   );
