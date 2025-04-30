@@ -126,7 +126,7 @@ export function CreateProject({ onProjectCreated }: { onProjectCreated: () => vo
                     </Button>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Make sure to save this API key. You'll need it to authenticate log submissions.
+                    Make sure to save this API key. You&apos;ll need it to authenticate log submissions.
                   </p>
                 </div>
               </div>
