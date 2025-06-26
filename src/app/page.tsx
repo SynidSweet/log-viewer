@@ -63,7 +63,7 @@ function HomePage() {
               <p className="text-sm font-medium mb-1">Log Format:</p>
               <p className="text-xs text-gray-600 mb-2">Pattern: <code>[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE</code> or <code>[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE - DATA</code></p>
               <p className="text-xs text-gray-600 mb-2">Supported levels: <code>LOG</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARN</code>, <code>DEBUG</code></p>
-              <p className="text-xs text-gray-600 mb-2">The <code>- DATA</code> portion is optional. You can send multiple log entries separated by newlines.</p>
+              <p className="text-xs text-gray-600 mb-2">The <code>- DATA</code> portion is optional and supports nested JSON. You can send multiple log entries separated by newlines.</p>
               
               <p className="text-sm font-medium mt-3 mb-1">Examples:</p>
               <pre className="text-xs overflow-auto">
@@ -74,6 +74,9 @@ function HomePage() {
 // Logs with JSON data
 [2025-04-29, 08:41:12] [ERROR] Failed to process payment - {"code": 500, "reason": "timeout"}
 [2025-04-29, 08:42:30] [WARN] Low disk space detected - {"available": "120MB"}
+
+// Nested JSON data
+[2025-04-29, 08:42:45] [DEBUG] User action tracked - {"user": {"id": 123, "role": "admin"}, "action": {"type": "update", "target": {"id": 456, "fields": ["name", "email"]}}}
 
 // Multiple entries in one request
 [2025-04-29, 08:43:00] [DEBUG] Starting batch process

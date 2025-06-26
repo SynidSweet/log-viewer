@@ -208,6 +208,9 @@ Send logs to the server.
 // Log with JSON data
 "content": "[2025-04-29, 08:40:24] [ERROR] Payment failed - {\"code\": 500, \"reason\": \"timeout\"}"
 
+// Log with nested JSON data
+"content": "[2025-04-29, 08:40:24] [DEBUG] API request completed - {\"user\": {\"id\": 123, \"name\": \"John\"}, \"response\": {\"status\": 200, \"data\": {\"items\": [1, 2, 3]}}}"
+
 // Multiple log entries in one request
 "content": "[2025-04-29, 08:40:24] [INFO] Server started\n[2025-04-29, 08:40:25] [INFO] Database connected\n[2025-04-29, 08:40:26] [INFO] Ready to accept connections"
 ```
@@ -247,6 +250,7 @@ The application supports logs in the following format:
 - The `- DATA` portion is completely optional
 - Supports multiple log entries in a single request (separated by newlines)
 - Each line must follow the format above
+- DATA can contain nested JSON objects of any complexity
 
 ### Extended Logging
 

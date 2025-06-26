@@ -110,6 +110,7 @@ POST /api/logs
 ### Log Format
 - Pattern: `[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE` or `[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE - DATA`
 - The `- DATA` portion is **optional** (implementation: src/app/api/logs/route.ts:10)
+- DATA supports nested JSON objects of any complexity
 - Supported levels: `LOG`, `ERROR`, `INFO`, `WARN`, `DEBUG`
 - **Multi-line support**: Can send multiple log entries separated by newlines in a single request
 
