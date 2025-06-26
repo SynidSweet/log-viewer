@@ -161,6 +161,19 @@ async function sendLogs(projectId, apiKey, logContent, comment) {
     throw error;
   }
 }
+
+// Usage examples:
+// Single log entry
+await sendLogs('project-id', 'api-key', '[2025-04-29, 08:40:24] [LOG] Application started');
+
+// Log with data
+await sendLogs('project-id', 'api-key', '[2025-04-29, 08:40:24] [ERROR] Database error - {"code": "ER_DUP_ENTRY"}');
+
+// Multiple log entries
+const multiLineLogs = `[2025-04-29, 08:40:24] [INFO] Processing batch job
+[2025-04-29, 08:40:25] [INFO] Processed 100 records
+[2025-04-29, 08:40:26] [INFO] Batch job completed`;
+await sendLogs('project-id', 'api-key', multiLineLogs);
 ```
 
 ### Authentication
@@ -179,11 +192,24 @@ Send logs to the server.
 
 ```json
 {
-  "projectId": "your-project-id",
-  "apiKey": "your-project-api-key",
-  "content": "[2025-04-29, 08:40:24] [LOG] Your log message - {\"key\": \"value\"}",
-  "comment": "Optional comment about this log"
+  "projectId": "your-project-id",       // Required
+  "apiKey": "your-project-api-key",     // Required
+  "content": "log content",             // Required (see examples below)
+  "comment": "Optional comment"         // Optional
 }
+```
+
+**Content Examples:**
+
+```json
+// Simple log without data
+"content": "[2025-04-29, 08:40:24] [LOG] User logged in successfully"
+
+// Log with JSON data
+"content": "[2025-04-29, 08:40:24] [ERROR] Payment failed - {\"code\": 500, \"reason\": \"timeout\"}"
+
+// Multiple log entries in one request
+"content": "[2025-04-29, 08:40:24] [INFO] Server started\n[2025-04-29, 08:40:25] [INFO] Database connected\n[2025-04-29, 08:40:26] [INFO] Ready to accept connections"
 ```
 
 **Response:**
@@ -208,13 +234,19 @@ Send logs to the server.
 The application supports logs in the following format:
 
 ```
+[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE
 [YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE - DATA
 ```
 
 - `TIMESTAMP`: Date and time in format `YYYY-MM-DD, HH:MM:SS`
-- `LEVEL`: Log level (LOG, ERROR, INFO, WARN, DEBUG)
-- `MESSAGE`: Log message text
-- `DATA`: Optional data after the hyphen
+- `LEVEL`: Log level - must be one of: `LOG`, `ERROR`, `INFO`, `WARN`, `DEBUG`
+- `MESSAGE`: Log message text (required)
+- `DATA`: Additional data after the hyphen (optional)
+
+**Features:**
+- The `- DATA` portion is completely optional
+- Supports multiple log entries in a single request (separated by newlines)
+- Each line must follow the format above
 
 ### Extended Logging
 

@@ -51,20 +51,34 @@ function HomePage() {
           <p className="mb-2">Request body:</p>
           <pre className="bg-gray-100 p-2 rounded overflow-auto">
 {`{
-  "projectId": "your-project-id",
-  "apiKey": "your-project-api-key",
-  "content": "[2025-04-29, 08:40:24] [LOG] Your log message - {}",
-  "comment": "Optional description of this log submission"
+  "projectId": "your-project-id",        // Required
+  "apiKey": "your-project-api-key",      // Required  
+  "content": "log entries (see below)",  // Required
+  "comment": "Optional description"      // Optional
 }`}
           </pre>
           
           <div className="mt-4 space-y-3">            
             <div className="p-3 bg-gray-50 border border-gray-200 rounded-md">
-              <p className="text-sm font-medium mb-1">Log Format Examples:</p>
+              <p className="text-sm font-medium mb-1">Log Format:</p>
+              <p className="text-xs text-gray-600 mb-2">Pattern: <code>[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE</code> or <code>[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE - DATA</code></p>
+              <p className="text-xs text-gray-600 mb-2">Supported levels: <code>LOG</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARN</code>, <code>DEBUG</code></p>
+              <p className="text-xs text-gray-600 mb-2">The <code>- DATA</code> portion is optional. You can send multiple log entries separated by newlines.</p>
+              
+              <p className="text-sm font-medium mt-3 mb-1">Examples:</p>
               <pre className="text-xs overflow-auto">
-{`[2025-04-29, 08:40:24] [LOG] User logged in successfully
-[2025-04-29, 08:41:12] [ERROR] Failed to process payment - {"code": 500}
-[2025-04-29, 08:42:30] [WARN] Low disk space detected - {"available": "120MB"}`}
+{`// Simple logs without data
+[2025-04-29, 08:40:24] [LOG] User logged in successfully
+[2025-04-29, 08:40:25] [INFO] Cache cleared
+
+// Logs with JSON data
+[2025-04-29, 08:41:12] [ERROR] Failed to process payment - {"code": 500, "reason": "timeout"}
+[2025-04-29, 08:42:30] [WARN] Low disk space detected - {"available": "120MB"}
+
+// Multiple entries in one request
+[2025-04-29, 08:43:00] [DEBUG] Starting batch process
+[2025-04-29, 08:43:01] [DEBUG] Processing item 1 of 100
+[2025-04-29, 08:43:02] [DEBUG] Batch completed`}
               </pre>
             </div>
           </div>
