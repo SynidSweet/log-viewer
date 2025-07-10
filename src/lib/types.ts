@@ -43,3 +43,63 @@ export interface Project {
     isRead: boolean;
     content?: string; // Full log content as a string, only included when fetching a specific log
   }
+
+  // Health check type definitions
+  export interface HealthCheckDetails {
+    [key: string]: unknown;
+  }
+
+  export interface HealthCheck {
+    healthy: boolean;
+    details: HealthCheckDetails | null;
+  }
+
+  export interface DatabaseHealthDetails extends HealthCheckDetails {
+    responseTime?: number;
+    tables?: string[];
+    initialized?: boolean;
+    retryCount?: number;
+    performance?: {
+      cacheSize: number;
+      lastUsed: number;
+      avgResponseTime: number;
+      queryCount: number;
+    };
+    error?: string;
+  }
+
+  export interface EnvironmentHealthDetails extends HealthCheckDetails {
+    required?: string[];
+    missing?: string[];
+    present?: string[];
+    error?: string;
+  }
+
+  export interface SchemaHealthDetails extends HealthCheckDetails {
+    required?: string[];
+    existing?: string[];
+    missing?: string[];
+    error?: string;
+  }
+
+  export interface MigrationHealthDetails extends HealthCheckDetails {
+    tracking?: boolean;
+    message?: string;
+    recentMigrations?: Array<{
+      id: unknown;
+      status: unknown;
+      executedAt: unknown;
+    }>;
+    error?: string;
+  }
+
+  export interface DeploymentReadinessCheck {
+    healthy: boolean;
+    checks: {
+      database: HealthCheck;
+      schema: HealthCheck;
+      environment: HealthCheck;
+      migration: HealthCheck;
+    };
+    error?: string;
+  }
