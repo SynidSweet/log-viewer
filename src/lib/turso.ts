@@ -1,26 +1,36 @@
 // lib/turso.ts
 import { createClient, type ResultSet, type InArgs } from '@libsql/client';
 
-if (!process.env.TURSO_DATABASE_URL) {
-  throw new Error('TURSO_DATABASE_URL environment variable is required');
-}
+// Environment variable validation with detailed error messages
+const TURSO_DATABASE_URL = process.env.TURSO_DATABASE_URL;
+const TURSO_AUTH_TOKEN = process.env.TURSO_AUTH_TOKEN;
 
-if (!process.env.TURSO_AUTH_TOKEN) {
-  throw new Error('TURSO_AUTH_TOKEN environment variable is required');
+// Check environment variables but don't throw at module level
+const hasRequiredEnvVars = !!(TURSO_DATABASE_URL && TURSO_AUTH_TOKEN);
+
+// Log environment variable status for debugging
+if (!hasRequiredEnvVars) {
+  console.error('[Turso] Missing required environment variables:', {
+    TURSO_DATABASE_URL: TURSO_DATABASE_URL ? 'Set' : 'Missing',
+    TURSO_AUTH_TOKEN: TURSO_AUTH_TOKEN ? 'Set' : 'Missing',
+    NODE_ENV: process.env.NODE_ENV,
+    VERCEL: process.env.VERCEL,
+  });
 }
 
 // Connection pooling configuration (reserved for future use)
 // const CONNECTION_POOL_SIZE = 5;
 // const CONNECTION_TIMEOUT_MS = 30000;
 
-export const turso = createClient({
-  url: process.env.TURSO_DATABASE_URL,
-  authToken: process.env.TURSO_AUTH_TOKEN,
-  // Performance optimizations
-  syncUrl: process.env.TURSO_SYNC_URL,
+// Create client only if environment variables are available
+export const turso = hasRequiredEnvVars ? createClient({
+  url: TURSO_DATABASE_URL,
+  authToken: TURSO_AUTH_TOKEN,
+  // Performance optimizations - check for existence before using
+  syncUrl: process.env.TURSO_SYNC_URL || undefined,
   syncInterval: 60000, // Sync every minute
-  encryptionKey: process.env.TURSO_ENCRYPTION_KEY,
-});
+  encryptionKey: process.env.TURSO_ENCRYPTION_KEY || undefined,
+}) : null;
 
 // Database initialization state
 let isInitialized = false;
@@ -96,7 +106,7 @@ export async function executeQuery(sql: string, args?: InArgs, useCache: boolean
   }
   
   try {
-    const result = args ? await turso.execute({ sql, args }) : await turso.execute(sql);
+    const result = args ? await turso!.execute({ sql, args }) : await turso!.execute(sql);
     
     // Update metrics
     const responseTime = Date.now() - startTime;
@@ -229,7 +239,7 @@ export async function initializeDatabase(): Promise<void> {
     }
     
     // Check if tables exist
-    const result = await turso.execute(`
+    const result = await turso!.execute(`
       SELECT name FROM sqlite_master 
       WHERE type='table' AND name IN ('projects', 'logs')
     `);
@@ -267,7 +277,11 @@ export async function initializeDatabase(): Promise<void> {
         CREATE INDEX IF NOT EXISTS idx_projects_api_key ON projects(api_key);
       `;
       
-      await turso.executeMultiple(schema);
+      if (!turso) {
+        throw createDatabaseError('connection', 'Database client not available');
+      }
+      
+      await turso!.executeMultiple(schema);
       console.log('Database schema created successfully');
     } else {
       console.log('Database schema validation passed');

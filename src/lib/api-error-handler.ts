@@ -27,6 +27,17 @@ export function classifyAndFormatError(error: unknown): ApiErrorResponse {
     
     switch (dbError.type) {
       case 'connection':
+        // Check if this is due to missing environment variables
+        if (dbError.message?.includes('Missing TURSO_DATABASE_URL or TURSO_AUTH_TOKEN')) {
+          return {
+            error: 'Database configuration missing',
+            message: 'Database environment variables not configured. In production, ensure TURSO_DATABASE_URL and TURSO_AUTH_TOKEN are set in Vercel dashboard and redeploy.',
+            type: 'database_configuration',
+            retryable: false,
+            timestamp,
+            statusCode: 503
+          };
+        }
         return {
           error: 'Database connection failed',
           message: 'Unable to connect to database. Please try again later.',

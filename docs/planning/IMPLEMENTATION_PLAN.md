@@ -1,10 +1,10 @@
 # Implementation Plan
 
-*Last updated: 2025-07-10 | Completed TURSO-004 dependency installation validation*
+*Last updated: 2025-07-10 | Removed 69 scope creep tasks - focus on core robustness improvements only*
 
 ## Current Development Status
 
-The Universal Log Viewer is in a **production-ready state** with core functionality complete. This document outlines planned enhancements and new features to extend the system's capabilities.
+The Universal Log Viewer is in a **production-ready state** with core functionality complete. This document outlines system improvements to make the existing functionality more robust, maintainable, and reliable without adding new features or expanding scope.
 
 ## Critical Database Reliability Issues
 
@@ -103,133 +103,9 @@ The Universal Log Viewer is in a **production-ready state** with core functional
 - TURSO-013 & TURSO-014 can run in parallel
 - TURSO-015 & TURSO-016 can run in parallel
 
-## Upcoming Features
+## Core System Improvements
 
-### 1. Enhanced Log Analysis
-**Priority**: High
-**Timeline**: 2-3 months
-**Status**: Planning
-
-**Description**: Advanced log analysis capabilities including pattern recognition, error correlation, and automated insights.
-
-**Features**:
-- [ ] Log pattern recognition and classification
-- [ ] Error correlation across multiple log entries
-- [ ] Automated anomaly detection
-- [ ] Statistical analysis and trends
-- [ ] Custom alert rules and notifications
-
-**Implementation Tasks**:
-- [ ] Design analysis engine architecture
-- [ ] Implement pattern matching algorithms
-- [ ] Create analysis result storage schema
-- [ ] Build analysis dashboard UI
-- [ ] Add notification system
-- [ ] Create analysis API endpoints
-
-**Dependencies**: None
-**Risks**: Complex analysis logic, performance considerations
-
-### 2. Real-Time Log Streaming
-**Priority**: High
-**Timeline**: 3-4 months
-**Status**: Planning
-
-**Description**: Live log streaming capabilities for real-time monitoring and debugging.
-
-**Features**:
-- [ ] WebSocket-based real-time log streaming
-- [ ] Live log tail functionality
-- [ ] Real-time filtering and search
-- [ ] Connection management and reconnection
-- [ ] Multiple client support
-
-**Implementation Tasks**:
-- [ ] Design WebSocket architecture
-- [ ] Implement server-side streaming infrastructure
-- [ ] Add client-side real-time components
-- [ ] Handle connection state management
-- [ ] Implement real-time filtering
-- [ ] Add performance monitoring
-
-**Dependencies**: None
-**Risks**: WebSocket complexity, connection management, performance at scale
-
-### 3. Advanced Search and Filtering
-**Priority**: Medium
-**Timeline**: 1-2 months
-**Status**: Planning
-
-**Description**: Enhanced search capabilities with advanced filters and saved searches.
-
-**Features**:
-- [ ] Full-text search across all log content
-- [ ] Advanced query syntax (regex, boolean operators)
-- [ ] Saved search queries
-- [ ] Search history and suggestions
-- [ ] Date range filtering
-- [ ] Multi-field search
-
-**Implementation Tasks**:
-- [ ] Design search architecture
-- [ ] Implement search indexing
-- [ ] Create advanced search UI
-- [ ] Add saved searches functionality
-- [ ] Implement search performance optimization
-- [ ] Add search analytics
-
-**Dependencies**: May benefit from database schema improvements
-**Risks**: Search performance, index management
-
-### 4. Log Export and Backup
-**Priority**: Medium
-**Timeline**: 1 month
-**Status**: Planning
-
-**Description**: Comprehensive log export and backup capabilities.
-
-**Features**:
-- [ ] Export logs in multiple formats (JSON, CSV, PDF)
-- [ ] Automated backup scheduling
-- [ ] Incremental backup support
-- [ ] Backup compression and encryption
-- [ ] Restore from backup functionality
-
-**Implementation Tasks**:
-- [ ] Design export format specifications
-- [ ] Implement export API endpoints
-- [ ] Create backup scheduling system
-- [ ] Add backup storage integration
-- [ ] Build export UI components
-- [ ] Add backup monitoring
-
-**Dependencies**: None
-**Risks**: Large file handling, storage costs
-
-### 5. Multi-User Project Management
-**Priority**: Low
-**Timeline**: 2-3 months
-**Status**: Consideration
-
-**Description**: Enhanced project management with team collaboration features.
-
-**Features**:
-- [ ] Project sharing and collaboration
-- [ ] Role-based access control
-- [ ] User management interface
-- [ ] Project templates
-- [ ] Activity logging and audit trails
-
-**Implementation Tasks**:
-- [ ] Design multi-user architecture
-- [ ] Implement user role system
-- [ ] Create project sharing mechanisms
-- [ ] Add user management UI
-- [ ] Implement audit logging
-- [ ] Add permission management
-
-**Dependencies**: May require authentication system changes
-**Risks**: Complex permission system, migration complexity
+*Note: This section focuses on making the existing log viewer more robust, maintainable, and reliable. No new features or scope additions.*
 
 ## Technical Improvements
 
@@ -238,32 +114,28 @@ The Universal Log Viewer is in a **production-ready state** with core functional
 **Timeline**: 1-2 months
 **Status**: Planning
 
+**Description**: Core performance improvements for existing functionality.
+
 #### PERF-INIT-001: Optimize Database Initialization for Cold Starts
 **Description**: Current initialization can add 1-2 seconds to cold start times
 **Implementation**:
 - [ ] Profile initialization timing in production
 - [ ] Consider connection pooling strategies
-- [ ] Investigate edge function warming techniques
 - [ ] Optimize schema validation queries
 **Priority**: Medium
 **Estimate**: 1 day
 
-**Description**: Comprehensive performance improvements across the system.
-
-**Improvements**:
-- [ ] Server-side log parsing and caching
+**Core Improvements**:
 - [ ] Database query optimization
-- [ ] Client-side performance monitoring
 - [ ] Bundle size optimization
 - [ ] Memory usage optimization
+- [ ] Client-side parsing performance improvements
 
 **Implementation Tasks**:
 - [ ] Profile current performance bottlenecks
-- [ ] Implement server-side parsing
-- [ ] Add caching layers
-- [ ] Optimize database queries
-- [ ] Implement performance monitoring
-- [ ] Add performance testing
+- [ ] Optimize database queries and indexing
+- [ ] Reduce bundle size through dependency optimization
+- [ ] Improve client-side log parsing efficiency
 
 **Dependencies**: Database schema improvements
 **Risks**: Performance testing complexity
@@ -273,22 +145,19 @@ The Universal Log Viewer is in a **production-ready state** with core functional
 **Timeline**: 1 month
 **Status**: Planning
 
-**Description**: Enhanced security features and compliance improvements.
+**Description**: Core security improvements for existing functionality.
 
-**Improvements**:
+**Core Security Improvements**:
 - [ ] API rate limiting and throttling
-- [ ] Enhanced audit logging
 - [ ] Security headers and HTTPS enforcement
 - [ ] Input validation improvements
-- [ ] Vulnerability scanning integration
+- [ ] API key security hardening
 
 **Implementation Tasks**:
 - [ ] Implement rate limiting middleware
-- [ ] Add comprehensive audit logging
 - [ ] Enhance security headers
-- [ ] Improve input validation
-- [ ] Set up security scanning
-- [ ] Add security monitoring
+- [ ] Improve input validation and sanitization
+- [ ] Review and harden API key handling
 
 #### IMPL-AUTH-001: Update Authentication Error Handling
 **Task ID**: IMPL-AUTH-001
@@ -304,41 +173,100 @@ The Universal Log Viewer is in a **production-ready state** with core functional
 **Dependencies**: None
 **Risks**: Security complexity, compliance requirements
 
-### 8. Monitoring and Observability
+### 8. Basic Health Monitoring
 **Priority**: Medium
-**Timeline**: 1-2 months
+**Timeline**: 1 month
 **Status**: Planning
 
-#### MON-ERROR-001: Add Error Monitoring and Alerting Integration
-**Description**: Integrate error tracking for production issues
+**Description**: Essential health monitoring for production reliability.
+
+#### MON-ERROR-001: Add Basic Error Tracking
+**Description**: Basic error tracking for production issues
 **Implementation**:
-- [ ] Evaluate error tracking services (Sentry, Rollbar)
 - [ ] Implement error reporting in api-error-handler.ts
-- [ ] Set up alerting for critical errors
-- [ ] Create error dashboards
-- [ ] Configure error sampling rates
-**Priority**: Low
-**Estimate**: 2 days
+- [ ] Set up basic alerting for critical errors
+- [ ] Configure error logging
+**Priority**: Medium
+**Estimate**: 1 day
 
-**Description**: Enhanced monitoring and observability for the system itself.
-
-**Features**:
-- [ ] Application performance monitoring
-- [ ] Error tracking and alerting
-- [ ] Usage analytics and metrics
-- [ ] Health check endpoints
-- [ ] Operational dashboards
+**Core Monitoring Features**:
+- [ ] Enhanced health check endpoints
+- [ ] Basic error tracking
+- [ ] Database connectivity monitoring
 
 **Implementation Tasks**:
-- [ ] Integrate monitoring solution
-- [ ] Add error tracking
-- [ ] Implement usage analytics
-- [ ] Create health check endpoints
-- [ ] Build operational dashboards
-- [ ] Set up alerting rules
+- [ ] Enhance existing health check endpoints
+- [ ] Add basic error tracking and logging
+- [ ] Implement database connectivity monitoring
 
-**Dependencies**: None
-**Risks**: Monitoring overhead, data privacy
+**Dependencies**: Current health check infrastructure
+**Risks**: Monitoring overhead
+
+### IMPL-PROD-007: Add Security Controls to Debug Endpoints
+**Task ID**: IMPL-PROD-007  
+**Priority**: High  
+**Complexity**: 🟢 Simple (~1 hour)  
+**Title**: Secure debug endpoints after production issue resolution  
+**Description**: The `/api/env-check` and enhanced `/api/debug` endpoints expose sensitive configuration information. After resolving production issues, these need security controls.  
+**Success Criteria**:
+- [ ] Add authentication requirement to debug endpoints
+- [ ] Implement IP allowlist for additional security
+- [ ] Add rate limiting to prevent abuse
+- [ ] Option to disable endpoints via environment variable
+- [ ] Log all access attempts for audit trail
+**Implementation**:
+- Add NextAuth session check to endpoints
+- Implement middleware for IP filtering
+- Use existing rate limiting infrastructure
+- Add ENABLE_DEBUG_ENDPOINTS environment variable
+- Integrate with logging system
+**Dependencies**: IMPL-PROD-001 (fix production first)  
+**Estimated Time**: 1 hour
+**Status**: Execute after production fix
+
+### IMPL-PROD-008: Automated Environment Validation in CI/CD
+**Task ID**: IMPL-PROD-008  
+**Priority**: Medium  
+**Complexity**: 🟡 Moderate (~2 hours)  
+**Title**: Add environment validation to deployment pipeline  
+**Description**: Prevent future deployment failures by validating environment configuration during CI/CD process.  
+**Success Criteria**:
+- [ ] Pre-deployment environment check script
+- [ ] GitHub Action or Vercel check for env validation
+- [ ] Block deployment if critical variables missing
+- [ ] Clear error messages in deployment logs
+- [ ] Documentation for CI/CD configuration
+**Implementation**:
+- Adapt verify-env.js for CI/CD use
+- Create GitHub Action workflow
+- Add to Vercel build process
+- Test with intentionally missing variables
+- Document setup process
+**Dependencies**: IMPL-PROD-001B tools (completed)  
+**Estimated Time**: 2 hours
+**Status**: Execute next sprint
+
+### DOC-PROD-002: Environment Troubleshooting Guide
+**Task ID**: DOC-PROD-002  
+**Priority**: Medium  
+**Complexity**: 🟢 Simple (~1 hour)  
+**Title**: Create comprehensive troubleshooting section for environment issues  
+**Description**: Document common environment configuration problems and their solutions based on production experience.  
+**Success Criteria**:
+- [ ] Common error patterns documented
+- [ ] Step-by-step troubleshooting flow
+- [ ] Screenshots of Vercel dashboard
+- [ ] Debug endpoint usage examples
+- [ ] FAQ section for environment issues
+**Implementation**:
+- Document errors from IMPL-PROD-001 investigation
+- Create visual troubleshooting flowchart
+- Add real examples from production debugging
+- Include curl commands for testing
+- Link from main documentation
+**Dependencies**: IMPL-PROD-001 experience  
+**Estimated Time**: 1 hour
+**Status**: Execute after production fix
 
 ## Development Methodology
 
@@ -395,23 +323,24 @@ The Universal Log Viewer is in a **production-ready state** with core functional
 ## Timeline Overview
 
 ### Q1 2025
-- Enhanced Log Analysis (start)
+- Critical Production Issues Resolution
 - Performance Optimization
 - Security Enhancements
 
 ### Q2 2025
-- Enhanced Log Analysis (complete)
-- Real-Time Log Streaming (start)
-- Advanced Search and Filtering
+- Database reliability improvements
+- Testing infrastructure completion
+- Basic health monitoring
 
 ### Q3 2025
-- Real-Time Log Streaming (complete)
-- Log Export and Backup
-- Monitoring and Observability
+- Code refactoring and maintainability improvements
+- Performance optimizations
+- Security hardening
 
 ### Q4 2025
-- Multi-User Project Management
-- Additional features based on user feedback
+- Technical debt reduction
+- Documentation improvements
+- Stability and reliability focus
 
 ## Recently Discovered Implementation Issues
 
@@ -457,4 +386,322 @@ The Universal Log Viewer is in a **production-ready state** with core functional
 **Timeline**: Immediate (next 1-2 weeks)
 **Dependencies**: Current Turso migration completion
 
-This implementation plan provides a structured approach to evolving the Universal Log Viewer while maintaining system stability and user experience.
+## Critical Production Issues - Immediate Action Required
+
+### CRITICAL: Database Initialization Failure in Production
+**Discovery Date**: 2025-07-10
+**Impact**: Complete API failure - all project operations returning 500 errors
+**Root Cause**: Database schema not initialized in production environment
+
+
+
+### IMPL-PROD-002: Enhanced Database Error Reporting
+**Task ID**: IMPL-PROD-002  
+**Priority**: Critical  
+**Complexity**: 🟡 Moderate (~2 hours)  
+**Title**: Implement detailed database error responses for production debugging  
+**Description**: Current 500 errors provide no actionable information. Need to expose specific database errors safely while maintaining security. This will prevent future debugging delays.  
+**Success Criteria**:
+- [ ] Database connection errors include specific failure reasons
+- [ ] Schema missing errors clearly indicate initialization needed
+- [ ] Error responses include suggested remediation steps
+- [ ] Sensitive information (credentials) never exposed
+- [ ] Error classification supports automatic alerting
+**Implementation**:
+- Enhance `classifyAndFormatError` in api-error-handler.ts
+- Add database-specific error codes and messages
+- Include actionable error responses (e.g., "Run POST /api/init-db")
+- Create error response format for production debugging
+**Dependencies**: IMPL-PROD-001B (environment fix)  
+**Estimated Time**: 2 hours
+**Status**: Execute after environment fix
+
+### IMPL-PROD-003: Automatic Database Initialization on Deployment
+**Task ID**: IMPL-PROD-003  
+**Priority**: High  
+**Complexity**: 🟡 Moderate (~2.5 hours)  
+**Title**: Add automatic database schema initialization to deployment process  
+**Description**: Currently database initialization requires manual intervention. Need automated setup during deployment to prevent recurrence of this issue.  
+**Success Criteria**:
+- [ ] Database schema automatically created on first deployment
+- [ ] Idempotent initialization (safe to run multiple times)
+- [ ] Vercel build process includes database setup step
+- [ ] Migration system supports schema updates
+- [ ] Deployment logs show database setup status
+**Implementation**:
+- Create database setup script in package.json
+- Add initialization to Vercel build process
+- Implement migration tracking system
+- Add database readiness validation
+**Dependencies**: IMPL-PROD-001 (emergency fix first)  
+**Estimated Time**: 2.5 hours
+**Status**: Execute this week
+
+### IMPL-PROD-004: Production Deployment Health Validation
+**Task ID**: IMPL-PROD-004  
+**Priority**: High  
+**Complexity**: 🟡 Moderate (~2 hours)  
+**Title**: Create comprehensive deployment readiness checks  
+**Description**: Need systematic validation that deployment is ready for production use. Current health check is insufficient for catching schema issues.  
+**Success Criteria**:
+- [ ] Enhanced health endpoint validates database schema
+- [ ] Deployment process includes readiness verification
+- [ ] All critical API endpoints tested post-deployment
+- [ ] Environment variable validation included
+- [ ] Failed readiness checks block deployment completion
+**Implementation**:
+- Enhance `/api/health` with schema validation
+- Add database table existence checks
+- Create post-deployment test suite
+- Add environment configuration validation
+- Integrate with Vercel deployment process
+**Dependencies**: IMPL-PROD-002 (enhanced error reporting)  
+**Estimated Time**: 2 hours
+**Status**: Execute this week
+
+### IMPL-PROD-005: Database Connectivity Monitoring and Alerting
+**Task ID**: IMPL-PROD-005  
+**Priority**: High  
+**Complexity**: 🟡 Moderate (~1.5 hours)  
+**Title**: Implement proactive database monitoring with alerting  
+**Description**: Need early detection of database issues before they impact users. Current reactive approach caused prolonged outage.  
+**Success Criteria**:
+- [ ] Continuous database connectivity monitoring
+- [ ] Schema validation checks every 5 minutes
+- [ ] Automatic alerts for database failures
+- [ ] Performance metrics tracking (query times)
+- [ ] Dashboard for database health status
+**Implementation**:
+- Create monitoring endpoint for external health checks
+- Set up Vercel monitoring or external service integration
+- Add database performance metrics collection
+- Configure alerting for failures
+- Create simple status dashboard
+**Dependencies**: IMPL-PROD-004 (health validation)  
+**Estimated Time**: 1.5 hours
+**Status**: Execute this week
+
+### DOC-PROD-001: Production Deployment Procedures Documentation
+**Task ID**: DOC-PROD-001  
+**Priority**: Medium  
+**Complexity**: 🟢 Simple (~1 hour)  
+**Title**: Create comprehensive production deployment guide  
+**Description**: Missing documentation caused deployment to production without proper database setup. Need clear procedures to prevent recurrence.  
+**Success Criteria**:
+- [ ] Step-by-step production deployment checklist
+- [ ] Environment variable setup guide
+- [ ] Database initialization procedures
+- [ ] Troubleshooting guide for common issues
+- [ ] Post-deployment validation steps
+**Implementation**:
+- Create `/docs/deployment/production-guide.md`
+- Document environment variable requirements
+- Add database setup procedures
+- Include troubleshooting section
+- Add to main documentation navigation
+**Dependencies**: IMPL-PROD-003 (deployment automation)  
+**Estimated Time**: 1 hour
+**Status**: Execute next sprint
+
+### TEST-PROD-001: Production Deployment Test Suite
+**Task ID**: TEST-PROD-001  
+**Priority**: Medium  
+**Complexity**: 🟡 Moderate (~2 hours)  
+**Title**: Create automated tests for production deployment scenarios  
+**Description**: Need comprehensive testing to catch deployment issues before they reach production. Current testing missed database initialization requirements.  
+**Success Criteria**:
+- [ ] Tests for fresh database deployment
+- [ ] Schema migration tests
+- [ ] API endpoint functionality validation
+- [ ] Environment configuration tests
+- [ ] Integration with CI/CD pipeline
+**Implementation**:
+- Create deployment-specific test suite
+- Add database initialization testing
+- Test API endpoints post-deployment
+- Add environment validation tests
+- Integrate with existing testing infrastructure
+**Dependencies**: IMPL-PROD-004 (health validation)  
+**Estimated Time**: 2 hours
+**Status**: Execute next sprint
+
+### IMPL-PROD-006: Database Migration System Enhancement
+**Task ID**: IMPL-PROD-006  
+**Priority**: Medium  
+**Complexity**: 🟠 Complex (~3 hours)  
+**Title**: Implement robust database migration and versioning system  
+**Description**: Current database initialization is basic. Need proper migration system for future schema changes and version management.  
+**Success Criteria**:
+- [ ] Migration tracking table for applied migrations
+- [ ] Versioned migration files
+- [ ] Rollback capability for failed migrations
+- [ ] Migration status logging and reporting
+- [ ] Safe concurrent migration handling
+**Implementation**:
+- Create migration tracking system
+- Add migration file versioning
+- Implement rollback procedures
+- Add migration status reporting
+- Handle concurrent deployment scenarios
+**Dependencies**: IMPL-PROD-003 (automatic initialization)  
+**Estimated Time**: 3 hours
+**Status**: Execute next sprint
+
+**Critical Action Required**: ✅ COMPLETED - Database connection issues have been resolved. Application now handles missing environment variables gracefully and provides clear error messages for debugging.
+
+### Recently Completed Tasks
+
+#### ✅ IMPL-PROD-001: Emergency Database Connection Investigation and Fix (COMPLETED)
+**Completed**: 2025-07-10
+**Implementation Summary**:
+- Identified root cause: Environment variables were being validated at module load time, causing application crashes
+- Fixed turso.ts to handle missing environment variables gracefully
+- Enhanced error messages to provide clear guidance for production deployment
+- Improved debugging capabilities with enhanced /api/env-check and /api/debug endpoints
+- Created comprehensive error handling for missing Turso configuration
+
+**Root Cause Analysis**:
+- The turso.ts module was throwing errors immediately when environment variables were missing
+- This prevented the application from starting properly in Vercel when variables weren't set
+- The error handling was improved to defer validation until database operations are attempted
+
+**Deliverables**:
+- Updated `/src/lib/turso.ts` - Graceful handling of missing environment variables
+- Enhanced `/src/lib/api-error-handler.ts` - Better error messages for configuration issues
+- Improved `/src/app/api/env-check/route.ts` - Detailed Turso diagnostics and suggestions
+- Fixed `/src/app/api/debug/route.ts` - Handle null turso client safely
+- Fixed `/src/app/api/init-db/route.ts` - Proper null checking for turso client
+
+**Follow-up Tasks Created**:
+- IMPL-ENV-001: Add build-time environment variable validation
+- TEST-ENV-001: Create tests for missing environment variable scenarios
+- DOC-ENV-001: Document Turso-specific environment variable requirements
+- IMPL-SEC-001: Implement connection string validation for security
+- PERF-INIT-002: Optimize module loading for faster cold starts
+
+#### ✅ IMPL-PROD-001B: Emergency Environment Variable Validation (COMPLETED)
+**Completed**: 2025-07-10
+**Implementation Summary**:
+- Created comprehensive environment variable verification tools
+- Added `/api/env-check` endpoint for masked environment variable checking
+- Enhanced `/api/debug` endpoint with step-by-step database diagnostics
+- Created `scripts/verify-env.js` for local environment validation
+- Added detailed Vercel deployment documentation
+- Fixed TypeScript and linting issues for clean build
+
+**Deliverables**:
+- `/scripts/verify-env.js` - Local environment verification script
+- `/src/app/api/env-check/route.ts` - Production environment check endpoint
+- `/src/app/api/debug/route.ts` - Enhanced debug endpoint with detailed tests
+- `/docs/deployment/vercel-env-setup.md` - Comprehensive Vercel setup guide
+- `/VERCEL_ENV_VERIFICATION.md` - Quick reference guide
+- `npm run verify-env` - New package.json script
+
+**Follow-up Tasks Created**:
+- IMPL-PROD-007: Add security controls to debug endpoints after production fix
+- IMPL-PROD-008: Create automated environment validation in CI/CD pipeline
+- DOC-PROD-002: Add troubleshooting section for common environment issues
+
+### Follow-up Tasks from IMPL-PROD-001 Investigation
+
+#### IMPL-ENV-001: Add Build-Time Environment Variable Validation
+**Task ID**: IMPL-ENV-001  
+**Priority**: High  
+**Complexity**: 🟢 Simple (~1 hour)  
+**Title**: Add build-time environment variable validation to prevent deployment issues  
+**Description**: Current environment validation happens at runtime. Adding build-time checks would catch missing variables before deployment completes.  
+**Success Criteria**:
+- [ ] Create build script that validates required environment variables
+- [ ] Integrate with Vercel build process
+- [ ] Fail build if critical variables are missing
+- [ ] Provide clear error messages about missing variables
+- [ ] Document build-time validation process
+**Implementation**:
+- Add prebuild script to package.json
+- Check for TURSO_DATABASE_URL and TURSO_AUTH_TOKEN
+- Integrate with existing verify-env.js script
+- Add to Vercel build configuration
+**Dependencies**: None  
+**Estimated Time**: 1 hour
+
+#### TEST-ENV-001: Create Tests for Missing Environment Variable Scenarios
+**Task ID**: TEST-ENV-001  
+**Priority**: Medium  
+**Complexity**: 🟡 Moderate (~2 hours)  
+**Title**: Add comprehensive tests for environment variable handling  
+**Description**: Need tests to ensure the application handles missing environment variables gracefully in all scenarios.  
+**Success Criteria**:
+- [ ] Test turso.ts behavior with missing variables
+- [ ] Test API endpoints with no database client
+- [ ] Test error messages are helpful and secure
+- [ ] Test graceful degradation scenarios
+- [ ] Achieve 100% coverage for environment handling code
+**Implementation**:
+- Create test suite for environment scenarios
+- Mock process.env for different configurations
+- Test all database operations with null client
+- Verify error responses match expected format
+**Dependencies**: Testing infrastructure setup  
+**Estimated Time**: 2 hours
+
+#### DOC-ENV-001: Document Turso-Specific Environment Variable Requirements
+**Task ID**: DOC-ENV-001  
+**Priority**: Medium  
+**Complexity**: 🟢 Simple (~1 hour)  
+**Title**: Create comprehensive Turso environment setup documentation  
+**Description**: Current documentation doesn't adequately explain Turso-specific requirements and common issues.  
+**Success Criteria**:
+- [ ] Document TURSO_DATABASE_URL format requirements
+- [ ] Document TURSO_AUTH_TOKEN structure
+- [ ] Include examples of correct values
+- [ ] Add troubleshooting for common errors
+- [ ] Link from main setup documentation
+**Implementation**:
+- Create /docs/database/turso-setup.md
+- Include screenshots from Turso dashboard
+- Add validation checklist
+- Document common pitfalls
+**Dependencies**: None  
+**Estimated Time**: 1 hour
+
+#### IMPL-SEC-001: Implement Connection String Validation for Security
+**Task ID**: IMPL-SEC-001  
+**Priority**: High  
+**Complexity**: 🟡 Moderate (~1.5 hours)  
+**Title**: Add security validation for database connection strings  
+**Description**: Need to validate that connection strings are properly formatted and don't contain security risks.  
+**Success Criteria**:
+- [ ] Validate URL format matches expected patterns
+- [ ] Check for injection attempts in connection strings
+- [ ] Ensure tokens are properly formatted JWTs
+- [ ] Log validation failures for security monitoring
+- [ ] Reject malformed credentials early
+**Implementation**:
+- Enhance validateTursoUrl with security checks
+- Add JWT structure validation
+- Check for suspicious patterns
+- Add security logging
+**Dependencies**: None  
+**Estimated Time**: 1.5 hours
+
+#### PERF-INIT-002: Optimize Module Loading for Faster Cold Starts
+**Task ID**: PERF-INIT-002  
+**Priority**: Medium  
+**Complexity**: 🟡 Moderate (~2 hours)  
+**Title**: Optimize turso.ts module loading to reduce cold start times  
+**Description**: Current module loading could be optimized to reduce serverless cold start times.  
+**Success Criteria**:
+- [ ] Defer client creation until first use
+- [ ] Lazy load heavy dependencies
+- [ ] Measure cold start improvement
+- [ ] Maintain current functionality
+- [ ] Document performance gains
+**Implementation**:
+- Convert turso client to lazy initialization
+- Profile module loading times
+- Defer non-critical imports
+- Add performance metrics
+**Dependencies**: None  
+**Estimated Time**: 2 hours
+
+This implementation plan focuses on making the Universal Log Viewer more robust, reliable, and maintainable without adding new features or expanding scope beyond core functionality.

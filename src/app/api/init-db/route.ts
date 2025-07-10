@@ -5,8 +5,13 @@ export async function POST() {
   return withApiErrorHandling(async () => {
     console.log('Initializing database schema...');
     
+    // Check if turso client is available
+    if (!turso) {
+      throw new Error('Database client not initialized. Missing TURSO_DATABASE_URL or TURSO_AUTH_TOKEN environment variables.');
+    }
+    
     // Check if tables exist first
-    const tablesResult = await turso.execute(`
+    const tablesResult = await turso!.execute(`
       SELECT name FROM sqlite_master 
       WHERE type='table' AND name IN ('projects', 'logs')
     `);
@@ -42,7 +47,7 @@ export async function POST() {
         CREATE INDEX idx_projects_api_key ON projects(api_key);
       `;
       
-      await turso.executeMultiple(schema);
+      await turso!.executeMultiple(schema);
       console.log('Database schema created successfully');
       
       return {

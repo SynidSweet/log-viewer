@@ -1,6 +1,6 @@
 # Refactoring Plan
 
-*Last updated: 2025-07-10 | Technical debt and improvement opportunities | Completed REF-API-001*
+*Last updated: 2025-07-10 | Removed scope creep enhancements - focus on core technical debt and architecture*
 
 ## Overview
 
@@ -142,32 +142,6 @@ This document tracks identified technical debt and improvement opportunities in 
 - [ ] Optimize third-party library imports
 - [ ] Remove unused dependencies
 
-## Future Enhancements
-
-### 9. Real-Time Log Streaming
-**Issue**: Currently batch-based log viewing
-**Impact**: Enhancement - would improve user experience
-**Effort**: High - requires WebSocket implementation
-**Benefits**: Live log monitoring, better debugging experience
-
-**Implementation Plan**:
-- [ ] Design WebSocket architecture
-- [ ] Implement server-side streaming
-- [ ] Add client-side real-time updates
-- [ ] Handle connection management and reconnection
-
-### 10. Advanced Log Analysis
-**Issue**: Limited log analysis capabilities
-**Impact**: Enhancement - would add significant value
-**Effort**: High - requires complex analysis logic
-**Benefits**: Better insights, automated problem detection
-
-**Implementation Plan**:
-- [ ] Implement log pattern recognition
-- [ ] Add error correlation features
-- [ ] Create dashboard and analytics views
-- [ ] Add alerting capabilities
-
 ## Refactoring Guidelines
 
 ### Code Quality Standards
@@ -193,22 +167,19 @@ This document tracks identified technical debt and improvement opportunities in 
 ## Timeline Recommendations
 
 ### Phase 1 (Immediate - 1 month)
+- Database Reliability and Resilience Architecture
 - Missing Test Coverage
 - Error Handling Consistency
-- API Rate Limiting
 
 ### Phase 2 (Short Term - 2-3 months)
 - Client-Side Log Parsing Performance
 - Component State Management
-- CSS Organization
+- API Rate Limiting
 
 ### Phase 3 (Medium Term - 4-6 months)
 - Database Schema Flexibility
+- CSS Organization
 - Bundle Size Optimization
-
-### Phase 4 (Long Term - 6+ months)
-- Real-Time Log Streaming
-- Advanced Log Analysis
 
 ## Recently Completed Refactoring
 
@@ -323,5 +294,52 @@ This document tracks identified technical debt and improvement opportunities in 
 - TEST-ERROR-001: Create comprehensive API error handling tests
 - PERF-INIT-001: Optimize database initialization timing for cold starts
 - MON-ERROR-001: Add error monitoring and alerting integration
+
+## Critical Production Deployment Architecture Issues
+
+### REF-DEPLOY-001: Refactor Deployment Process Architecture
+**Issue**: Current deployment process lacks systematic database initialization and validation
+**Impact**: Critical - leads to production failures and service outages
+**Effort**: High - requires architectural changes to deployment pipeline
+**Benefits**: Prevents deployment failures, improves system reliability, reduces operational overhead
+
+**Root Cause**: Deployment process doesn't include database readiness validation or initialization
+**Investigation ID**: PROD-INVESTIGATION-2025-001
+
+**Implementation Plan**:
+- [ ] Design deployment pipeline with database validation steps
+- [ ] Implement idempotent database initialization pattern
+- [ ] Create deployment health check framework
+- [ ] Add rollback procedures for failed deployments
+- [ ] Design environment-specific deployment configurations
+- [ ] Implement deployment state tracking and monitoring
+
+**Complexity**: 🟡 Moderate (requires process changes and tooling updates)
+**Success Criteria**: 
+- Zero-downtime deployments with automatic database setup
+- Failed deployments automatically rollback without manual intervention
+- Comprehensive deployment validation prevents production issues
+- Deployment process is repeatable across environments
+
+### REF-ERROR-001: Refactor Error Handling Architecture for Production Debugging
+**Issue**: Current error handling provides insufficient information for production debugging
+**Impact**: High - delays incident resolution and impacts user experience
+**Effort**: Medium - requires error handling pattern standardization
+**Benefits**: Faster incident resolution, better operational visibility, improved user experience
+
+**Implementation Plan**:
+- [ ] Design structured error response format with context
+- [ ] Implement error classification system with actionable guidance
+- [ ] Create error correlation and tracking mechanisms
+- [ ] Add deployment-specific error context (environment, version, etc.)
+- [ ] Implement error sanitization to prevent information leakage
+- [ ] Design error analytics and pattern detection
+
+**Complexity**: 🟡 Moderate (requires systematic error handling changes)
+**Success Criteria**:
+- Production errors include actionable remediation steps
+- Error responses provide sufficient context for debugging
+- Error classification enables automatic alerting and escalation
+- No sensitive information exposed in error responses
 
 This refactoring plan provides a structured approach to improving the codebase while maintaining system stability and user experience.
