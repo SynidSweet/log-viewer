@@ -1,6 +1,6 @@
 # Development Workflow
 
-*Last updated: 2025-07-10 | Added comprehensive error handling test suite*
+*Last updated: 2025-07-10 | Added automatic database deployment and comprehensive migration system*
 
 ## Environment Setup
 
@@ -52,7 +52,7 @@ ALLOWED_DOMAINS=domain1.com,domain2.com
 # Start development server with Turbopack
 npm run dev
 
-# Build for production
+# Build for production (includes automatic database initialization)
 npm run build
 
 # Start production server
@@ -60,12 +60,18 @@ npm run start
 
 # Run linter
 npm run lint
+
+# Database management
+npm run db:init      # Initialize database manually
+npm run db:migrate   # Run pending migrations
+npm run db:status    # Check migration status
 ```
 
 ### Development Server
 - **URL**: http://localhost:3000
 - **Features**: Hot reload, Turbopack fast refresh, TypeScript checking
 - **API**: All endpoints available at `/api/*`
+- **Environment Validation**: Use `npm run verify-env` to check configuration
 
 ## Testing Strategy
 
@@ -259,6 +265,7 @@ export default eslintConfig;
 2. **Database Connection**: Verify Turso database URL and auth token
 3. **API Key Issues**: Ensure project API keys are correct
 4. **Build Failures**: Check TypeScript errors and ESLint issues
+5. **Environment Variables**: Use `/api/env-check` endpoint to verify configuration
 
 ### Troubleshooting Steps
 1. **Check Environment**: Verify all required environment variables (Turso database credentials)
