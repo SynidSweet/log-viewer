@@ -1,6 +1,6 @@
 # Architecture Overview
 
-*Last updated: 2025-07-10 | Comprehensive system architecture documentation*
+*Last updated: 2025-07-10 | Database performance optimizations completed - caching, batch operations, and monitoring*
 
 ## System Architecture
 
@@ -10,7 +10,7 @@ The Universal Log Viewer implements a **hybrid security model** with public API 
 
 1. **Presentation Layer**: React 19 components with Next.js 15 App Router
 2. **API Layer**: REST endpoints with middleware authentication
-3. **Data Layer**: Vercel KV (Redis) with structured key patterns
+3. **Data Layer**: Turso SQLite with relational schema and resilience wrappers
 
 ### Technology Stack
 
@@ -18,7 +18,7 @@ The Universal Log Viewer implements a **hybrid security model** with public API 
 - **Next.js 15.3.1**: React framework with App Router and Turbopack
 - **React 19**: UI library with concurrent features
 - **TypeScript**: Strict type checking enabled
-- **Vercel KV**: Redis-compatible key-value store for persistence
+- **Turso SQLite**: Distributed SQLite database with global edge hosting
 
 #### UI & Styling
 - **Tailwind CSS v4**: Utility-first styling with PostCSS
@@ -40,11 +40,18 @@ The Universal Log Viewer implements a **hybrid security model** with public API 
 ### Architectural Patterns
 
 #### Repository Pattern
-All database operations are abstracted through `/src/lib/db.ts`:
+All database operations are abstracted through `/src/lib/db-turso.ts`:
 - Centralized data access layer
 - Type-safe operations with TypeScript interfaces
-- Consistent error handling and validation
-- Abstraction over Vercel KV operations
+- Consistent error handling and validation via withDatabaseOperation wrapper
+- Abstraction over Turso SQLite operations
+- **Performance optimizations**: Query result caching, batch operations, and connection monitoring
+
+#### Performance Architecture
+- **Query Caching**: Intelligent caching for frequently accessed read operations (30-second TTL)
+- **Batch Operations**: Reduced database round trips through `executeBatch()` functionality
+- **Connection Optimization**: Performance metrics tracking and connection warmup capabilities
+- **Monitoring**: Real-time database performance metrics and health checks
 
 #### Component Architecture
 - **Atomic Design**: UI components organized by complexity
@@ -56,24 +63,25 @@ All database operations are abstracted through `/src/lib/db.ts`:
 - **REST Conventions**: Standard HTTP methods and status codes
 - **Resource-Based**: Clear resource hierarchy `/api/projects/{id}/logs`
 - **Validation Layer**: Input validation at API boundaries
-- **Error Handling**: Consistent error responses with proper HTTP codes
+- **Error Handling**: Centralized error handling via `withApiErrorHandling` wrapper
+- **Structured Responses**: Consistent `ApiErrorResponse` format with retryability flags
 
 ### Data Flow Architecture
 
 #### Log Submission Flow
 ```
-External System → POST /api/logs → Validation → Vercel KV → Response
+External System → POST /api/logs → Validation → Turso SQLite → Response
 ```
 
 1. **Request Validation**: Project ID, API key, and log format validation
 2. **Authentication**: Project-specific API key verification
 3. **Data Processing**: Multi-line log parsing and storage
-4. **Persistence**: Atomic operations to Vercel KV
+4. **Persistence**: Atomic operations to Turso SQLite with retry logic
 5. **Response**: Success confirmation with log ID and timestamp
 
 #### Log Viewing Flow
 ```
-User → Authentication → UI → API → Vercel KV → Client-Side Parsing → Display
+User → Authentication → UI → API → Turso SQLite → Client-Side Parsing → Display
 ```
 
 1. **Authentication**: Google OAuth session validation
@@ -97,7 +105,7 @@ User → Authentication → UI → API → Vercel KV → Client-Side Parsing →
 #### Data Protection
 - **Environment Variables**: Sensitive configuration stored securely
 - **No Secret Logging**: System designed to prevent secret exposure
-- **Secure Storage**: Vercel KV provides encrypted data at rest
+- **Secure Storage**: Turso SQLite provides encrypted data at rest
 
 ### Component Architecture
 
@@ -138,8 +146,43 @@ Projects List (1/5) | Log Entries (1/5) | Log Details (3/5)
 
 #### Internal Systems
 - **NextAuth.js**: Google OAuth provider configuration
-- **Vercel KV**: Redis-compatible data operations
+- **Turso Database**: SQLite operations with global edge hosting and resilience wrappers
 - **Middleware**: Authentication and routing logic
+- **Error Handler**: Centralized API error management
+
+### Error Handling Architecture
+
+#### Centralized Error Management
+The system uses a unified error handling pattern across all API endpoints (except NextAuth handlers):
+
+```typescript
+// All API endpoints wrapped with error handling
+export async function POST(request: NextRequest) {
+  return withApiErrorHandling(async () => {
+    // API logic here
+  }, 'POST /api/endpoint')
+}
+```
+
+#### Error Response Structure
+```typescript
+interface ApiErrorResponse {
+  error: string          // Error type classification
+  message: string        // Human-readable error message
+  type: string          // Error category
+  retryable?: boolean   // Whether client should retry
+  timestamp: string     // ISO timestamp
+  statusCode: number    // HTTP status code
+}
+```
+
+#### Error Classification
+- **Database Errors**: Connection, initialization, query failures
+- **Validation Errors**: Input validation and format issues
+- **Authentication Errors**: Invalid credentials or permissions
+- **Not Found Errors**: Resource not found
+- **Rate Limit Errors**: Too many requests
+- **Unknown Errors**: Unclassified errors with stack traces (dev only)
 
 ### Deployment Architecture
 
@@ -149,7 +192,7 @@ Projects List (1/5) | Log Entries (1/5) | Log Details (3/5)
 - **Environment Management**: Secure configuration handling
 
 #### Environment Variables
-- **Vercel KV**: Database connection and authentication
+- **Turso Database**: Database connection and authentication
 - **Google OAuth**: Client ID and secret configuration
 - **NextAuth**: Session management and security
 - **Access Control**: Optional user restrictions
@@ -157,7 +200,7 @@ Projects List (1/5) | Log Entries (1/5) | Log Details (3/5)
 ### Scalability Considerations
 
 #### Current Limitations
-- **Single Database**: Vercel KV as single point of storage
+- **Single Database**: Turso SQLite as single point of storage
 - **Client-Side Parsing**: Heavy processing in browser
 - **No Pagination**: Full log loading (manageable for typical use cases)
 
@@ -168,3 +211,8 @@ Projects List (1/5) | Log Entries (1/5) | Log Details (3/5)
 - **Real-Time Features**: WebSocket support for live log streaming
 
 This architecture provides a solid foundation for log management with clear separation of concerns and robust security model.
+
+## Related Documentation
+
+- [Error Handling Architecture](./error-handling.md) - Detailed guide to API error handling
+- [Data Models](./data-models.md) - Database schema and type definitions

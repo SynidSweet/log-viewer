@@ -1,20 +1,16 @@
-import { NextResponse } from 'next/server';
 import { hasProjectLogs } from '@/lib/db-turso';
+import { withApiErrorHandling } from '@/lib/api-error-handler';
 
 // GET /api/projects/[id]/logs/check
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id: projectId } = await params;
-    
+  const { id: projectId } = await params;
+  return withApiErrorHandling(async () => {
     // Check if project has logs
     const hasLogs = await hasProjectLogs(projectId);
     
-    return NextResponse.json({ hasLogs });
-  } catch (error) {
-    console.error('Error checking project logs:', error);
-    return NextResponse.json({ error: 'Failed to check project logs' }, { status: 500 });
-  }
+    return { hasLogs };
+  }, `GET /api/projects/${projectId}/logs/check`);
 } 

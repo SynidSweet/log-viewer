@@ -1,25 +1,16 @@
-import { NextResponse } from 'next/server';
 import { createProject } from '@/lib/db-turso';
+import { withApiErrorHandling } from '@/lib/api-error-handler';
 
 export async function GET() {
-  try {
+  return withApiErrorHandling(async () => {
     console.log('Testing project creation...');
     
     const testProject = await createProject('test-project-' + Date.now(), 'Test project for debugging');
     
-    return NextResponse.json({
+    return {
       success: true,
       project: testProject,
       message: 'Project creation works!'
-    });
-  } catch (error) {
-    console.error('Test project creation failed:', error);
-    
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : 'No stack',
-      name: error instanceof Error ? error.name : 'Unknown error type'
-    }, { status: 500 });
-  }
+    };
+  }, 'GET /api/test-create');
 }

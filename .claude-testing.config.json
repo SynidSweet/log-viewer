@@ -1,0 +1,19 @@
+{
+  "include": [
+    "src/lib/api-error-handler.ts",
+    "src/lib/db-turso.ts",
+    "src/lib/turso.ts",
+    "src/app/api/health/route.ts",
+    "src/app/api/logs/route.ts",
+    "src/app/api/projects/route.ts"
+  ],
+  "exclude": ["**/*.test.*", "**/*.spec.*"],
+  "testFramework": "jest",
+  "aiModel": "claude-3",
+  "features": {
+    "coverage": true,
+    "edgeCases": true,
+    "integrationTests": true,
+    "errorHandling": true
+  }
+}

@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
 import { turso } from '@/lib/turso';
+import { withApiErrorHandling } from '@/lib/api-error-handler';
 
 export async function POST() {
-  try {
+  return withApiErrorHandling(async () => {
     console.log('Initializing database schema...');
     
     // Check if tables exist first
@@ -45,27 +45,19 @@ export async function POST() {
       await turso.executeMultiple(schema);
       console.log('Database schema created successfully');
       
-      return NextResponse.json({
+      return {
         success: true,
         message: 'Database schema created successfully',
         tables: ['projects', 'logs']
-      });
+      };
     } else {
       console.log('Database schema already exists');
       
-      return NextResponse.json({
+      return {
         success: true,
         message: 'Database schema already exists',
         existingTables: tablesResult.rows.map(row => row.name)
-      });
+      };
     }
-  } catch (error) {
-    console.error('Failed to initialize database:', error);
-    
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : 'No stack'
-    }, { status: 500 });
-  }
+  }, 'POST /api/init-db');
 }

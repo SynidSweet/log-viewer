@@ -1,29 +1,30 @@
 import { NextResponse } from 'next/server';
-import { checkDatabaseConnection } from '@/lib/turso';
+import { checkDatabaseHealth } from '@/lib/turso';
+import { withApiErrorHandling } from '@/lib/api-error-handler';
 
 export async function GET() {
-  try {
-    const isConnected = await checkDatabaseConnection();
+  return withApiErrorHandling(async () => {
+    const healthCheck = await checkDatabaseHealth();
     
-    if (isConnected) {
-      return NextResponse.json({ 
+    if (healthCheck.healthy) {
+      return { 
+        healthy: true,
         status: 'healthy', 
         database: 'connected',
+        details: healthCheck.details,
         timestamp: new Date().toISOString()
-      });
+      };
     } else {
-      return NextResponse.json({ 
+      // Return unhealthy status but don't throw error (503 handled by wrapper)
+      const response = { 
+        healthy: false,
         status: 'unhealthy', 
         database: 'disconnected',
+        details: healthCheck.details,
         timestamp: new Date().toISOString()
-      }, { status: 503 });
+      };
+      
+      return NextResponse.json(response, { status: 503 });
     }
-  } catch (error) {
-    return NextResponse.json({ 
-      status: 'error', 
-      database: 'error',
-      error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
-  }
+  }, 'GET /api/health');
 }

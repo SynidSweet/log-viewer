@@ -1,30 +1,32 @@
-import { NextResponse } from 'next/server';
 import { getProject, updateProject, deleteProject, hasProjectLogs } from '@/lib/db-turso';
+import { withApiErrorHandling } from '@/lib/api-error-handler';
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const project = await getProject(id);
-  
-  if (!project) {
-    return NextResponse.json({ error: 'Project not found' }, { status: 404 });
-  }
-  
-  return NextResponse.json(project);
+  return withApiErrorHandling(async () => {
+    const project = await getProject(id);
+    
+    if (!project) {
+      throw new Error('not found: Project not found');
+    }
+    
+    return project;
+  }, `GET /api/projects/${id}`);
 }
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
+  const { id } = await params;
+  return withApiErrorHandling(async () => {
     const project = await getProject(id);
     
     if (!project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+      throw new Error('not found: Project not found');
     }
     
     const data = await request.json();
@@ -35,32 +37,25 @@ export async function PATCH(
       // Check if we can change the ID (only if no logs exist)
       const hasLogs = await hasProjectLogs(id);
       if (hasLogs) {
-        return NextResponse.json({ 
-          error: 'Cannot change project ID after logs have been received' 
-        }, { status: 400 });
+        throw new Error('validation: Cannot change project ID after logs have been received');
       }
     }
     
     const updatedProject = await updateProject(id, { name, description, id: newId });
-    return NextResponse.json(updatedProject);
-  } catch (error) {
-    return NextResponse.json({ 
-      error: 'Failed to update project',
-      details: (error as Error).message
-    }, { status: 500 });
-  }
+    return updatedProject;
+  }, `PATCH /api/projects/${id}`);
 }
 
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
+  const { id } = await params;
+  return withApiErrorHandling(async () => {
     const project = await getProject(id);
     
     if (!project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+      throw new Error('not found: Project not found');
     }
     
     // Check if project has logs (we'll include this in response)
@@ -69,14 +64,9 @@ export async function DELETE(
     // Delete project
     await deleteProject(id);
     
-    return NextResponse.json({ 
+    return { 
       success: true,
       hadLogs: hasLogs 
-    });
-  } catch (error) {
-    return NextResponse.json({ 
-      error: 'Failed to delete project',
-      details: (error as Error).message
-    }, { status: 500 });
-  }
+    };
+  }, `DELETE /api/projects/${id}`);
 } 

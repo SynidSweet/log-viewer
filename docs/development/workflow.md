@@ -1,6 +1,6 @@
 # Development Workflow
 
-*Last updated: 2025-07-10 | Complete development setup and workflow guide*
+*Last updated: 2025-07-10 | Added comprehensive error handling test suite*
 
 ## Environment Setup
 
@@ -8,7 +8,8 @@
 - **Node.js**: Version 18+ (project uses React 19 and Next.js 15)
 - **npm**: Package manager (included with Node.js)
 - **Git**: Version control
-- **Vercel Account**: For KV database and deployment
+- **Turso Account**: For SQLite database hosting
+- **Vercel Account**: For deployment (optional)
 
 ### Initial Setup
 ```bash
@@ -27,11 +28,9 @@ cp env.example .env.local
 Required environment variables in `.env.local`:
 
 ```bash
-# Vercel KV Database
-KV_URL=your-kv-url
-KV_REST_API_URL=your-kv-rest-api-url  
-KV_REST_API_TOKEN=your-kv-rest-api-token
-KV_REST_API_READ_ONLY_TOKEN=your-kv-rest-api-read-only-token
+# Turso Database
+TURSO_DATABASE_URL=libsql://your-database-name.turso.io
+TURSO_AUTH_TOKEN=your-turso-auth-token
 
 # Google OAuth
 GOOGLE_CLIENT_ID=your-google-client-id
@@ -71,25 +70,42 @@ npm run lint
 ## Testing Strategy
 
 ### Current State
-- **No test framework configured**
-- **Manual testing workflow**
+- **Comprehensive error handling test suite**: 22 tests with 100% pass rate
+- **External testing infrastructure**: Claude Testing Infrastructure v2.0 setup
 - **Type checking via TypeScript**
 - **Linting via ESLint**
 
-### Recommended Testing Setup
-If implementing tests, consider:
+### Testing Infrastructure Setup
+1. **Testing directory**: `.claude-testing/` - External test setup maintaining project integrity
+2. **Test framework**: Jest with TypeScript support
+3. **Coverage**: Comprehensive API error handling scenarios
 
-1. **Clone testing infrastructure**:
+### Implemented Test Coverage
+- **Error Classification**: Database errors (connection, initialization, schema, query, validation)
+- **Standard HTTP Errors**: Authentication (401), validation (400), not found (404), timeout (504)
+- **Edge Cases**: Circular references, special characters, concurrent processing
+- **API Integration**: Error wrapper validation, health check endpoints, logs API
+- **Environment Validation**: Required environment variable checking
+
+### Running Tests
 ```bash
-git clone https://github.com/SynidSweet/claude-testing-infrastructure.git
+# Navigate to test directory
+cd .claude-testing
+
+# Install test dependencies
+npm install
+
+# Run comprehensive error handling tests
+npx jest api-error-handler.comprehensive.test.js
+
+# Run all tests
+npm test
 ```
 
-2. **Follow setup guide**: `claude-testing-infrastructure/AI_AGENT_GUIDE.md`
-
-3. **Test categories**:
-   - **Unit Tests**: Component logic and utilities
-   - **Integration Tests**: API endpoints and database operations
-   - **E2E Tests**: Complete user workflows
+### Test Categories
+- **Unit Tests**: Error classification and formatting logic
+- **Integration Tests**: API endpoints with error handling
+- **Edge Case Tests**: Robustness and error recovery scenarios
 
 ### Manual Testing Checklist
 - [ ] **Authentication**: Google OAuth login/logout
@@ -240,16 +256,16 @@ export default eslintConfig;
 
 ### Common Issues
 1. **Authentication Errors**: Check Google OAuth configuration
-2. **Database Connection**: Verify Vercel KV environment variables
+2. **Database Connection**: Verify Turso database URL and auth token
 3. **API Key Issues**: Ensure project API keys are correct
 4. **Build Failures**: Check TypeScript errors and ESLint issues
 
 ### Troubleshooting Steps
-1. **Check Environment**: Verify all required environment variables
+1. **Check Environment**: Verify all required environment variables (Turso database credentials)
 2. **Clear Cache**: Delete `.next` folder and rebuild
 3. **Dependency Issues**: Remove `node_modules` and reinstall
 4. **Console Errors**: Check browser console for client-side errors
-5. **API Logs**: Check Vercel function logs for server errors
+5. **API Logs**: Check deployment platform function logs for server errors
 
 ## Performance Optimization
 

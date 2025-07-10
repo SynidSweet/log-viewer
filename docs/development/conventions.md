@@ -1,6 +1,6 @@
 # Development Conventions
 
-*Last updated: 2025-07-10 | Code standards and patterns used in the project*
+*Last updated: 2025-07-10 | Added database resilience and standardized API error handling patterns*
 
 ## Code Organization
 
@@ -18,7 +18,9 @@ src/
 │   ├── log-viewer/       # Complex feature components
 │   └── *.tsx             # Shared components
 └── lib/                  # Utilities and core logic
-    ├── db.ts             # Database operations
+    ├── db-turso.ts       # Turso database operations
+    ├── turso.ts          # Database client and initialization
+    ├── api-error-handler.ts # Centralized error handling
     ├── types.ts          # Type definitions
     └── utils.ts          # Utility functions
 ```
@@ -146,18 +148,23 @@ export async function POST(request: NextRequest) {
 }
 ```
 
-### Error Handling
+### Error Handling (Updated Pattern)
 ```typescript
-try {
-  const result = await operation()
-  return NextResponse.json(result)
-} catch (error) {
-  console.error('Operation failed:', error)
-  return NextResponse.json(
-    { error: 'Operation failed' },
-    { status: 500 }
-  )
+// Use centralized error handling wrapper
+import { withApiErrorHandling } from '@/lib/api-error-handler'
+
+export async function POST(request: NextRequest) {
+  return withApiErrorHandling(async () => {
+    // Your API logic here
+    const result = await operation()
+    return result // Wrapper handles success response
+  }, 'POST /api/endpoint')
 }
+
+// For custom error types
+throw new Error('validation: Invalid input data')
+throw new Error('not found: Resource not found')
+throw new Error('authentication: Invalid credentials')
 ```
 
 ### Validation Pattern
@@ -173,16 +180,24 @@ function validateInput(data: unknown): ValidationResult {
 
 ## Database Patterns
 
-### Repository Pattern
+### Repository Pattern with Resilience
 ```typescript
-// lib/db.ts
+// lib/db-turso.ts
+import { withDatabaseOperation } from './db-turso'
+
 export async function getProjects(): Promise<Project[]> {
-  // Implementation details abstracted
+  return withDatabaseOperation(async () => {
+    // Database operation with automatic retry
+    const result = await turso.execute('SELECT * FROM projects')
+    return mapResultsToProjects(result)
+  }, 'getProjects')
 }
 
-export async function createProject(name: string, description: string): Promise<Project> {
-  // Validation and creation logic
-}
+// Database initialization guard
+import { ensureDatabaseReady } from './turso'
+
+// Called automatically before each operation
+await ensureDatabaseReady()
 ```
 
 ### Type Conversion
@@ -192,12 +207,23 @@ function recordToProject(record: Record<string, unknown>): Project {
 }
 ```
 
-### Error Handling
+### Database Error Classification
 ```typescript
-export async function getProject(id: string): Promise<Project | null> {
-  const record = await kv.hgetall(`project:${id}`);
-  return record ? recordToProject(record) : null;
+// Structured error types
+export interface DatabaseError {
+  type: 'connection' | 'initialization' | 'schema' | 'query' | 'validation'
+  message: string
+  code?: string
+  retryable: boolean
+  details?: unknown
 }
+
+// Error creation helper
+export function createDatabaseError(
+  type: DatabaseError['type'],
+  message: string,
+  originalError?: unknown
+): DatabaseError
 ```
 
 ## Styling Conventions
@@ -261,20 +287,34 @@ try {
 }
 ```
 
-### Server-Side Errors
+### Server-Side Errors (Updated Pattern)
 ```typescript
-export async function POST(request: NextRequest) {
-  try {
-    const data = await request.json()
-    // Process data
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
+// Standardized API response format
+export interface ApiErrorResponse {
+  error: string
+  message: string
+  type: string
+  retryable?: boolean
+  timestamp: string
+  statusCode: number
+}
+
+export interface ApiSuccessResponse<T> {
+  success: true
+  data: T
+  timestamp: string
+}
+
+// Health check pattern
+export async function GET() {
+  return withApiErrorHandling(async () => {
+    const health = await checkDatabaseHealth()
+    return {
+      status: health.healthy ? 'healthy' : 'unhealthy',
+      database: 'connected',
+      details: health.details
+    }
+  }, 'GET /api/health')
 }
 ```
 
@@ -335,8 +375,23 @@ const projects = await Promise.all(
   projectIds.map(id => getProject(id))
 )
 
-// Efficient database queries
-const logIds = await kv.smembers(`project:${projectId}:logs`)
+// Lazy database initialization
+let isInitialized = false
+let initializationPromise: Promise<void> | null = null
+
+export async function ensureDatabaseReady(): Promise<void> {
+  if (isInitialized) return
+  if (initializationPromise) {
+    await initializationPromise
+    return
+  }
+  initializationPromise = initializeWithRetry()
+  await initializationPromise
+}
+
+// Connection pooling and retry
+const MAX_RETRY_ATTEMPTS = 3
+const RETRY_DELAY_MS = 1000
 ```
 
 ## Security Patterns

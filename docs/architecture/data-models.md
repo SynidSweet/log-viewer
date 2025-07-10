@@ -1,25 +1,41 @@
 # Data Models & Database Schema
 
-*Last updated: 2025-07-10 | Vercel KV data structure and type definitions*
+*Last updated: 2025-07-10 | Turso SQLite schema and type definitions*
 
-## Database Schema (Vercel KV)
+## Database Schema (Turso SQLite)
 
-### Key Patterns
+### Table Structure
 
-Vercel KV uses Redis-style key-value operations with the following patterns:
+Turso SQLite uses relational tables with proper foreign key constraints:
 
-```
-projects                    → Set of all project IDs
-project:{id}               → Hash containing project metadata
-project:{id}:logs          → Set of log IDs for the project
-log:{id}                   → Hash containing log entry data
+```sql
+CREATE TABLE projects (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    created_at TEXT NOT NULL,
+    api_key TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE logs (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    comment TEXT,
+    timestamp TEXT NOT NULL,
+    is_read INTEGER DEFAULT 0,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_logs_project_id ON logs(project_id);
+CREATE INDEX idx_logs_timestamp ON logs(timestamp);
+CREATE INDEX idx_projects_api_key ON projects(api_key);
 ```
 
 ### Data Types
 
 #### Project Data
-**Key**: `project:{id}`
-**Type**: Hash
+**Table**: `projects`
 **Fields**:
 ```typescript
 {
@@ -32,8 +48,7 @@ log:{id}                   → Hash containing log entry data
 ```
 
 #### Log Data
-**Key**: `log:{id}`
-**Type**: Hash
+**Table**: `logs`
 **Fields**:
 ```typescript
 {
@@ -46,15 +61,11 @@ log:{id}                   → Hash containing log entry data
 }
 ```
 
-#### Project Registry
-**Key**: `projects`
-**Type**: Set
-**Members**: All project IDs
-
-#### Project Log Index
-**Key**: `project:{id}:logs`
-**Type**: Set
-**Members**: All log IDs for the project
+#### Database Constraints
+- **Primary Keys**: Unique identifiers for projects and logs
+- **Foreign Keys**: logs.project_id references projects.id with CASCADE DELETE
+- **Unique Constraints**: api_key must be unique across all projects
+- **Indexes**: Optimized queries on project_id, timestamp, and api_key
 
 ## TypeScript Interfaces
 
@@ -112,6 +123,13 @@ interface LogSubmission {
 
 ## Database Operations
 
+### Resilience Wrapper
+All database operations are wrapped with `withDatabaseOperation` which provides:
+- Automatic database connection initialization
+- Retry logic for transient failures
+- Consistent error handling and logging
+- Operation-specific error context
+
 ### Project Operations
 
 #### Create Project
@@ -120,15 +138,16 @@ async function createProject(name: string, description: string = ''): Promise<Pr
 ```
 - Generates slug-based ID from name
 - Creates 32-character nanoid API key
-- Stores as hash in `project:{id}`
-- Adds ID to `projects` set
+- Inserts into `projects` table with SQL INSERT
+- Wrapped with withDatabaseOperation for resilience
 
 #### Get Project
 ```typescript
 async function getProject(id: string): Promise<Project | null>
 ```
-- Fetches hash from `project:{id}`
+- Executes SQL SELECT with prepared statement
 - Returns null if not found
+- Wrapped with withDatabaseOperation for resilience
 
 #### Update Project
 ```typescript
@@ -136,16 +155,17 @@ async function updateProject(id: string, updates: Partial<Project>): Promise<Pro
 ```
 - Handles ID changes with data migration
 - Updates log references if ID changed
-- Atomic operations for consistency
+- Uses SQL transactions for consistency
+- Wrapped with withDatabaseOperation for resilience
 
 #### Delete Project
 ```typescript
 async function deleteProject(id: string): Promise<boolean>
 ```
-- Removes from `projects` set
-- Deletes `project:{id}` hash
-- Cascades to delete all project logs
-- Cleans up `project:{id}:logs` set
+- Executes SQL DELETE with prepared statement
+- Cascades to delete all project logs via foreign key constraint
+- Returns true if rows were affected
+- Wrapped with withDatabaseOperation for resilience
 
 ### Log Operations
 
@@ -154,39 +174,44 @@ async function deleteProject(id: string): Promise<boolean>
 async function createLog(projectId: string, content: string, comment: string = ''): Promise<ProjectLog>
 ```
 - Generates nanoid for log ID
-- Stores as hash in `log:{id}`
-- Adds ID to `project:{projectId}:logs` set
-- Sets initial `isRead: false`
+- Inserts into `logs` table with SQL INSERT
+- Sets initial `is_read: 0` (SQLite boolean)
+- Wrapped with withDatabaseOperation for resilience
 
 #### Get Project Logs
 ```typescript
 async function getProjectLogs(projectId: string): Promise<ProjectLog[]>
 ```
-- Fetches log IDs from `project:{projectId}:logs`
+- Executes SQL SELECT with WHERE clause on project_id
 - Retrieves metadata for each log (no content)
-- Returns sorted by timestamp
+- Returns sorted by timestamp DESC
+- Wrapped with withDatabaseOperation for resilience
 
 #### Get Log Details
 ```typescript
 async function getLog(logId: string): Promise<ProjectLog | null>
 ```
+- Executes SQL SELECT with all columns
 - Fetches complete log including content
 - Used for detailed log viewing
+- Wrapped with withDatabaseOperation for resilience
 
 #### Update Log
 ```typescript
 async function updateLog(logId: string, updates: { isRead?: boolean }): Promise<ProjectLog | null>
 ```
-- Updates log metadata
-- Primarily used for read status tracking
+- Executes SQL UPDATE with prepared statement
+- Updates log metadata (primarily is_read status)
+- Wrapped with withDatabaseOperation for resilience
 
 #### Delete Log
 ```typescript
 async function deleteLog(logId: string): Promise<boolean>
 ```
-- Removes from parent project's log set
-- Deletes log hash
-- Maintains referential integrity
+- Executes SQL DELETE with prepared statement
+- Returns true if rows were affected
+- Referential integrity maintained by foreign key constraints
+- Wrapped with withDatabaseOperation for resilience
 
 ## Data Validation
 
@@ -218,10 +243,10 @@ project:my-app → project:my-app:logs → {log1, log2, log3}
 ```
 
 ### Access Patterns
-1. **List Projects**: `SMEMBERS projects`
-2. **Get Project Details**: `HGETALL project:{id}`
-3. **List Project Logs**: `SMEMBERS project:{id}:logs`
-4. **Get Log Content**: `HGETALL log:{id}`
+1. **List Projects**: `SELECT * FROM projects ORDER BY created_at DESC`
+2. **Get Project Details**: `SELECT * FROM projects WHERE id = ?`
+3. **List Project Logs**: `SELECT * FROM logs WHERE project_id = ? ORDER BY timestamp DESC`
+4. **Get Log Content**: `SELECT * FROM logs WHERE id = ?`
 
 ## Migration & Versioning
 
@@ -233,28 +258,29 @@ project:my-app → project:my-app:logs → {log1, log2, log3}
 ### Data Consistency
 - Atomic operations for related data
 - Referential integrity maintained in application layer
-- No foreign key constraints (Redis limitation)
+- Foreign key constraints ensure referential integrity
 
 ### Backup Strategy
-- Vercel KV provides automated backups
+- Turso provides automated backups
 - Data export through API endpoints
-- Manual backup via database operations
+- SQLite database files for manual backup
 
 ## Performance Considerations
 
 ### Indexing
-- Redis sets provide O(1) membership testing
-- Hash operations are O(1) for field access
-- No secondary indexes available
+- Primary key lookups are O(log n) with B-tree indexes
+- Secondary indexes on project_id, timestamp, and api_key
+- Foreign key constraints ensure referential integrity
 
-### Memory Usage
-- All data stored in memory (Redis model)
+### Storage
+- Data stored on disk with SQLite engine
 - Content field can be large (full log text)
-- Consider pagination for large projects
+- Efficient storage with compression
 
 ### Query Optimization
-- Minimize round trips with batch operations
-- Use pipeline operations where possible
+- Use prepared statements for better performance
+- Leverage indexes for fast lookups
+- Batch operations with transactions
 - Cache frequently accessed data client-side
 
 This data model provides efficient access patterns for the log viewer while maintaining data integrity and supporting the application's use cases.
