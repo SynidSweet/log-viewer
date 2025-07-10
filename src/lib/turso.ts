@@ -14,6 +14,11 @@ export const turso = createClient({
   authToken: process.env.TURSO_AUTH_TOKEN,
 });
 
+// Auto-initialize database on import
+initializeDatabase().catch(error => {
+  console.error('Failed to initialize database:', error);
+});
+
 // Connection health check
 export async function checkDatabaseConnection(): Promise<boolean> {
   try {

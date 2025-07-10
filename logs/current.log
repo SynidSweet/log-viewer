@@ -1,0 +1,12 @@
+
+> log-viewer@0.1.0 start
+> next start
+
+   ▲ Next.js 15.3.1
+   - Local:        http://localhost:8664
+   - Network:      http://192.168.1.243:8664
+
+ ✓ Starting...
+ ✓ Ready in 813ms
+NextAuth configuration loading...
+Database schema already exists
