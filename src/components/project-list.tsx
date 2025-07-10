@@ -16,7 +16,8 @@ export function ProjectList() {
       const response = await fetch('/api/projects')
       if (response.ok) {
         const data = await response.json()
-        setProjects(data.success ? data.data : data)
+        const projects = data.success ? data.data : data
+        setProjects(Array.isArray(projects) ? projects : [])
       }
     } catch (error) {
       console.error('Failed to fetch projects', error)

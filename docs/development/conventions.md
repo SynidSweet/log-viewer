@@ -1,6 +1,6 @@
 # Development Conventions
 
-*Last updated: 2025-07-10 | Added database resilience and standardized API error handling patterns*
+*Last updated: 2025-07-10 | Added defensive programming patterns and array validation for React components*
 
 ## Code Organization
 
@@ -117,6 +117,35 @@ export function ExampleComponent({ data, onAction }: ExampleComponentProps) {
 - **Derived State**: `useMemo` for computed values
 - **Side Effects**: `useEffect` for external operations
 - **No Global State**: Currently no Redux/Zustand usage
+
+### Defensive Programming Patterns
+```typescript
+// Always validate arrays before setState to prevent .map() crashes
+const fetchData = async () => {
+  try {
+    const response = await fetch('/api/endpoint')
+    if (response.ok) {
+      const data = await response.json()
+      const items = data.success ? data.data : data
+      // CRITICAL: Validate array before setting state
+      setItems(Array.isArray(items) ? items : [])
+    }
+  } catch (error) {
+    console.error('Failed to fetch data', error)
+    setItems([]) // Always set safe fallback
+  }
+}
+
+// Alternative pattern for complex validation
+const handleApiResponse = (response: unknown) => {
+  // Validate response structure first
+  if (typeof response === 'object' && response !== null) {
+    const items = 'data' in response ? response.data : response
+    return Array.isArray(items) ? items : []
+  }
+  return []
+}
+```
 
 ### Memoization Strategy
 ```typescript
