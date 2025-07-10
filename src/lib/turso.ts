@@ -15,9 +15,15 @@ export const turso = createClient({
 });
 
 // Auto-initialize database on import
-initializeDatabase().catch(error => {
-  console.error('Failed to initialize database:', error);
-});
+console.log('Initializing Turso database...');
+initializeDatabase()
+  .then(() => {
+    console.log('Database initialization completed successfully');
+  })
+  .catch(error => {
+    console.error('Failed to initialize database:', error);
+    console.error('Database initialization error stack:', error.stack);
+  });
 
 // Connection health check
 export async function checkDatabaseConnection(): Promise<boolean> {
