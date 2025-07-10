@@ -169,7 +169,7 @@ async function main() {
     console.log('\n🎉 Database initialization completed successfully!');
     console.log(`⏱️  Duration: ${duration}ms`);
     console.log(`📊 Status: ${result.created ? 'Schema Created' : 'Schema Already Existed'}`);
-    console.log(`📋 Tables: ${result.tables.join(', ')}`);
+    console.log(`📋 Tables: projects, logs`);
     
     // Exit with success
     process.exit(0);
