@@ -1,0 +1,1 @@
+export const @/lib/api-error-handler = jest.fn();

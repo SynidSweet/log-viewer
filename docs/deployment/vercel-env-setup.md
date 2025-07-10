@@ -1,8 +1,10 @@
 # Vercel Environment Variable Setup Guide
 
+*Last updated: 2025-07-10 | Added comprehensive debugging tools and validation methods*
+
 ## Overview
 
-This guide helps resolve environment variable configuration issues in Vercel deployments, specifically for the Turso database connection.
+This guide helps resolve environment variable configuration issues in Vercel deployments, specifically for the Turso database connection. The application now includes enhanced debugging tools to help diagnose configuration issues.
 
 ## Required Environment Variables
 

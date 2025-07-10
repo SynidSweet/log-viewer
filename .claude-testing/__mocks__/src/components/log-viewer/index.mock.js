@@ -1,0 +1,9 @@
+export const react = jest.fn();
+export const @/lib/types = jest.fn();
+export const ./log-item = jest.fn();
+export const ./log-entry-list = jest.fn();
+export const ./log-entry-details = jest.fn();
+export const @/components/ui/input = jest.fn();
+export const @/components/ui/checkbox = jest.fn();
+export const @/components/ui/label = jest.fn();
+export const sonner = jest.fn();

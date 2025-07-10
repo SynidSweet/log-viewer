@@ -54,7 +54,8 @@ export function LogViewer({ projectId }: LogViewerProps) {
           throw new Error(errorData.error || `HTTP error ${response.status}`)
         }
         
-        const data = await response.json()
+        const result = await response.json()
+        const data = result.success ? result.data : result
         setLogs(Array.isArray(data) ? data : [])
       } catch (error) {
         console.error('Failed to fetch logs', error)

@@ -35,7 +35,8 @@ export function CreateProject({ onProjectCreated }: { onProjectCreated: () => vo
         throw new Error('Failed to create project')
       }
       
-      const project = await response.json()
+      const result = await response.json()
+      const project = result.success ? result.data : result
       toast.success('Project created', {
         description: `Project "${project.name}" created successfully with ID: ${project.id}`
       })

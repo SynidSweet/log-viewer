@@ -87,10 +87,10 @@ export function UploadLogsModal({ projectId, onLogsUploaded, trigger }: UploadLo
         }),
       })
       
-      const data = await response.json()
+      const result = await response.json()
       
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to upload logs')
+        throw new Error(result.error || 'Failed to upload logs')
       }
       
       // Success

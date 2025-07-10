@@ -1,0 +1,20 @@
+{
+  "name": "log-viewer-tests",
+  "version": "1.0.0",
+  "description": "Comprehensive error handling tests for Log Viewer",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:verbose": "jest --verbose",
+    "test:error-handling": "jest --testPathPattern=comprehensive"
+  },
+  "dependencies": {
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.6.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  }
+}
