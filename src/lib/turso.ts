@@ -1,5 +1,6 @@
 // lib/turso.ts
 import { createClient, type ResultSet, type InArgs } from '@libsql/client';
+import { DatabaseHealthDetails } from './types';
 
 // Environment variable validation with detailed error messages
 const TURSO_DATABASE_URL = process.env.TURSO_DATABASE_URL;
@@ -411,7 +412,7 @@ async function validateDatabaseSchema(): Promise<void> {
 }
 
 // Enhanced database health check with performance metrics
-export async function checkDatabaseHealth(): Promise<{ healthy: boolean; details: unknown }> {
+export async function checkDatabaseHealth(): Promise<{ healthy: boolean; details: DatabaseHealthDetails }> {
   try {
     const startTime = Date.now();
     
@@ -435,7 +436,7 @@ export async function checkDatabaseHealth(): Promise<{ healthy: boolean; details
       healthy: hasRequiredTables,
       details: {
         responseTime,
-        tables: tables.rows.map(row => row.name),
+        tables: tables.rows.map(row => row.name as string),
         initialized: isInitialized,
         retryCount: initializationRetryCount,
         // Performance metrics
@@ -456,6 +457,8 @@ export async function checkDatabaseHealth(): Promise<{ healthy: boolean; details
         retryCount: initializationRetryCount,
         performance: {
           cacheSize: queryCache.size,
+          lastUsed: connectionMetrics.lastUsed,
+          avgResponseTime: connectionMetrics.responseTime,
           queryCount: connectionMetrics.queryCount
         }
       }

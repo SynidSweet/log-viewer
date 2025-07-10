@@ -1,10 +1,22 @@
 import { NextResponse } from 'next/server';
 import { checkDatabaseHealth, turso } from '@/lib/turso';
 import { withApiErrorHandling } from '@/lib/api-error-handler';
+import { 
+  DeploymentReadinessCheck, 
+  HealthCheck, 
+  EnvironmentHealthDetails, 
+  SchemaHealthDetails, 
+  MigrationHealthDetails 
+} from '@/lib/types';
 
 // Comprehensive deployment readiness check
-async function checkDeploymentReadiness() {
-  const checks = {
+async function checkDeploymentReadiness(): Promise<DeploymentReadinessCheck> {
+  const checks: {
+    database: HealthCheck;
+    schema: HealthCheck;
+    environment: HealthCheck;
+    migration: HealthCheck;
+  } = {
     database: { healthy: false, details: null },
     schema: { healthy: false, details: null },
     environment: { healthy: false, details: null },
@@ -30,7 +42,7 @@ async function checkDeploymentReadiness() {
         required: envVars,
         missing: missingVars,
         present: envVars.filter(varName => !!process.env[varName])
-      }
+      } as EnvironmentHealthDetails
     };
 
     if (missingVars.length > 0) {
@@ -54,7 +66,7 @@ async function checkDeploymentReadiness() {
           required: requiredTables,
           existing: existingTables,
           missing: missingTables
-        }
+        } as SchemaHealthDetails
       };
 
       // 4. Migration status check
@@ -64,7 +76,7 @@ async function checkDeploymentReadiness() {
           WHERE type='table' AND name='migrations'
         `);
         
-        const hasMigrationsTable = migrationsResult.rows[0]?.count > 0;
+        const hasMigrationsTable = (migrationsResult.rows[0]?.count as number) > 0;
         
         if (hasMigrationsTable) {
           const migrationStatusResult = await turso.execute(
@@ -80,7 +92,7 @@ async function checkDeploymentReadiness() {
                 status: row.status,
                 executedAt: row.executed_at
               }))
-            }
+            } as MigrationHealthDetails
           };
         } else {
           checks.migration = {
@@ -88,34 +100,34 @@ async function checkDeploymentReadiness() {
             details: {
               tracking: false,
               message: 'Migration tracking not yet initialized'
-            }
+            } as MigrationHealthDetails
           };
         }
-      } catch (migrationError) {
+      } catch (migrationError: unknown) {
         checks.migration = {
           healthy: false,
           details: {
             error: 'Failed to check migration status',
-            message: migrationError.message
-          }
+            message: migrationError instanceof Error ? migrationError.message : 'Unknown error'
+          } as MigrationHealthDetails
         };
       }
     } else {
       checks.schema.healthy = false;
-      checks.schema.details = { error: 'Database client not available' };
+      checks.schema.details = { error: 'Database client not available' } as SchemaHealthDetails;
       
       checks.migration.healthy = false;
-      checks.migration.details = { error: 'Database client not available' };
+      checks.migration.details = { error: 'Database client not available' } as MigrationHealthDetails;
     }
 
     const allHealthy = Object.values(checks).every(check => check.healthy);
     return { healthy: allHealthy, checks };
 
-  } catch (error) {
+  } catch (error: unknown) {
     return {
       healthy: false,
       checks,
-      error: error.message
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }
