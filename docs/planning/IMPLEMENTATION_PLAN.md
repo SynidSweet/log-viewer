@@ -1422,4 +1422,106 @@ The Universal Log Viewer is in a **production-ready state** with core functional
 **Dependencies**: Database initialization script fix (completed)  
 **Status**: Ready for implementation
 
+## Critical UI Issues from Investigation (2025-07-10)
+
+### IMPL-UI-001: Fix Log Content Fetching API Response Unwrapping
+**Task ID**: IMPL-UI-001  
+**Priority**: Critical  
+**Complexity**: 🟢 Simple (~15 minutes)  
+**Type**: Bug Fix  
+
+**Description**: Log entries don't display because `fetchLogContent` doesn't unwrap the API response structure. The API returns `{success: true, data: {...}}` but the code expects direct log data.
+
+**Root Cause**: API response handling inconsistency - some endpoints unwrap correctly, others don't.
+
+**Implementation Steps**:
+1. Update `fetchLogContent` in `/src/components/log-viewer/index.tsx` line 183
+2. Change `setSelectedLog(logData)` to `setSelectedLog(logData.success ? logData.data : logData)`
+3. Test with existing demo logs
+
+**Success Criteria**:
+- [ ] Log entries display when clicking logs in left panel
+- [ ] Parsed log content appears in middle panel  
+- [ ] JSON tree displays in right panel when selecting entries
+- [ ] No console errors during log selection
+
+**Files to Modify**: `/src/components/log-viewer/index.tsx`  
+**Estimated Time**: 15 minutes  
+**Dependencies**: None  
+**Status**: Ready for immediate implementation
+
+### IMPL-API-002: Create Standardized API Response Utility
+**Task ID**: IMPL-API-002  
+**Priority**: High  
+**Complexity**: 🟡 Moderate (~1 hour)  
+**Type**: Systematic Improvement  
+
+**Description**: Create standardized utility for handling wrapped API responses to prevent similar issues and improve code consistency.
+
+**Implementation Steps**:
+1. Create `/src/lib/api-utils.ts` with response unwrapping utilities
+2. Add TypeScript interfaces for API response wrappers
+3. Update all API calls to use standardized unwrapping
+4. Add error handling for malformed responses
+
+**Success Criteria**:
+- [ ] All API calls use consistent response handling
+- [ ] TypeScript catches response structure mismatches
+- [ ] Centralized error handling for API responses
+- [ ] Documentation for API response patterns
+
+**Files to Create**: `/src/lib/api-utils.ts`  
+**Files to Modify**: All components with API calls  
+**Estimated Time**: 1 hour  
+**Dependencies**: IMPL-UI-001 (immediate fix first)  
+**Status**: Execute after immediate fix
+
+### TEST-API-001: Add API Response Handling Integration Tests
+**Task ID**: TEST-API-001  
+**Priority**: Medium  
+**Complexity**: 🟡 Moderate (~1.5 hours)  
+**Type**: Testing Infrastructure  
+
+**Description**: Add comprehensive tests for API response handling to catch similar issues before deployment.
+
+**Implementation Steps**:
+1. Create test suite for API response unwrapping utilities
+2. Add integration tests for log fetching and display
+3. Mock API responses to test both wrapped and unwrapped formats
+4. Add tests for error scenarios and malformed responses
+
+**Success Criteria**:
+- [ ] Tests catch API response structure mismatches
+- [ ] Integration tests verify log display functionality
+- [ ] Error scenarios properly tested
+- [ ] Tests run in CI/CD pipeline
+
+**Estimated Time**: 1.5 hours  
+**Dependencies**: IMPL-API-002 (utilities exist)  
+**Status**: Execute after API utilities created
+
+### IMPL-ERROR-006: Enhanced Log Parsing Error Messages
+**Task ID**: IMPL-ERROR-006  
+**Priority**: Low  
+**Complexity**: 🟢 Simple (~30 minutes)  
+**Type**: User Experience  
+
+**Description**: Add better error messages when log parsing fails instead of silent "No entries match your filters".
+
+**Implementation Steps**:
+1. Add error state tracking to log parsing
+2. Display specific error messages for parsing failures
+3. Add console warnings for debugging
+4. Provide user-friendly guidance for common issues
+
+**Success Criteria**:
+- [ ] Clear error messages when log parsing fails
+- [ ] Developer console shows debugging information
+- [ ] Users get actionable guidance for issues
+- [ ] Distinguishes between "no logs" and "parsing errors"
+
+**Estimated Time**: 30 minutes  
+**Dependencies**: IMPL-UI-001 (basic functionality working)  
+**Status**: Execute after immediate fix
+
 This implementation plan focuses on making the Universal Log Viewer more robust, reliable, and maintainable without adding new features or expanding scope beyond core functionality.

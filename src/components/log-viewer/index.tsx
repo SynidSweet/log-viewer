@@ -173,7 +173,9 @@ export function LogViewer({ projectId }: LogViewerProps) {
         throw new Error(`HTTP error ${response.status}`)
       }
       
-      const logData = await response.json()
+      const response_1 = await response.json()
+      // Fix: Unwrap API response structure (API returns {success: true, data: {...}})
+      const logData = response_1.success ? response_1.data : response_1
       
       // Store in cache
       if (logData.content) {
