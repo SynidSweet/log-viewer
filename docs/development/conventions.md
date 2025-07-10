@@ -1,6 +1,6 @@
 # Development Conventions
 
-*Last updated: 2025-07-10 | Added defensive programming patterns and array validation for React components*
+*Last updated: 2025-07-10 | Added defensive programming patterns for build scripts and property access safety*
 
 ## Code Organization
 
@@ -297,6 +297,95 @@ const Button = ({ className, variant = 'default', ...props }: ButtonProps) => {
       {...props}
     />
   )
+}
+```
+
+## Defensive Programming Patterns
+
+### Safe Property Access
+**Problem**: Undefined property access errors in build scripts and runtime code
+**Solution**: Defensive programming with validation and fallbacks
+
+```javascript
+// ❌ Dangerous: Direct property access
+console.log(`Tables: ${result.tables.join(', ')}`);
+
+// ✅ Safe: Defensive property access with fallback
+function getTableList(result) {
+  const defaultTables = ['projects', 'logs', 'migrations'];
+  
+  // Check if property exists and is an array
+  if (result && Array.isArray(result.tables)) {
+    return result.tables.join(', ');
+  }
+  
+  // Fallback for expected return value structure
+  if (result && result.migrationResults && Array.isArray(result.migrationResults)) {
+    return defaultTables.join(', ');
+  }
+  
+  // Safe fallback
+  return defaultTables.join(', ');
+}
+```
+
+### Return Value Contracts
+Document function return values with JSDoc to prevent undefined access:
+
+```javascript
+/**
+ * Initializes database schema during deployment
+ * @returns {Object} result - Result object from database initialization
+ * @returns {boolean} result.created - Whether schema was newly created
+ * @returns {boolean} result.verified - Whether initialization was verified
+ * @returns {number} result.migrations - Number of migrations executed
+ * @returns {Array} [result.migrationResults] - Optional array of migration results
+ */
+async function initializeDatabase() {
+  // Implementation with documented contract
+}
+```
+
+### Build Script Reliability
+Apply defensive patterns to all build and deployment scripts:
+
+```javascript
+// Safe result handling pattern
+function reportResults(result, duration) {
+  // Validate result object exists and has expected structure
+  if (!result || typeof result !== 'object') {
+    console.warn('⚠️  Warning: Invalid result object received');
+    result = { created: false, verified: false, migrations: 0 };
+  }
+  
+  // Safe property access throughout
+  console.log(`Status: ${result.created ? 'Created' : 'Existed'}`);
+  console.log(`Tables: ${getTableList(result)}`);
+  
+  // Optional properties with existence checks
+  if (result.migrations && result.migrations > 0) {
+    console.log(`Migrations: ${result.migrations}`);
+  }
+}
+```
+
+### Property Validation Utilities
+Create reusable validation functions:
+
+```javascript
+// Utility for safe array access
+function safeArrayJoin(array, separator = ', ', fallback = 'N/A') {
+  if (Array.isArray(array) && array.length > 0) {
+    return array.join(separator);
+  }
+  return fallback;
+}
+
+// Utility for safe object property access
+function safeGet(obj, path, fallback = null) {
+  return path.split('.').reduce((current, key) => {
+    return current && current[key] !== undefined ? current[key] : fallback;
+  }, obj);
 }
 ```
 

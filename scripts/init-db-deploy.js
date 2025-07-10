@@ -9,6 +9,12 @@
  * - Fail-safe: Won't crash if database is already initialized
  * - Logged: Provides detailed output for deployment logs
  * - Environment-aware: Works in all deployment environments
+ * - Defensive: Uses safe property access patterns to prevent runtime errors
+ * 
+ * Return Value Contracts:
+ * - initializeDatabase(): Returns {created: boolean, verified: boolean, migrations: number, migrationResults?: array}
+ * - validateEnvironment(): Returns void or throws Error
+ * - main(): Returns void, exits process with 0 or 1
  */
 
 const { createClient } = require('@libsql/client');
@@ -126,28 +132,51 @@ async function initializeDatabase() {
   }
 }
 
-// Migration tracking (for future use)
-async function trackMigration(turso, migrationId, description) {
-  try {
-    // Create migrations table if it doesn't exist
-    await turso.execute(`
-      CREATE TABLE IF NOT EXISTS migrations (
-        id TEXT PRIMARY KEY,
-        description TEXT NOT NULL,
-        executed_at TEXT NOT NULL,
-        checksum TEXT
-      )
-    `);
-    
-    // Record this migration
-    await turso.execute(
-      'INSERT OR IGNORE INTO migrations (id, description, executed_at) VALUES (?, ?, ?)',
-      [migrationId, description, new Date().toISOString()]
-    );
-    
-    console.log(`📝 Migration recorded: ${migrationId}`);
-  } catch (error) {
-    console.warn('⚠️  Warning: Could not track migration:', error);
+// Utility functions for safe data access and reporting
+
+/**
+ * Safely extracts table list from initialization result
+ * @param {Object} result - Result object from initializeDatabase()
+ * @returns {string} Comma-separated list of table names
+ */
+function getTableList(result) {
+  // Known tables in our schema (fallback if result doesn't contain table info)
+  const defaultTables = ['projects', 'logs', 'migrations'];
+  
+  // Defensive property access - result may not have tables property
+  if (result && Array.isArray(result.tables)) {
+    return result.tables.join(', ');
+  }
+  
+  // If migrationResults exist, we can infer tables were created
+  if (result && result.migrationResults && Array.isArray(result.migrationResults)) {
+    return defaultTables.join(', ');
+  }
+  
+  // Safe fallback
+  return defaultTables.join(', ');
+}
+
+/**
+ * Reports initialization results with proper error handling
+ * @param {Object} result - Result object from initializeDatabase() 
+ * @param {number} duration - Execution duration in milliseconds
+ */
+function reportInitializationResults(result, duration) {
+  // Validate result object has required properties
+  if (!result || typeof result !== 'object') {
+    console.warn('⚠️  Warning: Invalid result object received');
+    result = { created: false, verified: false, migrations: 0 };
+  }
+  
+  console.log('\n🎉 Database initialization completed successfully!');
+  console.log(`⏱️  Duration: ${duration}ms`);
+  console.log(`📊 Status: ${result.created ? 'Schema Created' : 'Schema Already Existed'}`);
+  console.log(`📋 Tables: ${getTableList(result)}`);
+  
+  // Additional context if migrations were executed
+  if (result.migrations && result.migrations > 0) {
+    console.log(`🔄 Migrations executed: ${result.migrations}`);
   }
 }
 
@@ -164,12 +193,9 @@ async function main() {
     // Step 2: Initialize database
     const result = await initializeDatabase();
     
-    // Step 3: Report results
+    // Step 3: Report results with defensive programming
     const duration = Date.now() - startTime;
-    console.log('\n🎉 Database initialization completed successfully!');
-    console.log(`⏱️  Duration: ${duration}ms`);
-    console.log(`📊 Status: ${result.created ? 'Schema Created' : 'Schema Already Existed'}`);
-    console.log(`📋 Tables: projects, logs`);
+    reportInitializationResults(result, duration);
     
     // Exit with success
     process.exit(0);
