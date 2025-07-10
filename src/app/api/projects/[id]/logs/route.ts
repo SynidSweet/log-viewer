@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getProjectLogs } from '@/lib/db';
+import { getProjectLogs } from '@/lib/db-turso';
 
 // GET /api/projects/[id]/logs
 export async function GET(

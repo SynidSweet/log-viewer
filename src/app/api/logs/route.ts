@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getProject, createLog } from '@/lib/db';
+import { getProject, createLog } from '@/lib/db-turso';
 
 // Validate log entry format: [DATE, TIME] [LEVEL] MESSAGE - DATA
 function validateLogFormat(logContent: string): { valid: boolean; error?: string } {

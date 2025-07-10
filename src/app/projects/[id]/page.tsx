@@ -1,6 +1,6 @@
 // app/projects/[id]/page.tsx
 import { notFound } from 'next/navigation'
-import { getProject } from '@/lib/db'
+import { getProject } from '@/lib/db-turso'
 import { ProjectContent } from './project-content'
 
 type Params = Promise<{ id: string }>

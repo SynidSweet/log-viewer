@@ -1,6 +1,6 @@
 // app/api/projects/route.ts
 import { NextResponse } from 'next/server';
-import { createProject, getProjects, getProject } from '@/lib/db';
+import { createProject, getProjects, getProject } from '@/lib/db-turso';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
