@@ -1,0 +1,23 @@
+
+> log-viewer@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.3.1 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.243:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+Slow filesystem detected. If /code/personal/log-viewer/.next is a network drive, consider moving it to a local folder. If you have an antivirus enabled, consider excluding your project directory.
+ ✓ Compiled middleware in 453ms
+ ✓ Ready in 2.2s
+ ○ Compiling /api/init-db ...
+ ✓ Compiled /api/init-db in 1356ms
+Initializing database schema...
+Existing tables: [ { name: 'projects' }, { name: 'logs' } ]
+Database schema already exists
+ POST /api/init-db 200 in 2120ms
+ ○ Compiling /api/health ...
+ ✓ Compiled /api/health in 573ms
+ GET /api/health 200 in 913ms
+[?25h

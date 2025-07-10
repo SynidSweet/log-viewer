@@ -48,7 +48,8 @@ export function EditProjectModal({ project, onProjectUpdated, trigger }: EditPro
         try {
           const response = await fetch(`/api/projects/${project.id}/logs/check`)
           if (response.ok) {
-            const data = await response.json()
+            const result = await response.json()
+            const data = result.success ? result.data : result
             setHasLogs(data.hasLogs)
           }
         } catch (error) {
@@ -76,12 +77,13 @@ export function EditProjectModal({ project, onProjectUpdated, trigger }: EditPro
         body: JSON.stringify(formData)
       })
       
-      const data = await response.json()
+      const result = await response.json()
       
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to update project')
+        throw new Error(result.error || 'Failed to update project')
       }
       
+      const data = result.success ? result.data : result
       toast.success('Project updated', {
         description: `Project "${data.name}" updated successfully`
       })

@@ -4,11 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "npm run db:init && next build",
     "start": "next start",
     "lint": "next lint",
     "setup:turso": "node scripts/setup-turso.js",
-    "verify-env": "node scripts/verify-env.js"
+    "verify-env": "node scripts/verify-env.js",
+    "db:init": "node scripts/init-db-deploy.js",
+    "db:migrate": "node scripts/migrate.js run",
+    "db:status": "node scripts/migrate.js status",
+    "postinstall": "npm run db:init"
   },
   "dependencies": {
     "@libsql/client": "^0.15.9",

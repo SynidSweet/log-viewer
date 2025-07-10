@@ -8,13 +8,36 @@ const TURSO_AUTH_TOKEN = process.env.TURSO_AUTH_TOKEN;
 // Check environment variables but don't throw at module level
 const hasRequiredEnvVars = !!(TURSO_DATABASE_URL && TURSO_AUTH_TOKEN);
 
+// Validate environment variable format for better error reporting
+function validateTursoConfig(): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+  
+  if (!TURSO_DATABASE_URL) {
+    errors.push('TURSO_DATABASE_URL is missing');
+  } else if (!TURSO_DATABASE_URL.startsWith('libsql://')) {
+    errors.push('TURSO_DATABASE_URL must start with "libsql://"');
+  }
+  
+  if (!TURSO_AUTH_TOKEN) {
+    errors.push('TURSO_AUTH_TOKEN is missing');
+  } else if (TURSO_AUTH_TOKEN.length < 32) {
+    errors.push('TURSO_AUTH_TOKEN appears to be invalid (too short)');
+  }
+  
+  return { valid: errors.length === 0, errors };
+}
+
+// Detailed environment validation for debugging
+const configValidation = validateTursoConfig();
+
 // Log environment variable status for debugging
-if (!hasRequiredEnvVars) {
-  console.error('[Turso] Missing required environment variables:', {
+if (!hasRequiredEnvVars || !configValidation.valid) {
+  console.error('[Turso] Database configuration issues detected:', {
     TURSO_DATABASE_URL: TURSO_DATABASE_URL ? 'Set' : 'Missing',
     TURSO_AUTH_TOKEN: TURSO_AUTH_TOKEN ? 'Set' : 'Missing',
     NODE_ENV: process.env.NODE_ENV,
     VERCEL: process.env.VERCEL,
+    validationErrors: configValidation.errors,
   });
 }
 
@@ -106,7 +129,11 @@ export async function executeQuery(sql: string, args?: InArgs, useCache: boolean
   }
   
   try {
-    const result = args ? await turso!.execute({ sql, args }) : await turso!.execute(sql);
+    if (!turso) {
+      throw createDatabaseError('connection', 'Database client not available - check environment configuration');
+    }
+    
+    const result = args ? await turso.execute({ sql, args }) : await turso.execute(sql);
     
     // Update metrics
     const responseTime = Date.now() - startTime;
@@ -125,7 +152,43 @@ export async function executeQuery(sql: string, args?: InArgs, useCache: boolean
     return result;
   } catch (error) {
     console.error('Query execution failed:', { sql, args, error });
-    throw error;
+    
+    // Classify database errors for better error reporting
+    if (error instanceof Error) {
+      const message = error.message.toLowerCase();
+      
+      // Connection-related errors
+      if (message.includes('connect') || message.includes('network') || message.includes('timeout')) {
+        throw createDatabaseError('connection', `Database connection failed: ${error.message}`, error);
+      }
+      
+      // Authentication errors
+      if (message.includes('unauthorized') || message.includes('authentication') || message.includes('token')) {
+        throw createDatabaseError('connection', `Database authentication failed: ${error.message}`, error);
+      }
+      
+      // Schema errors
+      if (message.includes('no such table') || message.includes('no such column')) {
+        throw createDatabaseError('schema', `Database schema error: ${error.message}`, error);
+      }
+      
+      // Constraint errors
+      if (message.includes('constraint') || message.includes('foreign key') || message.includes('unique')) {
+        throw createDatabaseError('validation', `Database constraint violation: ${error.message}`, error);
+      }
+      
+      // SQLite-specific errors
+      if (message.includes('syntax error') || message.includes('near')) {
+        throw createDatabaseError('query', `SQL syntax error: ${error.message}`, error);
+      }
+      
+      if (message.includes('database is locked') || message.includes('database is busy')) {
+        throw createDatabaseError('query', `Database busy: ${error.message}`, error);
+      }
+    }
+    
+    // Generic query error
+    throw createDatabaseError('query', `Query execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`, error);
   }
 }
 
@@ -157,6 +220,26 @@ export function createDatabaseError(type: DatabaseError['type'], message: string
 
 // Request-level database readiness guard
 export async function ensureDatabaseReady(): Promise<void> {
+  // First check if environment variables are properly configured
+  if (!hasRequiredEnvVars) {
+    const missingVars = [];
+    if (!TURSO_DATABASE_URL) missingVars.push('TURSO_DATABASE_URL');
+    if (!TURSO_AUTH_TOKEN) missingVars.push('TURSO_AUTH_TOKEN');
+    
+    throw createDatabaseError('connection', 
+      `Missing required environment variables: ${missingVars.join(', ')}. ` +
+      'Configure these variables in your deployment environment and redeploy.'
+    );
+  }
+  
+  // Check configuration validity
+  if (!configValidation.valid) {
+    throw createDatabaseError('connection', 
+      `Invalid database configuration: ${configValidation.errors.join(', ')}. ` +
+      'Check your environment variables format and update them.'
+    );
+  }
+  
   if (isInitialized) {
     return;
   }
@@ -251,38 +334,47 @@ export async function initializeDatabase(): Promise<void> {
     if (missingTables.length > 0) {
       console.log(`Creating missing tables: ${missingTables.join(', ')}`);
       
-      // Create schema with proper error handling
-      const schema = `
-        CREATE TABLE IF NOT EXISTS projects (
-          id TEXT PRIMARY KEY,
-          name TEXT NOT NULL,
-          description TEXT DEFAULT '',
-          created_at TEXT NOT NULL,
-          api_key TEXT NOT NULL UNIQUE
-        );
+      try {
+        // Create schema with proper error handling
+        const schema = `
+          CREATE TABLE IF NOT EXISTS projects (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            description TEXT DEFAULT '',
+            created_at TEXT NOT NULL,
+            api_key TEXT NOT NULL UNIQUE
+          );
 
-        CREATE TABLE IF NOT EXISTS logs (
-          id TEXT PRIMARY KEY,
-          project_id TEXT NOT NULL,
-          content TEXT NOT NULL,
-          comment TEXT DEFAULT '',
-          timestamp TEXT NOT NULL,
-          is_read BOOLEAN DEFAULT FALSE,
-          FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
-        );
+          CREATE TABLE IF NOT EXISTS logs (
+            id TEXT PRIMARY KEY,
+            project_id TEXT NOT NULL,
+            content TEXT NOT NULL,
+            comment TEXT DEFAULT '',
+            timestamp TEXT NOT NULL,
+            is_read BOOLEAN DEFAULT FALSE,
+            FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+          );
 
-        CREATE INDEX IF NOT EXISTS idx_logs_project_id ON logs(project_id);
-        CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON logs(timestamp);
-        CREATE INDEX IF NOT EXISTS idx_logs_is_read ON logs(is_read);
-        CREATE INDEX IF NOT EXISTS idx_projects_api_key ON projects(api_key);
-      `;
-      
-      if (!turso) {
-        throw createDatabaseError('connection', 'Database client not available');
+          CREATE INDEX IF NOT EXISTS idx_logs_project_id ON logs(project_id);
+          CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON logs(timestamp);
+          CREATE INDEX IF NOT EXISTS idx_logs_is_read ON logs(is_read);
+          CREATE INDEX IF NOT EXISTS idx_projects_api_key ON projects(api_key);
+        `;
+        
+        if (!turso) {
+          throw createDatabaseError('connection', 'Database client not available - check environment configuration');
+        }
+        
+        await turso.executeMultiple(schema);
+        console.log('Database schema created successfully');
+      } catch (schemaError) {
+        console.error('Failed to create database schema:', schemaError);
+        throw createDatabaseError('schema', 
+          `Failed to create database tables: ${missingTables.join(', ')}. ` +
+          `Error: ${schemaError instanceof Error ? schemaError.message : 'Unknown error'}`, 
+          schemaError
+        );
       }
-      
-      await turso!.executeMultiple(schema);
-      console.log('Database schema created successfully');
     } else {
       console.log('Database schema validation passed');
     }
