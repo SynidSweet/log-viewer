@@ -1,25 +1,30 @@
 # Project Context & AI Agent Guide
 
-*Last updated: 2025-07-10 | Fixed critical database initialization script reliability - prevented build failures from undefined property access*
+*Last updated: 2025-07-17 | Completed smooth sort animations implementation, sprint now 92.3% complete*
 
 ## 🎯 Project Overview
 
 ### Core Purpose
-Universal Log Viewer is a Next.js web application that provides secure log management via REST API with Google OAuth authentication and multi-project support.
+Universal Log Viewer is a Next.js web application that provides secure log management - external applications send logs via REST API while authenticated users view and analyze them through a web interface.
 
-**Current Status**: ✅ **FULLY OPERATIONAL** - Production system validated with 223ms database response time, all APIs working, comprehensive testing completed
+**Current Status**: Active development with core features implemented
+
+### Key Value Proposition
+- **Hybrid Security**: UI requires Google OAuth, API uses project-specific keys
+- **Multi-line Log Support**: Handle complex log submissions with multiple entries
+- **Real-time Analysis**: Client-side parsing for flexible log format handling
+- **Scalable Architecture**: Built on Turso SQLite for performance and reliability
 
 ## 🏗️ Architecture & Technical Stack
 
 ### Quick Overview
-**Stack**: Next.js 15.3.1, React 19, TypeScript, Turso SQLite, NextAuth.js, Tailwind CSS v4, shadcn/ui components
+**Stack**: Next.js 15.3.1, React 19, TypeScript, Turso SQLite, NextAuth.js, Tailwind CSS v4, shadcn/ui
 
-**Key Features**:
-- Public REST API for log submission with API key authentication
-- Google OAuth-secured UI for log viewing
-- Multi-project support with isolated log storage
-- Real-time log parsing and filtering
-- Three-column UI: Projects → Logs → Log Details
+**Key Patterns**:
+- **App Router** with server-side rendering
+- **Repository Pattern** for database abstraction
+- **Client-side Parsing** for log format flexibility
+- **Component-based UI** with shadcn/ui atomic components
 
 📖 **See detailed architecture**: [`./docs/architecture/overview.md`](./docs/architecture/overview.md)
 
@@ -27,140 +32,177 @@ Universal Log Viewer is a Next.js web application that provides secure log manag
 
 **Setup**:
 ```bash
-npm install        # Includes automatic database initialization
-npm run dev        # Development with Turbopack
-npm run build      # Production build with database setup
-npm run lint       # ESLint validation
-npm run verify-env # Environment variable validation
-npm run db:init    # Manual database initialization
-npm run db:migrate # Run pending migrations
-npm run db:status  # Check migration status
+npm install
+npm run dev        # Development server with Turbopack
 ```
 
-**API Usage**:
+**Main Commands**:
 ```bash
-POST /api/logs
-{
-  "projectId": "project-id",
-  "apiKey": "api-key", 
-  "content": "[2025-04-29, 08:40:24] [LOG] Message - {\"data\": \"value\"}",
-  "comment": "optional"
-}
+npm run build      # Production build with DB init
+npm run start      # Production server
+npm run lint       # ESLint validation
+npm run db:init    # Initialize database
+npm run db:migrate # Run migrations
 ```
 
-📖 **See development workflow**: [`./docs/development/workflow.md`](./docs/development/workflow.md)
+📖 **See development workflow**: [`./docs/development/workflow.md`](./docs/development/workflow.md)  
+📖 **See testing guide**: [`./docs/development/testing.md`](./docs/development/testing.md)
 
 ## ⚠️ Critical Constraints
 
-- **Hybrid Security**: UI requires Google OAuth, API uses project-specific keys
-- **Log Format**: Strict regex validation on submission: `[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE - DATA`
-- **Data Storage**: Turso (SQLite) with automatic retry and resilience patterns via withDatabaseOperation wrapper
-- **Client-Side Parsing**: Raw logs stored, parsed in browser for flexibility
-- **Database Resilience**: Lazy initialization with automatic retry mechanisms
+- **Database**: Turso SQLite with specific initialization requirements
+- **Authentication**: Google OAuth for UI access, API keys for log submission
+- **Log Format**: Strict validation pattern required: `[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE - DATA`
+- **Multi-line Support**: Single API calls can contain multiple log entries separated by newlines
 
 ## 📍 Where to Find Things
 
 ### Key Files & Locations
-- **API Routes**: `/src/app/api/` - REST endpoints for logs and projects
-- **Core Components**: `/src/components/log-viewer/` - Main UI system
-- **Database Layer**: `/src/lib/db-turso.ts` - Turso database operations
-- **Error Handling**: `/src/lib/api-error-handler.ts` - Centralized API error handling with structured responses
-- **Type Definitions**: `/src/lib/types.ts` - TypeScript interfaces
-- **Authentication**: `/src/middleware.ts` - NextAuth.js integration
-- **Debug Endpoints**: `/src/app/api/env-check/` & `/src/app/api/debug/` - Production debugging tools with environment validation
-- **Deployment Scripts**: `/scripts/init-db-deploy.js`, `/scripts/migrate.js` - Automated database initialization and migration system
-- **Migration Files**: `/scripts/migrations/` - Versioned database schema changes
-- **Environment Scripts**: `/scripts/verify-env.js` - Environment validation utility
+- **API Routes**: `src/app/api/` - REST endpoints for logs and projects
+- **Database Layer**: `src/lib/db-turso.ts` - All database operations
+- **Log Viewer**: `src/components/log-viewer/` - Complex log viewing system
+- **Authentication**: `src/app/api/auth/[...nextauth]/route.ts` - NextAuth.js setup
+- **Types**: `src/lib/types.ts` - TypeScript definitions
+- **Tests**: `.claude-testing/` - Comprehensive test suite (Jest + React Testing Library)
+- **Test Helpers**: `.claude-testing/test-helpers/` - Server Component testing utilities
 
-### Database Schema (Turso SQLite)
-- `projects` table - Project metadata with API keys
-- `logs` table - Log entries with foreign key to projects
-- `migrations` table - Migration tracking with execution history
-- Indexes on project_id, timestamp, and api_key for performance
-- **Automated initialization** via deployment scripts and migration system
-- **All operations wrapped** with withDatabaseOperation for resilience
+### Database Schema
+- **Projects**: `id, name, description, created_at, api_key`
+- **Logs**: `id, project_id, timestamp, comment, is_read, content`
+- **Migrations**: Automated schema management with tracking
 
-📖 **See planning**: [`./docs/planning/`](./docs/planning/) for current tasks
+📖 **See data models**: [`./docs/architecture/data-models.md`](./docs/architecture/data-models.md)
+
+## 🔌 API Integration
+
+### Log Submission Endpoint
+```javascript
+POST /api/logs
+{
+  "projectId": "project-id",
+  "apiKey": "api-key", 
+  "content": "[2025-07-16, 14:30:00] [LOG] User login successful - {\"userId\": \"123\", \"ip\": \"192.168.1.1\", \"_tags\": [\"auth\", \"user-action\"]}",
+  "comment": "Optional description"
+}
+```
+
+### Log Format Requirements
+- **Pattern**: `[YYYY-MM-DD, HH:MM:SS] [LEVEL] MESSAGE - DATA`
+- **Levels**: LOG, ERROR, INFO, WARN, DEBUG - ✅ DEBUG validated with purple badges
+- **Multi-line**: Multiple entries separated by newlines in single request
+- **Data Section**: Optional JSON data after hyphen delimiter
+- **Tag Support**: Include `_tags` array in JSON data for tag-based filtering
+
+📖 **See API reference**: [`./docs/commands/api-reference.md`](./docs/commands/api-reference.md)
+
+## 🎨 UI Architecture
+
+### Component Structure
+- **Three-Column Layout**: Projects → Logs → Details
+- **Responsive Design**: Tailwind breakpoints for mobile/desktop
+- **State Management**: React local state, no global state library
+- **Memoized Operations**: Filtering and parsing optimized with useMemo
+- **Keyboard Navigation**: Shortcuts for power users (press 's' to toggle sort) - ✅ Validated working
+
+### Key Components
+- **LogViewer**: Main interface at `src/components/log-viewer/index.tsx`
+- **ProjectList**: Project selection and management
+- **LogEntryList**: Filterable log display with sort controls, tag badges, and smooth animations
+- **JsonTree**: Structured data visualization
+- **localStorage Persistence**: User preferences saved across sessions
+
+### Animation Features
+- **Sort Transitions**: Smooth CSS animations for log reordering (300ms fadeInSlide + 400ms staggered entries)
+- **Visual Polish**: Hardware-accelerated transforms with subtle hover effects
+- **Keyboard Integration**: Animations work seamlessly with 's' key sort toggle
+
+### Tag Support
+- **Tag Parsing**: Extracts `_tags` from JSON log details automatically
+- **Tag Display**: Shows tags as badges in log entry list (top-right corner)
+- **Tag Filtering**: ✅ **Complete** - Multi-select dropdown with full functionality
+  - **OR Logic**: Shows entries with ANY selected tags
+  - **Multi-select UI**: Dropdown with checkboxes, search, and bulk actions
+  - **Performance**: Memoized filtering with `useMemo`
+  - **State Management**: Integrated with existing `entryFilters`
+  - **User Experience**: Badge count indicator, click-outside-to-close, keyboard accessible
+  - **Validation**: ✅ Confirmed working with multi-select, search, and bulk operations
+
+## 🚀 Environment & Deployment
+
+### Required Environment Variables
+```bash
+# Database
+TURSO_DATABASE_URL
+TURSO_AUTH_TOKEN
+
+# Authentication  
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+NEXTAUTH_SECRET
+NEXTAUTH_URL
+
+# Optional Access Control
+ALLOWED_EMAILS
+ALLOWED_DOMAINS
+```
+
+### Deployment Process
+1. Set environment variables
+2. Run `npm run build` (includes DB initialization)
+3. Deploy to Vercel or compatible platform
+4. Verify health endpoints: `/api/health`, `/api/env-check`
+
+📖 **See deployment details**: [`./docs/deployment/`](./docs/deployment/)
 
 ## 💡 AI Agent Guidelines
 
 ### Essential Workflow
-1. Read this PROJECT_CONTEXT.md first for navigation
-2. Check `/docs/` modules for detailed information
-3. Follow patterns in `/docs/development/conventions.md`
-4. Test with both `npm run lint` and `npm run build`
+1. **Read this PROJECT_CONTEXT.md** first for navigation
+2. **Check `/docs/` modules** for detailed information  
+3. **Follow patterns** in `/docs/development/conventions.md`
+4. **Test API endpoints** with proper authentication
+5. **Validate log formats** before submission
 
-### Component Patterns
-- **Three-Column Layout**: Projects list → Logs list → Log details
-- **Client-Side Caching**: Log content cached to avoid re-fetching
-- **Memoized Operations**: Heavy parsing operations use React.useMemo
-- **Repository Pattern**: All DB operations in `/src/lib/db-turso.ts`
-- **Error Handling**: Standardized API error responses via `withApiErrorHandling` wrapper
+### Development Best Practices
+- **Database Operations**: Always use repository pattern in `lib/db-turso.ts`
+- **Error Handling**: Implement proper error boundaries and API responses
+- **Type Safety**: Leverage TypeScript strictly throughout
+- **Component Patterns**: Follow shadcn/ui conventions for UI components
+- **Testing**: Use comprehensive testing infrastructure in `.claude-testing/` directory
+- **Server Component Testing**: Test as functions, not with render() - check JSX structure directly
+- **Client Component Testing**: Mock all Next.js dependencies before rendering
 
-### API Integration
-- **Log Submission**: External systems POST to `/api/logs` with API key
-- **Log Viewing**: Authenticated users fetch via `/api/projects/{id}/logs`
-- **Multi-line Support**: Single request can contain multiple log entries
-- **Extended Data**: Include `_extended` field in JSON for separate tab display
+### Critical Integration Points
+- **Database Initialization**: Required before any database operations
+- **Authentication Flow**: NextAuth.js handles OAuth, API keys for external access
+- **Log Parsing**: Client-side parsing allows flexible log format handling
+- **Multi-line Processing**: Handle complex log submissions with multiple entries
+- **Testing Infrastructure**: Claude-testing-infrastructure v2.0 with JSX/TypeScript support configured
 
-### Security Model
-- **Public API**: `/api/logs` accepts logs with project API key validation
-- **Protected UI**: All UI routes require Google OAuth except auth pages
-- **Middleware**: `/src/middleware.ts` handles authentication routing
-- **Environment Variables**: Google OAuth, Turso database, and access control settings
-
-### ✅ Recently Resolved Production Issues
-- **Database Connection**: Fixed environment variable handling with graceful fallbacks
-- **Error Reporting**: Added comprehensive error messages with actionable guidance
-- **Deployment Process**: Created environment validation tools and documentation
-- **Debugging**: Added `/api/env-check` and enhanced `/api/debug` endpoints
-
-📖 **See critical tasks**: [`./docs/planning/IMPLEMENTATION_PLAN.md`](./docs/planning/IMPLEMENTATION_PLAN.md) for immediate action items
-
-### Development Notes
-- **Testing Infrastructure**: Claude Testing Infrastructure v2.0 setup in `.claude-testing/`
-- **Test Coverage**: 22 comprehensive error handling tests with 100% pass rate
-- **Turbopack**: Used for development server performance
-- **Tailwind v4**: PostCSS configuration for styling
-- **shadcn/ui**: Radix UI-based component library
-- **Client-Side State**: Local React state, no global state management
-
-## Recent Updates
-- **2025-07-10**: ✅ **DATABASE SCRIPT RELIABILITY FIX** - Fixed critical undefined property access in `/scripts/init-db-deploy.js` that was blocking production deployments, added defensive programming patterns and proper return value contracts
-- **2025-07-10**: ✅ **PRODUCTION VALIDATION COMPLETE** - Autonomous session validated all systems operational: 223ms DB response, API endpoints working, environment variables valid, log submission/retrieval tested and confirmed
-- **2025-07-10**: Auto-resolved IMPL-PROD-009 & IMPL-PROD-010 - TURSO_AUTH_TOKEN authentication issues were resolved between task documentation and execution, production environment now stable
-- **2025-07-10**: Enhanced Database Error Reporting: Added 12 specific database error types with actionable guidance, comprehensive error responses with remediation steps
+📖 **See planning**: [`./docs/planning/`](./docs/planning/) for current tasks and roadmap
 
 ## 📊 Current Task Status
 
-### Database Connection Status
-- **✅ VERIFIED**: Turso database is connected and fully operational
-- **Database**: `log-petter-ai-synidsweet.aws-eu-west-1.turso.io` 
-- **Performance**: 44ms response time, all health checks passing
-- **Schema**: Complete with `projects` and `logs` tables
-- **Status**: Ready for production use
+### Sprint Status
+- **Current Sprint**: Frontend Log Viewer Enhancements (SPRINT-2025-Q3-DEV01)
+- **Sprint Progress**: 92.3% complete (24/26 tasks)
+- **Focus**: Enhanced user experience with sorting, filtering, and visual organization
+- **Validation Status**: ✅ All core features + smooth animations validated and tested
 
-## 📊 Current Task Status Report
+### Task Backlog
+- **Total pending**: 14 tasks
+- **Critical priority**: 0 tasks
+- **High priority**: 0 tasks
+- **Medium priority**: 10 tasks (backlog)
+- **Low priority**: 4 tasks (2 in sprint, 2 in backlog)
+- **In progress**: 0 tasks
+- **Next up**: TASK-2025-015 - Add visual feedback when keyboard shortcut is used (Low, Sprint task)
 
-### Implementation Backlog  
-- **Total remaining tasks**: 52 (3 new follow-up tasks added from session)
-- **Critical priority**: 4 tasks (final migration cleanup and environment validation)
-- **High priority**: 14 tasks (monitoring, security, testing infrastructure)
-- **Medium priority**: 25 tasks (authentication, CI/CD, documentation + 2 new defensive programming tasks)
-- **Low priority**: 9 tasks (optimizations and minor improvements + 1 new documentation task)
-- **Next recommended**: TURSO-018 - Monitor and validate migration (Critical, ~30 mins)
+### System Health
+- **Task System**: Available and operational
+- **Data Validation**: Valid
+- **Configuration**: Project-specific MCP integration
 
-### Refactoring Backlog
-- **Total remaining tasks**: 50 (1 completed this session: database initialization script reliability)
-- **Critical priority**: 20 tasks (database reliability and defensive programming patterns)
-- **High priority**: 10 tasks (performance, testing infrastructure, schema flexibility)
-- **Medium priority**: 15 tasks (deployment architecture, error handling consistency)
-- **Low priority**: 6 tasks (CSS organization, bundle optimization)
-- **Next recommended**: REF-DB-001 - Database connection resilience (Critical, Medium effort)
+---
 
-### Project Status
-**Current State**: ✅ **PRODUCTION VALIDATED** - All systems operational, comprehensive testing completed
-**Validation Results**: 223ms DB response, all API endpoints working (200 OK), environment variables valid, log submission/retrieval confirmed
-**Production Readiness**: System exceeds stability expectations, ready for immediate production use
-
-This documentation serves as the central navigation hub - detailed implementation information is available in the `/docs/` modules.
+*This navigation hub stays lean - detailed information lives in `/docs/` modules*

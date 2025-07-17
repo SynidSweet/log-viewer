@@ -6,4 +6,7 @@ export const ./log-entry-details = jest.fn();
 export const @/components/ui/input = jest.fn();
 export const @/components/ui/checkbox = jest.fn();
 export const @/components/ui/label = jest.fn();
+export const @/components/ui/button = jest.fn();
+export const @/components/ui/badge = jest.fn();
+export const lucide-react = jest.fn();
 export const sonner = jest.fn();

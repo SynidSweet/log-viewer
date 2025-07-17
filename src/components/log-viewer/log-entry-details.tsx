@@ -9,15 +9,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export interface LogDetails {
   _extended?: Record<string, unknown>;
+  _tags?: string[];
   [key: string]: unknown;
 }
 
 export interface LogEntry {
   id: string;
   timestamp: string;
-  level: 'LOG' | 'WARN' | 'ERROR';
+  level: 'LOG' | 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
   message: string;
   details?: LogDetails;
+  tags?: string[];
 }
 
 interface LogEntryDetailsProps {
@@ -76,7 +78,9 @@ export function LogEntryDetails({ entry, loading }: LogEntryDetailsProps) {
             <span 
               className={`text-white text-xs px-2 py-1 rounded uppercase font-medium mr-2 ${
                 entry.level === 'ERROR' ? 'bg-red-500' : 
-                entry.level === 'WARN' ? 'bg-yellow-500' : 'bg-green-500'
+                entry.level === 'WARN' ? 'bg-yellow-500' : 
+                entry.level === 'DEBUG' ? 'bg-purple-500' : 
+                entry.level === 'INFO' ? 'bg-blue-500' : 'bg-green-500'
               }`}
             >
               {entry.level}

@@ -8,10 +8,14 @@ A modern, React-based log viewer application that allows you to collect, store, 
 
 - **Project Management**: Create and manage multiple projects for different applications
 - **Real-time Log Viewing**: View logs in real-time with automatic updates
-- **Advanced Filtering**: Filter logs by level, type, and content with a powerful search
+- **Advanced Filtering**: Filter logs by level, type, content, and tags with powerful search and multi-select dropdowns
+- **Enhanced Sort Controls**: Sort logs by timestamp (ascending/descending) with keyboard shortcuts (press 's')
+- **Multi-Select Copy**: Select multiple log entries with checkboxes and copy formatted logs to clipboard
+- **Tag-Based Organization**: Use `_tags` arrays in log data for visual badges and advanced filtering
 - **Structured Log Details**: View formatted JSON data with collapsible tree view
+- **Performance Optimized**: Smooth scrolling through large log datasets with minimal animations
 - **Log Collection API**: Send logs from any application via a simple REST API
-- **Version Control**: API versioning to ensure backward compatibility
+- **Multi-line Support**: Process multiple log entries in a single API request
 - **Modern UI**: Clean, responsive interface built with shadcn/ui components
 - **Google Authentication**: Secure user access with Google Sign-In while keeping API endpoints public
 
@@ -20,7 +24,7 @@ A modern, React-based log viewer application that allows you to collect, store, 
 - **Next.js**: React framework with App Router
 - **TypeScript**: Static type checking
 - **shadcn/ui**: UI component library
-- **Vercel KV**: For persistent storage
+- **Turso SQLite**: For persistent storage with edge performance
 - **Vercel**: Hosting and deployment platform
 - **Tailwind CSS**: Utility-first CSS framework
 - **NextAuth.js**: Authentication with Google provider
@@ -30,7 +34,7 @@ A modern, React-based log viewer application that allows you to collect, store, 
 - Node.js 18.x or later
 - npm or yarn
 - Vercel account (for deployment)
-- Vercel KV (for database)
+- Turso database (for persistent storage)
 - Google Developer account (for authentication)
 
 ## 🚀 Getting Started
@@ -53,10 +57,8 @@ A modern, React-based log viewer application that allows you to collect, store, 
 3. Set up environment variables:
    Create a `.env.local` file with the following variables:
    ```
-   KV_URL=your_kv_url
-   KV_REST_API_URL=your_kv_rest_api_url
-   KV_REST_API_TOKEN=your_kv_rest_api_token
-   KV_REST_API_READ_ONLY_TOKEN=your_kv_read_only_token
+   TURSO_DATABASE_URL=your_turso_database_url
+   TURSO_AUTH_TOKEN=your_turso_auth_token
    
    # Authentication (for Google Sign-In)
    GOOGLE_CLIENT_ID=your_google_client_id
@@ -91,12 +93,13 @@ A modern, React-based log viewer application that allows you to collect, store, 
    - Configure environment variables
    - Click "Deploy"
 
-3. Set up Vercel KV:
-   - In your Vercel dashboard, go to "Storage"
-   - Add KV database (now Upstash Serverless DB on marketplace)
-   - At install, choose the Redis database option
-   - Connect it to your project
-   - Vercel will automatically add the required environment variables
+3. Set up Turso Database:
+   - Create a Turso account at [turso.tech](https://turso.tech)
+   - Create a new database
+   - Get your database URL and auth token
+   - Add these to your Vercel environment variables:
+     - TURSO_DATABASE_URL
+     - TURSO_AUTH_TOKEN
 
 4. Set up Google Authentication:
    - Go to the [Google Cloud Console](https://console.cloud.google.com/)
@@ -127,11 +130,18 @@ A modern, React-based log viewer application that allows you to collect, store, 
 
 ### Viewing Logs
 
-1. Select a project from the main menu
-2. Use filters to narrow down logs by level or content
-3. Click on a log entry to view its details
-4. Use the tabs to switch between regular and extended details
-5. Copy logs to clipboard using the "Copy Log" button
+1. Select a project from the projects list (left column)
+2. Choose a log from the log entries list (middle column)
+3. View detailed log information in the details panel (right column)
+
+**Enhanced Navigation Features:**
+- **Sort Control**: Click the sort button or press 's' to toggle timestamp sorting (ascending/descending)
+- **Level Filtering**: Use checkboxes to show/hide specific log levels (LOG, INFO, WARN, ERROR, DEBUG)
+- **Tag Filtering**: Use the Tags dropdown for multi-select filtering by log tags
+- **Search**: Filter logs and entries using the search boxes
+- **Multi-Select**: Use checkboxes next to each entry to select multiple logs
+- **Copy to Clipboard**: Click "Copy (X)" button to copy selected entries in formatted text
+- **Visual Selection**: Selected items are highlighted with blue background and left border
 
 ### Sending Logs
 
@@ -168,6 +178,9 @@ await sendLogs('project-id', 'api-key', '[2025-04-29, 08:40:24] [LOG] Applicatio
 
 // Log with data
 await sendLogs('project-id', 'api-key', '[2025-04-29, 08:40:24] [ERROR] Database error - {"code": "ER_DUP_ENTRY"}');
+
+// Log with tags for filtering
+await sendLogs('project-id', 'api-key', '[2025-04-29, 08:40:24] [ERROR] Payment failed - {"transactionId": "txn_123", "error": "insufficient_funds", "_tags": ["payment", "error", "critical"]}');
 
 // Multiple log entries
 const multiLineLogs = `[2025-04-29, 08:40:24] [INFO] Processing batch job
@@ -207,6 +220,9 @@ Send logs to the server.
 
 // Log with JSON data
 "content": "[2025-04-29, 08:40:24] [ERROR] Payment failed - {\"code\": 500, \"reason\": \"timeout\"}"
+
+// Log with tags for filtering
+"content": "[2025-04-29, 08:40:24] [ERROR] Payment failed - {\"transactionId\": \"txn_123\", \"error\": \"insufficient_funds\", \"_tags\": [\"payment\", \"error\", \"critical\"]}"
 
 // Log with nested JSON data
 "content": "[2025-04-29, 08:40:24] [DEBUG] API request completed - {\"user\": {\"id\": 123, \"name\": \"John\"}, \"response\": {\"status\": 200, \"data\": {\"items\": [1, 2, 3]}}}"
@@ -251,6 +267,7 @@ The application supports logs in the following format:
 - Supports multiple log entries in a single request (separated by newlines)
 - Each line must follow the format above
 - DATA can contain nested JSON objects of any complexity
+- Include `_tags` array in JSON data for tag-based filtering and organization
 
 ### Extended Logging
 

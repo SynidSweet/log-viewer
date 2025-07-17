@@ -30,7 +30,7 @@ export function LogItem({ log, isSelected, onClick, onDelete, onToggleRead }: Lo
   return (
     <div 
       className={`py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 ${
-        isSelected ? 'bg-gray-100' : ''
+        isSelected ? 'bg-blue-100 border-l-4 border-l-blue-500 shadow-sm' : ''
       }`}
       onClick={onClick}
     >

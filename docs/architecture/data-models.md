@@ -1,6 +1,6 @@
-# Data Models & Database Schema
+# Data Models
 
-*Last updated: 2025-07-10 | Turso SQLite schema and type definitions*
+*Last updated: 2025-07-16 | Added _tags field support to LogEntry and LogDetails interfaces*
 
 ## Database Schema (Turso SQLite)
 
@@ -94,6 +94,7 @@ interface ProjectLog {
 // Extended log details for parsed content
 interface LogDetails {
   _extended?: unknown;
+  _tags?: string[];
   [key: string]: unknown;
 }
 
@@ -102,9 +103,10 @@ interface LogEntry {
   id: string;
   projectId: string;
   timestamp: string;
-  level: 'LOG' | 'WARN' | 'ERROR';
+  level: 'LOG' | 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
   message: string;
   details?: LogDetails;
+  tags?: string[];
   schemaVersion: string;
   submissionId?: string;
 }

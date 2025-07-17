@@ -9,6 +9,9 @@ import { LogEntryDetails, LogEntry } from './log-entry-details'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { ArrowUp, ArrowDown, Filter, ChevronDown, Copy, CheckSquare, Square } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface LogViewerProps {
@@ -35,9 +38,25 @@ export function LogViewer({ projectId }: LogViewerProps) {
   const [entryFilters, setEntryFilters] = useState({
     searchText: '',
     showLog: true,
+    showInfo: true,
     showWarn: true,
-    showError: true
+    showError: true,
+    showDebug: true,
+    selectedTags: [] as string[]
   })
+  // Initialize sort order from localStorage or default to 'asc'
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(() => {
+    if (typeof window !== 'undefined') {
+      const savedSortOrder = localStorage.getItem('logViewer.sortOrder')
+      if (savedSortOrder === 'asc' || savedSortOrder === 'desc') {
+        return savedSortOrder
+      }
+    }
+    return 'asc'
+  })
+  const [tagDropdownOpen, setTagDropdownOpen] = useState(false)
+  const [tagSearchTerm, setTagSearchTerm] = useState('')
+  const [selectedEntryIds, setSelectedEntryIds] = useState<Set<string>>(new Set())
   
   // Fetch logs list
   useEffect(() => {
@@ -82,9 +101,15 @@ export function LogViewer({ projectId }: LogViewerProps) {
         const [, timestamp, level, message, , detailsStr] = match;
         
         let details = undefined;
+        let tags: string[] = [];
+        
         if (detailsStr) {
           try {
             details = JSON.parse(detailsStr);
+            // Extract _tags field if it exists and is an array
+            if (details && typeof details === 'object' && Array.isArray(details._tags)) {
+              tags = details._tags.filter((tag: unknown): tag is string => typeof tag === 'string');
+            }
           } catch {
             details = detailsStr;
           }
@@ -93,9 +118,10 @@ export function LogViewer({ projectId }: LogViewerProps) {
         entries.push({
           id: `entry_${entries.length}`,
           timestamp,
-          level: level as 'LOG' | 'WARN' | 'ERROR',
+          level: level as 'LOG' | 'INFO' | 'WARN' | 'ERROR' | 'DEBUG',
           message,
-          details
+          details,
+          tags: tags.length > 0 ? tags : undefined
         });
       } else {
         // If line doesn't match pattern, add it as a raw message
@@ -104,6 +130,7 @@ export function LogViewer({ projectId }: LogViewerProps) {
           timestamp: new Date().toISOString(),
           level: 'LOG',
           message: line,
+          tags: undefined
         });
       }
     }
@@ -111,43 +138,68 @@ export function LogViewer({ projectId }: LogViewerProps) {
     return entries;
   }, [selectedLog?.content]);
   
-  // Filter log entries based on the entry filters
+  // Filter log entries based on the entry filters (simplified for performance)
   const filteredEntries = useMemo(() => {
-    return parsedEntries.filter(entry => {
-      // Filter by log level
-      if (
-        (entry.level === 'LOG' && !entryFilters.showLog) ||
-        (entry.level === 'WARN' && !entryFilters.showWarn) ||
-        (entry.level === 'ERROR' && !entryFilters.showError)
-      ) {
-        return false;
+    let filtered = parsedEntries;
+    
+    // Level filtering
+    filtered = filtered.filter(entry => {
+      switch (entry.level) {
+        case 'LOG': return entryFilters.showLog;
+        case 'INFO': return entryFilters.showInfo;
+        case 'WARN': return entryFilters.showWarn;
+        case 'ERROR': return entryFilters.showError;
+        case 'DEBUG': return entryFilters.showDebug;
+        default: return true;
       }
-      
-      // Filter by search text
-      if (entryFilters.searchText) {
-        const searchTerm = entryFilters.searchText.toLowerCase();
-        const messageMatches = entry.message.toLowerCase().includes(searchTerm);
-        
-        let detailsString = '';
-        if (entry.details) {
-          detailsString = typeof entry.details === 'object' 
-            ? JSON.stringify(entry.details) 
-            : String(entry.details);
-        }
-        const detailsMatch = detailsString.toLowerCase().includes(searchTerm);
-        
-        if (!messageMatches && !detailsMatch) {
-          return false;
-        }
-      }
-      
-      return true;
-    })
-    .sort((a, b) => {
-      // Sort by timestamp (oldest first)
-      return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
     });
-  }, [parsedEntries, entryFilters]);
+    
+    // Search filtering (only if search term exists)
+    if (entryFilters.searchText) {
+      const searchTerm = entryFilters.searchText.toLowerCase();
+      filtered = filtered.filter(entry => 
+        entry.message.toLowerCase().includes(searchTerm) ||
+        (entry.details && String(entry.details).toLowerCase().includes(searchTerm))
+      );
+    }
+    
+    // Tag filtering (only if tags selected)
+    if (entryFilters.selectedTags.length > 0) {
+      filtered = filtered.filter(entry => 
+        entry.tags?.some(tag => entryFilters.selectedTags.includes(tag))
+      );
+    }
+    
+    // Sort by timestamp
+    filtered.sort((a, b) => {
+      const timeA = new Date(a.timestamp).getTime();
+      const timeB = new Date(b.timestamp).getTime();
+      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+    });
+    
+    return filtered;
+  }, [parsedEntries, entryFilters.showLog, entryFilters.showInfo, entryFilters.showWarn, entryFilters.showError, entryFilters.showDebug, entryFilters.searchText, entryFilters.selectedTags, sortOrder]);
+
+  // Extract all unique tags from parsed entries for the dropdown
+  const availableTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    
+    parsedEntries.forEach(entry => {
+      if (entry.tags) {
+        entry.tags.forEach(tag => tagSet.add(tag));
+      }
+    });
+    
+    return Array.from(tagSet).sort();
+  }, [parsedEntries]);
+
+  // Filter tags based on search term
+  const filteredTags = useMemo(() => {
+    if (!tagSearchTerm) return availableTags;
+    return availableTags.filter(tag => 
+      tag.toLowerCase().includes(tagSearchTerm.toLowerCase())
+    );
+  }, [availableTags, tagSearchTerm]);
   
   // Fetch log content when a log is selected
   const fetchLogContent = useCallback(async (logId: string) => {
@@ -287,6 +339,136 @@ export function LogViewer({ projectId }: LogViewerProps) {
   const handleSelectEntry = (index: number) => {
     setSelectedEntryIndex(index)
   }
+
+  // Toggle sort order
+  const toggleSortOrder = useCallback(() => {
+    setSortOrder(prev => {
+      const newOrder = prev === 'asc' ? 'desc' : 'asc'
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('logViewer.sortOrder', newOrder)
+      }
+      return newOrder
+    })
+  }, [])
+
+  // Tag filtering utility functions
+  const toggleTag = useCallback((tag: string) => {
+    setEntryFilters(prev => ({
+      ...prev,
+      selectedTags: prev.selectedTags.includes(tag)
+        ? prev.selectedTags.filter(t => t !== tag)
+        : [...prev.selectedTags, tag]
+    }))
+  }, [])
+
+  const selectAllTags = useCallback(() => {
+    setEntryFilters(prev => ({
+      ...prev,
+      selectedTags: [...availableTags]
+    }))
+  }, [availableTags])
+
+  const clearAllTags = useCallback(() => {
+    setEntryFilters(prev => ({
+      ...prev,
+      selectedTags: []
+    }))
+    setTagSearchTerm('')
+  }, [])
+
+  // Selection functions
+  const toggleEntrySelection = useCallback((entryId: string) => {
+    setSelectedEntryIds(prev => {
+      const newSelection = new Set(prev)
+      if (newSelection.has(entryId)) {
+        newSelection.delete(entryId)
+      } else {
+        newSelection.add(entryId)
+      }
+      return newSelection
+    })
+  }, [])
+
+  const selectAllEntries = useCallback(() => {
+    const allIds = new Set(filteredEntries.map(entry => entry.id))
+    setSelectedEntryIds(allIds)
+  }, [filteredEntries])
+
+  const clearAllSelections = useCallback(() => {
+    setSelectedEntryIds(new Set())
+  }, [])
+
+  const copySelectedEntries = useCallback(() => {
+    const selectedEntries = filteredEntries.filter(entry => selectedEntryIds.has(entry.id))
+    
+    if (selectedEntries.length === 0) {
+      toast.error('No entries selected to copy')
+      return
+    }
+
+    // Format entries for copying
+    const formattedEntries = selectedEntries.map(entry => {
+      let output = `[${entry.timestamp}] [${entry.level}] ${entry.message}`
+      if (entry.details) {
+        const detailsStr = typeof entry.details === 'object' 
+          ? JSON.stringify(entry.details, null, 2) 
+          : String(entry.details)
+        output += ` - ${detailsStr}`
+      }
+      return output
+    }).join('\n')
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(formattedEntries).then(() => {
+      toast.success(`Copied ${selectedEntries.length} log entries to clipboard`)
+      setSelectedEntryIds(new Set()) // Clear selection after copying
+    }).catch((error) => {
+      console.error('Failed to copy to clipboard:', error)
+      toast.error('Failed to copy to clipboard')
+    })
+  }, [filteredEntries, selectedEntryIds])
+  
+  // Add keyboard shortcut for sort toggle
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Check if the user is typing in an input field
+      const activeElement = document.activeElement;
+      const isInputFocused = activeElement instanceof HTMLInputElement || 
+                            activeElement instanceof HTMLTextAreaElement;
+      
+      // Only trigger if 's' is pressed and user is not typing in an input
+      if (event.key === 's' && !event.ctrlKey && !event.metaKey && !event.altKey && !isInputFocused) {
+        event.preventDefault();
+        toggleSortOrder();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [toggleSortOrder]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (tagDropdownOpen && event.target instanceof Element) {
+        const dropdown = document.getElementById('tag-dropdown');
+        if (dropdown && !dropdown.contains(event.target)) {
+          setTagDropdownOpen(false);
+          setTagSearchTerm('');
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [tagDropdownOpen]);
   
   // Filter logs by search text
   const filteredLogs = logs
@@ -353,13 +535,138 @@ export function LogViewer({ projectId }: LogViewerProps) {
       {/* Log Entries Column (1/5) */}
       <div className="w-1/5 border-r border-gray-200 flex flex-col overflow-hidden">
         <div className="p-3 bg-gray-50 border-b border-gray-200 space-y-3 flex-shrink-0">
-          <Input
-            placeholder="Filter entries..."
-            value={entryFilters.searchText}
-            onChange={(e) => setEntryFilters(prev => ({ ...prev, searchText: e.target.value }))}
-            className="text-sm"
-          />
+          <div className="flex items-center space-x-2">
+            <Input
+              placeholder="Filter entries..."
+              value={entryFilters.searchText}
+              onChange={(e) => setEntryFilters(prev => ({ ...prev, searchText: e.target.value }))}
+              className="text-sm flex-1"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleSortOrder}
+              className="flex items-center space-x-1"
+              title={`Sort by timestamp ${sortOrder === 'asc' ? 'ascending' : 'descending'} (Press 's' to toggle)`}
+            >
+              {sortOrder === 'asc' ? (
+                <ArrowUp className="h-3 w-3" />
+              ) : (
+                <ArrowDown className="h-3 w-3" />
+              )}
+            </Button>
+          </div>
           
+          {/* Copy Controls */}
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={selectedEntryIds.size === filteredEntries.length ? clearAllSelections : selectAllEntries}
+              className="flex items-center space-x-1 text-xs"
+              disabled={filteredEntries.length === 0}
+            >
+              {selectedEntryIds.size === filteredEntries.length ? (
+                <CheckSquare className="h-3 w-3" />
+              ) : (
+                <Square className="h-3 w-3" />
+              )}
+              <span>All</span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={copySelectedEntries}
+              className="flex items-center space-x-1 text-xs"
+              disabled={selectedEntryIds.size === 0}
+            >
+              <Copy className="h-3 w-3" />
+              <span>Copy</span>
+              {selectedEntryIds.size > 0 && (
+                <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
+                  {selectedEntryIds.size}
+                </Badge>
+              )}
+            </Button>
+          </div>
+
+          {/* Tags Filter Dropdown */}
+          <div className="relative" id="tag-dropdown">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setTagDropdownOpen(!tagDropdownOpen)}
+              className="flex items-center space-x-2 text-xs"
+              disabled={availableTags.length === 0}
+            >
+              <Filter className="h-3 w-3" />
+              <span>Tags</span>
+              {entryFilters.selectedTags.length > 0 && (
+                <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
+                  {entryFilters.selectedTags.length}
+                </Badge>
+              )}
+              <ChevronDown className="h-3 w-3" />
+            </Button>
+            
+            {tagDropdownOpen && availableTags.length > 0 && (
+              <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                {/* Search input */}
+                <div className="p-2 border-b border-gray-200">
+                  <Input
+                    placeholder="Search tags..."
+                    value={tagSearchTerm}
+                    onChange={(e) => setTagSearchTerm(e.target.value)}
+                    className="text-xs h-7"
+                  />
+                </div>
+                
+                {/* Actions */}
+                <div className="p-2 border-b border-gray-200 flex space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={selectAllTags}
+                    className="text-xs h-6 px-2"
+                  >
+                    Select All
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={clearAllTags}
+                    className="text-xs h-6 px-2"
+                  >
+                    Clear All
+                  </Button>
+                </div>
+                
+                {/* Tags list */}
+                <div className="max-h-48 overflow-y-auto">
+                  {filteredTags.length === 0 ? (
+                    <div className="p-3 text-xs text-gray-500">
+                      {tagSearchTerm ? 'No tags match your search' : 'No tags available'}
+                    </div>
+                  ) : (
+                    filteredTags.map(tag => (
+                      <div key={tag} className="flex items-center space-x-2 p-2 hover:bg-gray-50">
+                        <Checkbox
+                          id={`tag-${tag}`}
+                          checked={entryFilters.selectedTags.includes(tag)}
+                          onCheckedChange={() => toggleTag(tag)}
+                        />
+                        <Label htmlFor={`tag-${tag}`} className="text-xs flex-1 cursor-pointer">
+                          {tag}
+                        </Label>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="flex items-center space-x-4 text-sm">
             <div className="flex items-center space-x-2">
               <Checkbox 
@@ -370,6 +677,17 @@ export function LogViewer({ projectId }: LogViewerProps) {
                 }
               />
               <Label htmlFor="show-log" className="text-xs">LOG</Label>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="show-info" 
+                checked={entryFilters.showInfo}
+                onCheckedChange={(checked) => 
+                  setEntryFilters(prev => ({ ...prev, showInfo: !!checked }))
+                }
+              />
+              <Label htmlFor="show-info" className="text-xs">INFO</Label>
             </div>
             
             <div className="flex items-center space-x-2">
@@ -393,6 +711,17 @@ export function LogViewer({ projectId }: LogViewerProps) {
               />
               <Label htmlFor="show-error" className="text-xs">ERROR</Label>
             </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="show-debug" 
+                checked={entryFilters.showDebug}
+                onCheckedChange={(checked) => 
+                  setEntryFilters(prev => ({ ...prev, showDebug: !!checked }))
+                }
+              />
+              <Label htmlFor="show-debug" className="text-xs">DEBUG</Label>
+            </div>
           </div>
         </div>
         
@@ -414,6 +743,8 @@ export function LogViewer({ projectId }: LogViewerProps) {
               entries={filteredEntries}
               selectedIndex={selectedEntryIndex}
               onSelectEntry={handleSelectEntry}
+              selectedEntryIds={selectedEntryIds}
+              onToggleSelection={toggleEntrySelection}
             />
           )}
         </div>

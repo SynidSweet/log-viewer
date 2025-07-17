@@ -1,6 +1,6 @@
 # Development Workflow
 
-*Last updated: 2025-07-10 | Added automatic database deployment and comprehensive migration system*
+*Last updated: 2025-07-16 | Fixed Jest configuration and updated testing infrastructure*
 
 ## Environment Setup
 
@@ -76,42 +76,51 @@ npm run db:status    # Check migration status
 ## Testing Strategy
 
 ### Current State
-- **Comprehensive error handling test suite**: 22 tests with 100% pass rate
-- **External testing infrastructure**: Claude Testing Infrastructure v2.0 setup
+- **✅ Jest Configuration**: Fully operational with TypeScript support and dual environments
+- **✅ Testing Infrastructure**: External `.claude-testing/` directory with Jest + React Testing Library
+- **✅ Multi-Environment Support**: Node.js for API tests, jsdom for React component tests
+- **✅ Module Resolution**: Working `@/` aliases and proper TypeScript integration
 - **Type checking via TypeScript**
 - **Linting via ESLint**
 
 ### Testing Infrastructure Setup
-1. **Testing directory**: `.claude-testing/` - External test setup maintaining project integrity
-2. **Test framework**: Jest with TypeScript support
-3. **Coverage**: Comprehensive API error handling scenarios
+1. **Testing Directory**: `.claude-testing/` - External test setup maintaining project integrity
+2. **Test Framework**: Jest with ts-jest transform and dual project configuration
+3. **TypeScript Support**: Custom `tsconfig.test.json` with Jest types and proper module resolution
+4. **Environment Separation**: API tests (Node) vs component tests (jsdom)
 
-### Implemented Test Coverage
-- **Error Classification**: Database errors (connection, initialization, schema, query, validation)
-- **Standard HTTP Errors**: Authentication (401), validation (400), not found (404), timeout (504)
-- **Edge Cases**: Circular references, special characters, concurrent processing
-- **API Integration**: Error wrapper validation, health check endpoints, logs API
-- **Environment Validation**: Required environment variable checking
+### Jest Configuration Features
+- **Dual Environment Projects**: Automatically runs API tests in Node, component tests in jsdom
+- **TypeScript Integration**: Full ts-jest support with proper type checking
+- **Module Resolution**: `@/` path aliases working correctly
+- **Coverage Collection**: Configured for parent `src/` directory
+- **Setup Files**: Environment-aware setup with proper window/global mocking
 
 ### Running Tests
 ```bash
 # Navigate to test directory
 cd .claude-testing
 
-# Install test dependencies
+# Install test dependencies (if not already done)
 npm install
 
-# Run comprehensive error handling tests
-npx jest api-error-handler.comprehensive.test.js
-
-# Run all tests
+# Run all tests with Jest project separation
 npm test
+
+# Run specific test patterns
+npm test -- --testPathPattern=utility.test    # API utility tests
+npm test -- --testPathPattern=component.test  # React component tests
+npm test -- --testPathPattern=comprehensive   # Comprehensive API tests
+
+# Run with coverage
+npm test -- --coverage
 ```
 
 ### Test Categories
-- **Unit Tests**: Error classification and formatting logic
-- **Integration Tests**: API endpoints with error handling
-- **Edge Case Tests**: Robustness and error recovery scenarios
+- **API Tests (Node Environment)**: Database operations, error handling, route logic
+- **Component Tests (jsdom Environment)**: React components, UI interactions, integration tests
+- **Utility Tests**: Helper functions, type safety, module loading
+- **Integration Tests**: End-to-end scenarios across multiple components
 
 ### Manual Testing Checklist
 - [ ] **Authentication**: Google OAuth login/logout
@@ -120,7 +129,10 @@ npm test
 - [ ] **Log Viewing**: Three-column interface functionality
 - [ ] **Log Parsing**: Multi-line logs with JSON data
 - [ ] **Filtering**: Search and level filtering
+- [ ] **Sort Functionality**: Ascending/descending toggle with visual indicators
 - [ ] **Read Status**: Mark logs as read/unread
+- [ ] **Log Levels**: Verify LOG, ERROR, INFO, WARN, DEBUG support
+- [ ] **Tag Display**: Check badge rendering for _tags field (when implemented)
 
 ## Git Workflow
 
