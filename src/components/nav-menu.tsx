@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { signIn, signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
@@ -41,14 +40,10 @@ export function NavMenu() {
   }, []);
   
   // Don't render anything during SSR or if not mounted yet
-  if (!mounted) return <nav className="flex items-center gap-4"><Link href="/">Home</Link></nav>;
+  if (!mounted) return <nav className="flex items-center gap-4"></nav>;
   
   return (
     <nav className="flex items-center gap-4">
-      <Link href="/" className="hover:underline">
-        Home
-      </Link>
-      
       {isLoading ? (
         <span className="text-sm opacity-70">Loading...</span>
       ) : isAuthenticated ? (

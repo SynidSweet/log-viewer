@@ -16,7 +16,7 @@ export interface Project {
     id: string;
     projectId: string;
     timestamp: string;
-    level: 'LOG' | 'WARN' | 'ERROR';
+    level: 'LOG' | 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
     message: string;
     details?: LogDetails;
     schemaVersion: string;

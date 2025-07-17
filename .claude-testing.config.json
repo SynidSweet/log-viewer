@@ -1,19 +1,19 @@
 {
   "include": [
-    "src/lib/api-error-handler.ts",
-    "src/lib/db-turso.ts",
-    "src/lib/turso.ts",
-    "src/app/api/health/route.ts",
+    "src/components/log-viewer/index.tsx",
+    "src/components/log-viewer/log-entry-list.tsx",
+    "src/components/log-viewer/log-entry-details.tsx",
     "src/app/api/logs/route.ts",
-    "src/app/api/projects/route.ts"
+    "src/lib/types.ts",
+    "src/lib/api-error-handler.ts",
+    "src/lib/db-turso.ts"
   ],
-  "exclude": ["**/*.test.*", "**/*.spec.*"],
+  "exclude": ["**/*.test.*", "**/*.spec.*", "**/node_modules/**", "**/.next/**"],
   "testFramework": "jest",
-  "aiModel": "claude-3",
+  "aiModel": "claude-3-5-sonnet-20241022",
   "features": {
     "coverage": true,
     "edgeCases": true,
-    "integrationTests": true,
-    "errorHandling": true
+    "integrationTests": true
   }
 }

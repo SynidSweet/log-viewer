@@ -1,6 +1,6 @@
 # Development Conventions
 
-*Last updated: 2025-07-10 | Added defensive programming patterns for build scripts and property access safety*
+*Last updated: 2025-07-17 | Added CSS animation patterns for smooth UI transitions*
 
 ## Code Organization
 
@@ -14,7 +14,7 @@ src/
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Home page
 ├── components/            # React components
-│   ├── ui/               # Atomic UI components (shadcn/ui)
+│   ├── ui/               # Atomic UI components (shadcn/ui: badge, button, input, etc.)
 │   ├── log-viewer/       # Complex feature components
 │   └── *.tsx             # Shared components
 └── lib/                  # Utilities and core logic
@@ -46,7 +46,7 @@ interface Project {
 }
 
 // Use type for unions and computed types
-type LogLevel = 'LOG' | 'WARN' | 'ERROR';
+type LogLevel = 'LOG' | 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
 type ProjectUpdate = Partial<Pick<Project, 'name' | 'description'>>;
 ```
 
@@ -117,6 +117,48 @@ export function ExampleComponent({ data, onAction }: ExampleComponentProps) {
 - **Derived State**: `useMemo` for computed values
 - **Side Effects**: `useEffect` for external operations
 - **No Global State**: Currently no Redux/Zustand usage
+- **UI Controls**: Session-persistent state for user preferences (sort order, filters)
+- **State Dependencies**: Include all state in useMemo dependency arrays
+- **Persistent Preferences**: localStorage for cross-session persistence
+
+### Tag Filtering Patterns
+```typescript
+// Tag filtering state integration
+const [entryFilters, setEntryFilters] = useState({
+  searchText: '',
+  showLog: true,
+  showInfo: true,
+  showWarn: true,
+  showError: true,
+  showDebug: true,
+  selectedTags: [] as string[] // Added for tag filtering
+})
+
+// Tag filtering logic (OR logic - show entries with ANY selected tags)
+const filteredEntries = useMemo(() => {
+  return entries.filter(entry => {
+    // Filter by selected tags
+    if (entryFilters.selectedTags.length > 0) {
+      // If entry has no tags, exclude it when tags are selected
+      if (!entry.tags || entry.tags.length === 0) {
+        return false;
+      }
+      
+      // Check if entry has any of the selected tags
+      const hasSelectedTag = entry.tags.some(tag => 
+        entryFilters.selectedTags.includes(tag)
+      );
+      
+      if (!hasSelectedTag) {
+        return false;
+      }
+    }
+    
+    // Other filtering logic...
+    return true;
+  });
+}, [entries, entryFilters]);
+```
 
 ### Defensive Programming Patterns
 ```typescript
@@ -149,18 +191,305 @@ const handleApiResponse = (response: unknown) => {
 
 ### Memoization Strategy
 ```typescript
-// Expensive computations
+// Expensive computations with sorting and filtering
 const filteredEntries = useMemo(() => {
-  return entries.filter(entry => {
-    // Complex filtering logic
-    return matchesFilter(entry, filters)
-  })
-}, [entries, filters])
+  return entries
+    .filter(entry => {
+      // Complex filtering logic with multiple criteria
+      return matchesFilter(entry, filters)
+    })
+    .sort((a, b) => {
+      // Dynamic sorting based on state
+      const timeA = new Date(a.timestamp).getTime();
+      const timeB = new Date(b.timestamp).getTime();
+      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+    });
+}, [entries, filters, sortOrder])
+
+// Extract available tags for dropdown population
+const availableTags = useMemo(() => {
+  const tagSet = new Set<string>();
+  
+  entries.forEach(entry => {
+    if (entry.tags) {
+      entry.tags.forEach(tag => tagSet.add(tag));
+    }
+  });
+  
+  return Array.from(tagSet).sort();
+}, [entries])
 
 // Callback memoization
 const handleSelectEntry = useCallback((index: number) => {
   setSelectedEntryIndex(index)
 }, [])
+
+// Toggle handlers for UI controls
+const toggleSortOrder = useCallback(() => {
+  setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')
+}, [])
+
+// Tag filtering utility functions
+const toggleTag = useCallback((tag: string) => {
+  setEntryFilters(prev => ({
+    ...prev,
+    selectedTags: prev.selectedTags.includes(tag)
+      ? prev.selectedTags.filter(t => t !== tag)
+      : [...prev.selectedTags, tag]
+  }))
+}, [])
+
+const selectAllTags = useCallback(() => {
+  setEntryFilters(prev => ({
+    ...prev,
+    selectedTags: [...availableTags]
+  }))
+}, [availableTags])
+
+const clearAllTags = useCallback(() => {
+  setEntryFilters(prev => ({
+    ...prev,
+    selectedTags: []
+  }))
+  setTagSearchTerm('') // Clear search when clearing tags
+}, [])
+```
+
+### localStorage Persistence Patterns
+```typescript
+// Initialize state from localStorage with type safety
+const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(() => {
+  if (typeof window !== 'undefined') {
+    const savedSortOrder = localStorage.getItem('logViewer.sortOrder')
+    if (savedSortOrder === 'asc' || savedSortOrder === 'desc') {
+      return savedSortOrder
+    }
+  }
+  return 'asc' // Default value
+})
+
+// Save to localStorage when state changes
+const toggleSortOrder = useCallback(() => {
+  setSortOrder(prev => {
+    const newOrder = prev === 'asc' ? 'desc' : 'asc'
+    // Save to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('logViewer.sortOrder', newOrder)
+    }
+    return newOrder
+  })
+}, [])
+
+// localStorage Key Convention
+// Format: {component}.{preference}
+// Examples:
+// - logViewer.sortOrder
+// - logViewer.filters
+// - projectList.viewMode
+
+// Best Practices:
+// 1. Always check window !== 'undefined' for SSR safety
+// 2. Validate retrieved values before using them
+// 3. Provide sensible defaults for missing/invalid values
+// 4. Use consistent key naming convention
+// 5. Clean up obsolete keys when features are removed
+```
+
+### Keyboard Shortcut Patterns
+```typescript
+// Add keyboard shortcuts for power users
+useEffect(() => {
+  const handleKeyPress = (event: KeyboardEvent) => {
+    // Check if the user is typing in an input field
+    const activeElement = document.activeElement;
+    const isInputFocused = activeElement instanceof HTMLInputElement || 
+                          activeElement instanceof HTMLTextAreaElement;
+    
+    // Only trigger if not typing in an input
+    if (event.key === 's' && !event.ctrlKey && !event.metaKey && !event.altKey && !isInputFocused) {
+      event.preventDefault();
+      toggleSortOrder();
+    }
+  };
+
+  window.addEventListener('keydown', handleKeyPress);
+  
+  return () => {
+    window.removeEventListener('keydown', handleKeyPress);
+  };
+}, [toggleSortOrder]);
+
+// Update tooltips to show keyboard shortcuts
+<Button
+  title={`Sort by timestamp ${sortOrder === 'asc' ? 'ascending' : 'descending'} (Press 's' to toggle)`}
+>
+  {/* Button content */}
+</Button>
+```
+
+### UI Control Patterns
+```typescript
+// Sort button with visual indicators
+<Button
+  variant="outline"
+  size="sm"
+  onClick={toggleSortOrder}
+  className="flex items-center space-x-1"
+  title={`Sort by timestamp ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}
+>
+  {sortOrder === 'asc' ? (
+    <ArrowUp className="h-3 w-3" />
+  ) : (
+    <ArrowDown className="h-3 w-3" />
+  )}
+</Button>
+
+// Responsive layout with controls
+<div className="flex items-center space-x-2">
+  <Input
+    placeholder="Filter entries..."
+    value={searchText}
+    onChange={(e) => setSearchText(e.target.value)}
+    className="text-sm flex-1"
+  />
+  {/* Control buttons */}
+</div>
+```
+
+### Custom Dropdown Pattern
+```typescript
+// Multi-select dropdown with custom implementation
+const [dropdownOpen, setDropdownOpen] = useState(false)
+const [searchTerm, setSearchTerm] = useState('')
+
+// Close dropdown when clicking outside
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownOpen && event.target instanceof Element) {
+      const dropdown = document.getElementById('dropdown-id');
+      if (dropdown && !dropdown.contains(event.target)) {
+        setDropdownOpen(false);
+        setSearchTerm('');
+      }
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => document.removeEventListener('mousedown', handleClickOutside);
+}, [dropdownOpen]);
+
+// Filter items based on search term
+const filteredItems = useMemo(() => {
+  if (!searchTerm) return availableItems;
+  return availableItems.filter(item => 
+    item.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+}, [availableItems, searchTerm]);
+
+// Dropdown trigger button
+<Button
+  variant="outline"
+  size="sm"
+  onClick={() => setDropdownOpen(!dropdownOpen)}
+  className="flex items-center space-x-2 text-xs"
+  disabled={availableItems.length === 0}
+>
+  <Filter className="h-3 w-3" />
+  <span>Filter</span>
+  {selectedItems.length > 0 && (
+    <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
+      {selectedItems.length}
+    </Badge>
+  )}
+  <ChevronDown className="h-3 w-3" />
+</Button>
+
+// Dropdown content with positioning
+{dropdownOpen && availableItems.length > 0 && (
+  <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+    {/* Search input */}
+    <div className="p-2 border-b border-gray-200">
+      <Input
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="text-xs h-7"
+      />
+    </div>
+    
+    {/* Bulk actions */}
+    <div className="p-2 border-b border-gray-200 flex space-x-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={selectAllItems}
+        className="text-xs h-6 px-2"
+      >
+        Select All
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={clearAllItems}
+        className="text-xs h-6 px-2"
+      >
+        Clear All
+      </Button>
+    </div>
+    
+    {/* Items list */}
+    <div className="max-h-48 overflow-y-auto">
+      {filteredItems.length === 0 ? (
+        <div className="p-3 text-xs text-gray-500">
+          {searchTerm ? 'No items match your search' : 'No items available'}
+        </div>
+      ) : (
+        filteredItems.map(item => (
+          <div key={item} className="flex items-center space-x-2 p-2 hover:bg-gray-50">
+            <Checkbox
+              id={`item-${item}`}
+              checked={selectedItems.includes(item)}
+              onCheckedChange={() => toggleItem(item)}
+            />
+            <Label htmlFor={`item-${item}`} className="text-xs flex-1 cursor-pointer">
+              {item}
+            </Label>
+          </div>
+        ))
+      )}
+    </div>
+  </div>
+)}
+```
+
+### Custom Dropdown Design Principles
+- **Positioning**: Use `absolute` positioning with `top-full` and `mt-1` for proper alignment
+- **Z-index**: Apply `z-50` to ensure dropdown appears above other content
+- **Width**: Fixed width (`w-64`) for consistent layout
+- **Shadow**: Use `shadow-lg` for depth perception
+- **Scrolling**: Limit height with `max-h-48` and `overflow-y-auto` for long lists
+- **Search**: Include search input for large datasets
+- **Bulk Actions**: Provide "Select All" and "Clear All" for user convenience
+- **Accessibility**: Use proper label associations and keyboard navigation
+- **Visual Feedback**: Hover states and badge counters for better UX
+- **Click Outside**: Close dropdown when clicking outside for intuitive behavior
+
+### Icon Usage Patterns
+```typescript
+// Import from lucide-react
+import { ArrowUp, ArrowDown, Search, Filter, ChevronDown } from 'lucide-react'
+
+// Size consistency
+className="h-3 w-3"  // Small icons in buttons
+className="h-4 w-4"  // Default icon size
+className="h-5 w-5"  // Larger icons in headers
+
+// Semantic icon usage
+ArrowUp/ArrowDown: Sort direction indicators
+Search: Search functionality
+Filter: Filtering controls
+ChevronDown: Dropdown state indicator
+Check/X: Status indicators
 ```
 
 ## API Design Patterns
@@ -257,28 +586,101 @@ export function createDatabaseError(
 
 ## Styling Conventions
 
+### CSS Animation Patterns
+```css
+/* Global animation definitions in src/app/globals.css */
+@layer components {
+  /* Container-level animations for smooth transitions */
+  .log-entry-sort-animation {
+    animation: fadeInSlide 0.3s ease-out;
+  }
+  
+  @keyframes fadeInSlide {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Staggered entry animations */
+  .log-entry-stagger {
+    animation: staggeredFadeIn 0.4s ease-out both;
+  }
+  
+  @keyframes staggeredFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(8px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+```
+
+### Animation Integration Patterns
+```typescript
+// Trigger animations on state changes with key props
+<div 
+  key={`sort-${sortOrder}-${entries.length}`} 
+  className="log-entry-sort-animation"
+>
+  {entries.map((entry, index) => (
+    <div
+      key={`${entry.id}-${sortOrder}`}
+      className="log-entry-stagger transition-all duration-200 ease-in-out"
+      style={{
+        animationDelay: `${index * 20}ms`
+      }}
+    >
+      {/* Entry content */}
+    </div>
+  ))}
+</div>
+
+// Pass animation triggers to child components
+<LogEntryList 
+  entries={filteredEntries}
+  sortOrder={sortOrder} // Triggers re-render with animations
+/>
+```
+
+### Animation Design Principles
+- **Performance**: Use CSS transforms and opacity for hardware acceleration
+- **Duration**: Keep animations under 400ms to avoid perceived lag
+- **Staggering**: Use small delays (20ms) for sequential entry animations
+- **Easing**: Prefer `ease-out` for natural feeling transitions
+- **Key Changes**: Change component keys to trigger clean animation resets
+- **Fallbacks**: Ensure functionality works without animations
+
 ### Tailwind CSS Usage
 ```typescript
 // Responsive design
 className="w-full md:w-1/2 lg:w-1/3"
 
-// State-based styling
+// State-based styling with animations
 className={`
-  px-4 py-2 rounded
-  ${isActive ? 'bg-blue-500 text-white' : 'bg-gray-200'}
+  px-4 py-2 rounded transition-all duration-200 ease-in-out
+  ${isActive ? 'bg-blue-500 text-white scale-105' : 'bg-gray-200'}
 `}
 
-// Complex conditions
+// Complex conditions with animation support
 className={clsx(
-  'base-classes',
-  isActive && 'active-classes',
-  hasError && 'error-classes'
+  'base-classes transition-all duration-200',
+  isActive && 'active-classes transform scale-105',
+  hasError && 'error-classes animate-pulse'
 )}
 ```
 
 ### Component Styling
 ```typescript
-// shadcn/ui pattern
+// shadcn/ui pattern for buttons
 import { cn } from '@/lib/utils'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -298,6 +700,85 @@ const Button = ({ className, variant = 'default', ...props }: ButtonProps) => {
     />
   )
 }
+
+// Badge component pattern for tags
+interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'secondary' | 'destructive' | 'outline'
+}
+
+const Badge = ({ className, variant = 'default', ...props }: BadgeProps) => {
+  return (
+    <div
+      className={cn(
+        'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold',
+        variant === 'default' && 'border-transparent bg-primary text-primary-foreground',
+        variant === 'secondary' && 'border-transparent bg-secondary text-secondary-foreground',
+        className
+      )}
+      {...props}
+    />
+  )
+}
+```
+
+### Log Level Styling Pattern
+```typescript
+// Consistent log level badge styling across components
+const getLogLevelBadgeClass = (level: LogLevel) => {
+  const baseClasses = 'text-white text-xs px-2 py-1 rounded uppercase font-medium'
+  
+  switch (level) {
+    case 'ERROR':
+      return `${baseClasses} bg-red-500`
+    case 'WARN':
+      return `${baseClasses} bg-yellow-500`
+    case 'DEBUG':
+      return `${baseClasses} bg-purple-500`
+    case 'INFO':
+      return `${baseClasses} bg-blue-500`
+    default: // LOG or fallback
+      return `${baseClasses} bg-green-500`
+  }
+}
+
+// Usage in components
+<span className={getLogLevelBadgeClass(entry.level)}>
+  {entry.level}
+</span>
+```
+
+### Tags Display Pattern
+```typescript
+// Tags badges with overflow handling in log entries
+{entry.tags && entry.tags.length > 0 && (
+  <div className="absolute top-1.5 right-1.5 flex flex-wrap gap-1 max-w-[40%]">
+    {entry.tags.slice(0, 2).map((tag, tagIndex) => (
+      <Badge 
+        key={tagIndex}
+        variant="secondary" 
+        className="text-[8px] px-1 py-0 h-4 bg-gray-200 text-gray-700 hover:bg-gray-300"
+      >
+        {tag}
+      </Badge>
+    ))}
+    {entry.tags.length > 2 && (
+      <Badge 
+        variant="secondary" 
+        className="text-[8px] px-1 py-0 h-4 bg-gray-300 text-gray-600"
+        title={`Additional tags: ${entry.tags.slice(2).join(', ')}`}
+      >
+        +{entry.tags.length - 2}
+      </Badge>
+    )}
+  </div>
+)}
+
+// Responsive positioning for tags badges
+// - Absolute positioning in top-right corner
+// - Max width constraint to prevent overflow
+// - Gap spacing between multiple badges
+// - Tooltip for overflow count badge
+// - Small font size for compact display
 ```
 
 ## Defensive Programming Patterns
@@ -438,40 +919,259 @@ export async function GET() {
 
 ## Testing Patterns
 
-### Component Testing (when implemented)
-```typescript
-// components/__tests__/LogViewer.test.tsx
-import { render, screen } from '@testing-library/react'
-import { LogViewer } from '../LogViewer'
+### Test Infrastructure
+```bash
+# Test location: .claude-testing/ directory (external tests)
+# Framework: Jest + React Testing Library + ts-jest
+# Environment: jsdom for React component testing
 
-describe('LogViewer', () => {
-  it('renders log entries', () => {
-    render(<LogViewer projectId="test" />)
-    expect(screen.getByText('Loading logs...')).toBeInTheDocument()
-  })
-})
+# Commands
+cd .claude-testing
+npm test                # Run all tests
+npm run test:coverage   # Run with coverage
+npm run test:watch      # Watch mode
 ```
 
-### API Testing (when implemented)
+### Component Testing Implementation
 ```typescript
-// app/api/__tests__/logs.test.ts
-import { POST } from '../logs/route'
+// .claude-testing/src/components/log-viewer/index.sort.test.tsx
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import LogViewer from '@/components/log-viewer';
 
-describe('/api/logs', () => {
-  it('creates log entry', async () => {
-    const request = new Request('http://localhost', {
-      method: 'POST',
-      body: JSON.stringify({
-        projectId: 'test',
-        content: '[2025-01-01, 12:00:00] [LOG] Test message'
-      })
-    })
+// Mock child components for isolation
+jest.mock('@/components/log-viewer/log-entry-list', () => ({
+  __esModule: true,
+  default: ({ entries, sortOrder, onSortToggle }: any) => (
+    <div data-testid="log-entry-list">
+      <div data-testid="sort-order">{sortOrder}</div>
+      <button data-testid="sort-button" onClick={onSortToggle}>Sort</button>
+    </div>
+  ),
+}));
+
+describe('LogViewer Sort Functionality', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ logs: mockLogData }),
+    });
+  });
+
+  it('should toggle between ascending and descending on button click', async () => {
+    render(<LogViewer projectId="test" />);
     
-    const response = await POST(request)
-    expect(response.status).toBe(201)
-  })
-})
+    await waitFor(() => {
+      expect(screen.getByTestId('sort-order')).toHaveTextContent('desc');
+    });
+
+    fireEvent.click(screen.getByTestId('sort-button'));
+    expect(screen.getByTestId('sort-order')).toHaveTextContent('asc');
+  });
+
+  it('should toggle sort order when pressing "s" key', async () => {
+    const user = userEvent.setup();
+    render(<LogViewer projectId="test" />);
+    
+    await user.keyboard('s');
+    expect(screen.getByTestId('sort-order')).toHaveTextContent('asc');
+  });
+});
 ```
+
+### API Testing Implementation  
+```typescript
+// .claude-testing/src/app/api/logs/route.debug.test.ts
+import { POST } from '@/app/api/logs/route';
+import { NextRequest } from 'next/server';
+
+jest.mock('@/lib/db-turso', () => ({
+  db: {
+    getProjectByApiKey: jest.fn(),
+    addLogToProject: jest.fn(),
+  },
+}));
+
+describe('Logs API Route - DEBUG Support', () => {
+  it('should accept DEBUG log level in the standard format', async () => {
+    const request = new NextRequest('http://localhost:3000/api/logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        projectId: 'project-123',
+        apiKey: 'test-api-key',
+        content: '[2025-07-16, 10:00:00] [DEBUG] Debug message - {"key": "value"}',
+      }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(200);
+  });
+});
+```
+
+### Integration Testing Pattern
+```typescript
+// .claude-testing/integration/log-viewer-features.test.tsx
+// Tests all features working together: sort + DEBUG + tags
+describe('LogViewer Integration - All Features', () => {
+  const mockLogs = [
+    {
+      id: '1',
+      content: '[2025-07-16, 09:00:00] [DEBUG] Cache invalidated - {"_tags": ["cache", "debug"]}',
+      created_at: '2025-07-16T09:00:00Z',
+    },
+    // ... more test data
+  ];
+
+  it('should sort logs correctly while maintaining tags and DEBUG display', async () => {
+    render(<LogViewer projectId="test" />);
+    
+    // Verify all features work together
+    await waitFor(() => {
+      expect(screen.getAllByTestId(/^entry-/)).toHaveLength(5);
+    });
+
+    // Toggle sort
+    fireEvent.click(screen.getByTestId('sort-button'));
+    
+    // Verify tags still visible after sort
+    expect(screen.getByTestId('tags-1')).toBeInTheDocument();
+    expect(screen.getByTestId('level-1')).toHaveTextContent('DEBUG');
+  });
+});
+```
+
+### Test Patterns by Feature
+
+#### Sort Functionality Tests
+- ✅ Button toggle (ascending/descending)  
+- ✅ Keyboard shortcut 's' functionality
+- ✅ Sort persistence across state changes
+- ✅ Edge cases: empty logs, identical timestamps
+
+#### DEBUG Log Support Tests  
+- ✅ DEBUG log parsing and display
+- ✅ Backend API validation of DEBUG level
+- ✅ Frontend DEBUG checkbox filtering
+- ✅ Case sensitivity validation (uppercase only)
+
+#### Tags Feature Tests
+- ✅ Tag extraction from `_tags` field in JSON
+- ✅ Badge display with 2-tag limit (+N overflow)
+- ✅ Tags across all log levels (LOG, INFO, WARN, ERROR, DEBUG)
+- ✅ Edge cases: empty tags, non-array tags, special characters
+
+### Test Configuration
+```javascript
+// .claude-testing/jest.config.js
+module.exports = {
+  rootDir: '..',
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  testMatch: ['<rootDir>/.claude-testing/**/*.test.{js,ts,jsx,tsx}'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
+  },
+  setupFilesAfterEnv: ['<rootDir>/.claude-testing/setupTests.js'],
+  collectCoverageFrom: [
+    '<rootDir>/src/components/log-viewer/**/*.{js,ts,jsx,tsx}',
+    '<rootDir>/src/app/api/logs/route.ts',
+    '<rootDir>/src/lib/types.ts',
+  ],
+  coverageDirectory: '<rootDir>/.claude-testing/coverage',
+};
+```
+
+### Test Execution
+```bash
+# Current status: Jest configuration needs fixes for module resolution
+# Next steps:
+# 1. Fix ts-jest configuration for @/ path aliases
+# 2. Ensure React Testing Library setup works with Next.js components
+# 3. Run test suite and address any failing tests
+# 4. Generate coverage report to verify feature coverage
+```
+
+### Testing Best Practices Applied
+- **Component Isolation**: Mock child components to test specific functionality
+- **Data-testid Strategy**: Use consistent test IDs for reliable element selection  
+- **Async Testing**: Proper use of `waitFor` for async operations
+- **User Event Testing**: Test keyboard interactions with @testing-library/user-event
+- **Edge Case Coverage**: Test empty data, malformed input, error conditions
+- **Integration Testing**: Verify features work together (sort + filtering + tags)
+- **Mock Strategy**: Mock external dependencies (fetch, database) for unit tests
+
+### React 19 Testing Patterns
+
+#### Server Component Testing (No 'use client')
+```typescript
+// ✅ Correct: Test Server Components by calling them as functions
+import ProjectPage from '@/app/projects/[id]/page';
+
+it('should return JSX with correct structure', async () => {
+  const mockParams = Promise.resolve({ id: 'test-id' });
+  const result = await ProjectPage({ params: mockParams });
+  
+  // Test JSX structure directly
+  expect(result).toHaveProperty('$$typeof');
+  expect(result).toHaveProperty('type');
+  expect(result).toHaveProperty('props');
+  expect(result.props.project).toEqual(mockProject);
+});
+
+// ❌ Incorrect: Don't use render() with Server Components
+// This will cause "Objects are not valid as a React child" errors
+```
+
+#### Client Component Testing (With 'use client')
+```typescript
+// ✅ Correct: Mock all Next.js dependencies first
+jest.mock('next-auth/react', () => ({
+  signIn: jest.fn(),
+  signOut: jest.fn()
+}));
+
+jest.mock('next/navigation', () => ({
+  useSearchParams: () => ({
+    get: jest.fn((key: string) => null)
+  }),
+  useRouter: () => ({
+    push: jest.fn(),
+    refresh: jest.fn()
+  })
+}));
+
+// For complex components, mock the entire component
+jest.mock('@/app/page', () => {
+  const MockPage = () => (
+    <div data-testid="mocked-page">
+      <h1>Log Viewer</h1>
+    </div>
+  );
+  return MockPage;
+});
+
+// Then use render() normally
+import { render, screen } from '@testing-library/react';
+render(<Page />);
+```
+
+#### Key Testing Rules
+1. **Identify Component Type**: Check for 'use client' directive
+2. **Server Components**: Call as async functions, test JSX properties
+3. **Client Components**: Mock all dependencies, use RTL render()
+4. **Mock Strategy**: Complete module mocking prevents complex dependency chains
+5. **File Extensions**: Use `.tsx` for test files with JSX
+6. **Import Types**: Import `RenderResult` from '@testing-library/react'
+
+### Testing File Cleanup
+- **Remove Duplicate Tests**: Delete `.ts` files when `.tsx` equivalents exist
+- **Consistent Extensions**: Use `.tsx` for all component tests
+- **Proper Imports**: Ensure all RTL types are imported
 
 ## Performance Patterns
 

@@ -1,6 +1,6 @@
 # Architecture Overview
 
-*Last updated: 2025-07-10 | Database performance optimizations completed - caching, batch operations, monitoring, and production environment validation*
+*Last updated: 2025-07-16 | Added keyboard shortcut for sort toggle*
 
 ## System Architecture
 
@@ -22,7 +22,7 @@ The Universal Log Viewer implements a **hybrid security model** with public API 
 
 #### UI & Styling
 - **Tailwind CSS v4**: Utility-first styling with PostCSS
-- **shadcn/ui**: Component library built on Radix UI primitives
+- **shadcn/ui**: Component library built on Radix UI primitives with Badge component for tags
 - **Radix UI**: Accessible component primitives
 - **Lucide React**: Icon library
 - **Sonner**: Toast notifications
@@ -86,7 +86,7 @@ User → Authentication → UI → API → Turso SQLite → Client-Side Parsing 
 
 1. **Authentication**: Google OAuth session validation
 2. **Data Fetching**: Authenticated API calls for log data
-3. **Client-Side Processing**: Log parsing and filtering in browser
+3. **Client-Side Processing**: Log parsing with _tags field extraction and filtering in browser
 4. **Caching**: Client-side content caching to avoid re-fetching
 5. **Real-Time Updates**: Read status updates and log management
 
@@ -119,18 +119,29 @@ Projects List (1/5) | Log Entries (1/5) | Log Details (3/5)
 **Log Details**: Parsed log content with syntax highlighting
 
 #### Key Components
-- **LogViewer**: Main orchestration component
-- **LogEntryList**: Virtualized list for performance
+- **LogViewer**: Main orchestration component with sort state management
+- **LogEntryList**: Virtualized list for performance with timestamp sorting and tags display
 - **LogEntryDetails**: Detailed view with JSON tree rendering
 - **Project Management**: CRUD operations for projects
+- **Badge**: Atomic UI component for tag visualization with overflow handling
+
+#### UI Features
+- **Sort Control**: Toggle button for ascending/descending timestamp order
+- **Keyboard Shortcuts**: Press 's' to toggle sort order (disabled when input focused)
+- **Visual Indicators**: Arrow icons (ArrowUp/ArrowDown) show current sort direction
+- **Session Persistence**: Sort preference maintained during user session
+- **Responsive Layout**: Sort controls integrated into column headers
+- **Tags Display**: Visual badges in log entries with overflow handling (show first 2 + count)
+- **Accessibility**: Keyboard navigation support for power users
 
 ### Performance Optimizations
 
 #### Client-Side Optimizations
-- **Memoization**: `React.useMemo` for expensive filtering operations
+- **Memoization**: `React.useMemo` for expensive filtering and sorting operations
 - **Caching**: Client-side log content cache
 - **Lazy Loading**: Content loaded on demand
 - **Debounced Search**: Search input debouncing
+- **Efficient Sorting**: Timestamp-based sorting with minimal recalculation
 
 #### Server-Side Optimizations
 - **Turbopack**: Fast development builds
@@ -201,7 +212,7 @@ interface ApiErrorResponse {
 
 #### Current Limitations
 - **Single Database**: Turso SQLite as single point of storage
-- **Client-Side Parsing**: Heavy processing in browser
+- **Client-Side Parsing**: Enhanced processing in browser including tags extraction
 - **No Pagination**: Full log loading (manageable for typical use cases)
 
 #### Future Scalability

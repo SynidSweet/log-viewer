@@ -1,6 +1,6 @@
 # Vercel Environment Variable Setup Guide
 
-*Last updated: 2025-07-10 | Added comprehensive debugging tools and validation methods*
+*Last updated: 2025-07-10 | Added domain configuration section and comprehensive debugging tools*
 
 ## Overview
 
@@ -30,6 +30,8 @@ These are needed for Google OAuth functionality:
 4. **`GOOGLE_CLIENT_SECRET`**
 5. **`NEXTAUTH_SECRET`**
 6. **`NEXTAUTH_URL`**
+   - Production: `https://log.petter.ai` (custom domain)
+   - Development: `http://localhost:3000`
 
 ## Step-by-Step Setup in Vercel
 
@@ -162,7 +164,7 @@ TURSO_AUTH_TOKEN=your-turso-auth-token
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 NEXTAUTH_SECRET=your-nextauth-secret
-NEXTAUTH_URL=https://your-app.vercel.app
+NEXTAUTH_URL=https://log.petter.ai
 ```
 
 ## Security Notes
@@ -205,6 +207,42 @@ After setting up environment variables:
 
 3. **Create First Project**: Use the UI or API to create a test project
 
+## Custom Domain Configuration
+
+The application is deployed with a custom domain configuration:
+
+### Production URL
+- **Custom Domain**: `https://log.petter.ai`
+- **Vercel Domain**: `log-viewer-g6vytr1s4-petter-sjostrands-projects.vercel.app`
+
+### Setting Up Custom Domain
+
+If you need to configure a custom domain:
+
+1. **Add Domain to Project**:
+   ```bash
+   vercel domains add your-domain.com
+   ```
+
+2. **Configure DNS** (if domain is external):
+   - Add CNAME record pointing to your Vercel deployment
+   - Or configure A records to Vercel's IP addresses
+
+3. **Update NextAuth URL**:
+   ```env
+   NEXTAUTH_URL=https://your-custom-domain.com
+   ```
+
+4. **Verify Configuration**:
+   ```bash
+   curl -I https://your-custom-domain.com/api/health
+   ```
+
+### Domain Requirements
+- SSL certificate is automatically provisioned by Vercel
+- Domain must support HTTPS for OAuth authentication
+- Ensure NEXTAUTH_URL matches your production domain
+
 ## Support
 
 If issues persist after following this guide:
@@ -213,3 +251,4 @@ If issues persist after following this guide:
 2. Use the `/api/debug` endpoint for detailed diagnostics
 3. Verify Turso database is active and accessible
 4. Check Turso dashboard for any service issues
+5. Verify custom domain configuration and SSL certificate status

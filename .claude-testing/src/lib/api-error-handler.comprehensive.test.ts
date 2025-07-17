@@ -56,7 +56,7 @@ describe('API Error Handler Comprehensive Tests', () => {
 
       expect(result).toEqual({
         error: 'Database connection failed',
-        message: 'Unable to connect to database. Please try again later.',
+        message: 'Unable to connect to database. Please verify database configuration and try again.',
         type: 'database_connection',
         retryable: true,
         timestamp: expect.any(String),
@@ -76,7 +76,7 @@ describe('API Error Handler Comprehensive Tests', () => {
 
       expect(result).toEqual({
         error: 'Database initialization failed',
-        message: 'Database is not ready. Please wait a moment and try again.',
+        message: 'Database initialization in progress. Please wait a moment and try again. If this persists, check /api/health for more details.',
         type: 'database_initialization',
         retryable: true,
         timestamp: expect.any(String),
@@ -95,7 +95,7 @@ describe('API Error Handler Comprehensive Tests', () => {
 
       expect(result).toEqual({
         error: 'Database schema validation failed',
-        message: 'Database schema is corrupted. Please contact support.',
+        message: 'Database schema integrity issue detected. This may require database maintenance. Contact support if this persists.',
         type: 'database_schema',
         retryable: false,
         timestamp: expect.any(String),
@@ -114,7 +114,7 @@ describe('API Error Handler Comprehensive Tests', () => {
 
       expect(result).toEqual({
         error: 'Database query failed',
-        message: 'Unable to process request. Please try again.',
+        message: 'Database operation failed. Please try again. If this persists, check system status.',
         type: 'database_query',
         retryable: true,
         timestamp: expect.any(String),
@@ -581,7 +581,8 @@ describe('API Error Handler Comprehensive Tests', () => {
       const error = new Error('Error with special chars: àáâãäåæçèé €£¥');
 
       const result = classifyAndFormatError(error);
-      expect(result.message).toContain('special chars');
+      expect(result.message).toBe('An unexpected error occurred. Please try again later.');
+      expect(result.type).toBe('server_error');
     });
 
     it('should handle concurrent error processing', async () => {
