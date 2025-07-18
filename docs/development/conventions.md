@@ -1,6 +1,6 @@
 # Development Conventions
 
-*Last updated: 2025-07-17 | Added CSS animation patterns for smooth UI transitions*
+*Last updated: 2025-07-18 | Added card component to shadcn/ui library following standard patterns*
 
 ## Code Organization
 
@@ -14,7 +14,7 @@ src/
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Home page
 ├── components/            # React components
-│   ├── ui/               # Atomic UI components (shadcn/ui: badge, button, input, etc.)
+│   ├── ui/               # Atomic UI components (shadcn/ui: badge, button, card, input, etc.)
 │   ├── log-viewer/       # Complex feature components
 │   └── *.tsx             # Shared components
 └── lib/                  # Utilities and core logic
@@ -112,6 +112,130 @@ export function ExampleComponent({ data, onAction }: ExampleComponentProps) {
 }
 ```
 
+### Authentication Patterns
+
+#### Client Components with useSession
+When using `useSession` hook in client components that might be statically generated:
+
+```typescript
+// ❌ Wrong: Direct useSession in a page that might be statically generated
+'use client'
+export default function Page() {
+  const { data: session } = useSession()
+  // This will fail during static generation
+}
+
+// ✅ Correct: Split into server page and client component
+// page.tsx (server component)
+export { default } from './client-page'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+// client-page.tsx (client component)
+'use client'
+export default function ClientPage() {
+  const [mounted, setMounted] = useState(false)
+  const { data: session, status } = useSession({ required: false })
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  
+  if (!mounted || status === 'loading') {
+    return <LoadingState />
+  }
+  
+  // Component logic here
+}
+```
+
+### Performance Optimization
+
+#### React.memo with Custom Comparison
+For components with complex props that need re-render optimization:
+
+```typescript
+// components/optimized-component.tsx
+'use client'
+
+import { memo, useCallback } from 'react'
+
+interface OptimizedComponentProps {
+  items: Item[];
+  selectedIndex: number;
+  onSelect: (index: number) => void;
+  selectedItems: Set<string>;
+}
+
+function OptimizedComponentInner({ items, selectedIndex, onSelect, selectedItems }: OptimizedComponentProps) {
+  // Component implementation
+  return <div>{/* Component JSX */}</div>
+}
+
+// Custom comparison function for React.memo
+function arePropsEqual(prevProps: OptimizedComponentProps, nextProps: OptimizedComponentProps): boolean {
+  // Check array length and references
+  if (prevProps.items.length !== nextProps.items.length) return false
+  
+  // Shallow comparison of array items
+  for (let i = 0; i < prevProps.items.length; i++) {
+    if (prevProps.items[i] !== nextProps.items[i]) return false
+  }
+  
+  // Check primitive props
+  if (prevProps.selectedIndex !== nextProps.selectedIndex) return false
+  
+  // Check Set contents
+  if (prevProps.selectedItems.size !== nextProps.selectedItems.size) return false
+  for (const id of prevProps.selectedItems) {
+    if (!nextProps.selectedItems.has(id)) return false
+  }
+  
+  return true
+}
+
+// Export the memoized component
+export const OptimizedComponent = memo(OptimizedComponentInner, arePropsEqual)
+```
+
+#### Callback Optimization (✅ IMPROVED - TASK-2025-051)
+Always wrap callback functions with `useCallback` when passing to memoized components:
+
+```typescript
+// ✅ Correct: Stable callbacks with minimal dependencies
+const handleSelect = useCallback((index: number) => {
+  setSelectedIndex(index)
+}, [])
+
+// ✅ Improved: More stable callback for Set-based operations
+const selectAllEntries = useCallback(() => {
+  setSelectedEntryIds(new Set(filteredEntries.map(entry => entry.id)))
+}, [filteredEntries]) // Dependency is necessary but minimized
+
+// ❌ Previously: Less stable pattern (fixed in TASK-2025-051)
+// const selectAllEntries = useCallback(() => {
+//   const allIds = new Set(filteredEntries.map(entry => entry.id))
+//   setSelectedEntryIds(allIds)
+// }, [filteredEntries])
+
+// ✅ Pattern: Callbacks without dependencies when possible
+const clearAllSelections = useCallback(() => {
+  setSelectedEntryIds(new Set())
+}, [])
+
+const toggleEntrySelection = useCallback((entryId: string) => {
+  setSelectedEntryIds(prev => {
+    const newSelection = new Set(prev)
+    if (newSelection.has(entryId)) {
+      newSelection.delete(entryId)
+    } else {
+      newSelection.add(entryId)  
+    }
+    return newSelection
+  })
+}, [])
+```
+
 ### State Management
 - **Local State**: `useState` for component-specific state
 - **Derived State**: `useMemo` for computed values
@@ -189,22 +313,109 @@ const handleApiResponse = (response: unknown) => {
 }
 ```
 
-### Memoization Strategy
+### Memoization Strategy (✅ ENHANCED - TASK-2025-053)
+
+#### Pre-parsed Timestamp Optimization
 ```typescript
-// Expensive computations with sorting and filtering
+// ✅ PERFORMANCE BOOST: Pre-parse timestamps to avoid repeated Date operations during sort
+const entriesWithParsedTimestamps = useMemo(() => {
+  return parsedEntries.map(entry => ({
+    ...entry,
+    _timestampMs: new Date(entry.timestamp).getTime()
+  }));
+}, [parsedEntries]);
+
+// ✅ OPTIMIZED: Use pre-parsed timestamps for efficient sorting
 const filteredEntries = useMemo(() => {
-  return entries
-    .filter(entry => {
-      // Complex filtering logic with multiple criteria
-      return matchesFilter(entry, filters)
-    })
-    .sort((a, b) => {
-      // Dynamic sorting based on state
-      const timeA = new Date(a.timestamp).getTime();
-      const timeB = new Date(b.timestamp).getTime();
-      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
-    });
-}, [entries, filters, sortOrder])
+  let filtered = entriesWithParsedTimestamps;
+  
+  // Level filtering with lookup object (faster than switch statement)
+  const levelFilter = {
+    'LOG': entryFilters.showLog,
+    'INFO': entryFilters.showInfo,
+    'WARN': entryFilters.showWarn,
+    'ERROR': entryFilters.showError,
+    'DEBUG': entryFilters.showDebug
+  };
+  
+  filtered = filtered.filter(entry => levelFilter[entry.level] ?? true);
+  
+  // Search filtering (only if search term exists)
+  if (entryFilters.searchText) {
+    const searchTerm = entryFilters.searchText.toLowerCase();
+    filtered = filtered.filter(entry => 
+      entry.message.toLowerCase().includes(searchTerm) ||
+      (entry.details && String(entry.details).toLowerCase().includes(searchTerm))
+    );
+  }
+  
+  // ✅ PERFORMANCE: Set-based tag filtering (O(1) lookup vs O(n) array.includes)
+  if (entryFilters.selectedTags.length > 0) {
+    const selectedTagsSet = new Set(entryFilters.selectedTags);
+    filtered = filtered.filter(entry => 
+      entry.tags?.some(tag => selectedTagsSet.has(tag))
+    );
+  }
+  
+  // ✅ OPTIMIZED: Sort by pre-parsed timestamp (no Date parsing in sort)
+  filtered.sort((a, b) => {
+    return sortOrder === 'asc' ? a._timestampMs - b._timestampMs : b._timestampMs - a._timestampMs;
+  });
+  
+  return filtered;
+}, [entriesWithParsedTimestamps, entryFilters, sortOrder]);
+
+// ❌ PREVIOUS: Less efficient pattern (fixed in TASK-2025-053)
+// const filteredEntries = useMemo(() => {
+//   return entries
+//     .filter(entry => {
+//       // Complex filtering logic with multiple criteria
+//       return matchesFilter(entry, filters)
+//     })
+//     .sort((a, b) => {
+//       // ❌ INEFFICIENT: Date parsing on every sort comparison
+//       const timeA = new Date(a.timestamp).getTime();
+//       const timeB = new Date(b.timestamp).getTime();
+//       return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+//     });
+// }, [entries, filters, sortOrder]) // ❌ Unstable dependencies
+```
+
+#### Stable Dependency Management
+```typescript
+// ✅ IMPROVED: Use entire filter object as dependency for stable memoization
+const filteredEntries = useMemo(() => {
+  // Filtering logic...
+}, [entriesWithParsedTimestamps, entryFilters, sortOrder]);
+
+// ❌ PREVIOUS: Individual filter flags created unstable dependencies
+// }, [parsedEntries, entryFilters.showLog, entryFilters.showInfo, entryFilters.showWarn, entryFilters.showError, entryFilters.showDebug, entryFilters.searchText, entryFilters.selectedTags, sortOrder]);
+```
+
+#### Log Search Optimization
+```typescript
+// ✅ OPTIMIZED: Memoized log search with proper dependencies
+const filteredLogs = useMemo(() => {
+  if (!logFilters.searchText) return logs;
+  
+  const searchTerm = logFilters.searchText.toLowerCase();
+  return logs.filter(log => 
+    log.comment.toLowerCase().includes(searchTerm)
+  );
+}, [logs, logFilters.searchText]);
+
+// ❌ PREVIOUS: Inline filtering without memoization
+// const filteredLogs = logs.filter(log => {
+//   if (logFilters.searchText) {
+//     const searchTerm = logFilters.searchText.toLowerCase()
+//     const commentMatches = log.comment.toLowerCase().includes(searchTerm)
+//     if (!commentMatches) {
+//       return false
+//     }
+//   }
+//   return true
+// })
+```
 
 // Extract available tags for dropdown population
 const availableTags = useMemo(() => {
@@ -476,13 +687,18 @@ const filteredItems = useMemo(() => {
 
 ### Icon Usage Patterns
 ```typescript
-// Import from lucide-react
-import { ArrowUp, ArrowDown, Search, Filter, ChevronDown } from 'lucide-react'
+// Import from centralized icons (optimized inline SVGs)
+import { ArrowUp, ArrowDown, Search, Filter, ChevronDown } from '@/components/icons'
 
-// Size consistency
-className="h-3 w-3"  // Small icons in buttons
-className="h-4 w-4"  // Default icon size
-className="h-5 w-5"  // Larger icons in headers
+// Size consistency (using size prop)
+size={12}  // Small icons in buttons (12px)
+size={16}  // Default icon size (16px)
+size={20}  // Larger icons in headers (20px)
+
+// Alternative: className for Tailwind sizing
+className="h-3 w-3"  // Small icons
+className="h-4 w-4"  // Default size
+className="h-5 w-5"  // Larger icons
 
 // Semantic icon usage
 ArrowUp/ArrowDown: Sort direction indicators
@@ -516,7 +732,7 @@ export async function POST(request: NextRequest) {
     // Your API logic here
     const result = await operation()
     return result // Wrapper handles success response
-  }, 'POST /api/endpoint')
+  })
 }
 
 // For custom error types
@@ -534,6 +750,21 @@ function validateInput(data: unknown): ValidationResult {
   
   return { valid: true }
 }
+```
+
+### Turbopack Dynamic Path Workaround
+```typescript
+// ❌ Problematic: Turbopack treats path.join() arguments as ES6 imports
+const scriptPath = path.join(process.cwd(), '.claude-testing', 'script.js')
+const child = spawn('node', [scriptPath])
+
+// ✅ Solution: Use array-based path construction to avoid static analysis
+const scriptDir = '.claude-testing'
+const scriptName = 'script.js'
+const scriptPath = [process.cwd(), scriptDir, scriptName].join(path.sep)
+const child = spawn('node', [scriptPath])
+
+// This prevents Turbopack from attempting to resolve the path as a module import
 ```
 
 ## Database Patterns
@@ -913,7 +1144,7 @@ export async function GET() {
       database: 'connected',
       details: health.details
     }
-  }, 'GET /api/health')
+  })
 }
 ```
 
@@ -1182,6 +1413,11 @@ const parsedEntries = useMemo(() => {
   return parseLogContent(logContent)
 }, [logContent])
 
+// Date formatting memoization (avoid re-formatting on every render)
+const formattedTimestamps = useMemo(() => {
+  return entries.map(entry => format(new Date(entry.timestamp), 'HH:mm:ss'))
+}, [entries])
+
 // Caching to avoid repeated fetches
 const logCache: Record<string, string> = {}
 ```
@@ -1211,6 +1447,88 @@ export async function ensureDatabaseReady(): Promise<void> {
 const MAX_RETRY_ATTEMPTS = 3
 const RETRY_DELAY_MS = 1000
 ```
+
+### Production Code Cleanup (✅ COMPLETED)
+```typescript
+// ❌ Removed: Debug logging from production code (TASK-2025-051)
+// console.error('Failed to fetch logs', error) → Removed from LogViewer
+// console.error('Failed to fetch log content', error) → Removed from LogViewer  
+// console.error('Failed to update read status', error) → Removed from LogViewer
+// console.error('Failed to delete log', error) → Removed from LogViewer
+// console.error('Failed to copy to clipboard:', error) → Removed from LogViewer
+// console.error('Failed to fetch projects', error) → Removed from ProjectList
+// console.error('Failed to fetch projects', error) → Removed from ProjectSelector
+
+// ✅ Current: Clean production code with UI feedback only
+export async function deleteLog(logId: string) {
+  try {
+    const response = await fetch(`/api/logs/${logId}`, { method: 'DELETE' });
+    if (response.ok) {
+      toast.success('Log deleted successfully');
+    } else {
+      throw new Error('Failed to delete log');
+    }
+  } catch {
+    // User feedback without console pollution
+    toast.error('Failed to delete log');
+  }
+}
+
+// ✅ Alternative: Error handling with UI state management
+export async function fetchProjects() {
+  try {
+    const response = await fetch('/api/projects');
+    if (response.ok) {
+      const data = await response.json();
+      const projects = data.success ? data.data : data;
+      setProjects(Array.isArray(projects) ? projects : []);
+    }
+  } catch {
+    // Error handled by UI state - no console noise
+    setProjects([]);
+  }
+}
+
+// ✅ Alternative: Conditional logging for development
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+function debugLog(message: string, data?: unknown) {
+  if (isDevelopment) {
+    console.log(message, data);
+  }
+}
+
+// ✅ Structured error handling without debug noise
+export async function createProject(name: string, description: string) {
+  try {
+    const project = await db.project.create({ name, description });
+    return project;
+  } catch (error) {
+    // Log errors, not debug information
+    console.error('Project creation failed:', error);
+    throw new Error('validation: Failed to create project');
+  }
+}
+```
+
+### Performance Impact of Console Output
+- **Production Impact**: Each console.log() call creates overhead in production
+- **Bundle Size**: Debug statements increase the final bundle size
+- **Runtime Performance**: Console operations can block the event loop
+- **User Experience**: Cleaner console output improves developer experience
+
+### Console Cleanup Guidelines
+1. **Remove Debug Logging**: Eliminate console.log() statements from production code
+2. **Development Script Output**: Use `process.stdout.write()` for development script output instead of console.log()
+3. **Silent Error Handling**: Replace console.error() with silent error handling in development-only code
+4. **Preserve Critical Error Logging**: Keep console.error() only for actual error reporting that affects functionality
+5. **Structured Logging**: Consider proper logging libraries for production
+6. **Linting Rules**: Configure ESLint to catch console.log() in CI/CD
+
+✅ **TASK-2025-118 COMPLETED**: Cleaned up console.log statements from development files:
+- `scripts/verify-performance.js`: Replaced console.log with process.stdout.write for proper output handling
+- `src/app/test-performance/page.tsx`: Replaced console.error with silent error handling
+- `manual-performance-validation.js`: Replaced 30+ console.log statements with process.stdout.write
 
 ## Security Patterns
 

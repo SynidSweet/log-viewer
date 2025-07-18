@@ -17,33 +17,27 @@ export async function GET(request: Request) {
     
     const projects = await getProjects();
     return projects;
-  }, 'GET /api/projects');
+  });
 }
 
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
-    console.log('POST /api/projects - Starting request');
     
     let body;
     try {
       body = await request.json();
-    } catch (error) {
-      console.log('Invalid JSON payload:', error);
+    } catch {
       throw new Error('validation: Invalid JSON payload');
     }
     
     const { name, description } = body;
-    console.log('Request data:', { name, description });
     
     if (!name) {
-      console.log('Missing project name');
       throw new Error('validation: Project name is required');
     }
     
-    console.log('Attempting to create project...');
     const project = await createProject(name, description || '');
-    console.log('Project created successfully:', project.id);
     
     return project;
-  }, 'POST /api/projects');
+  });
 }

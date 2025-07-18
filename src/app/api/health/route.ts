@@ -151,5 +151,5 @@ export async function GET() {
       // Return detailed error information for deployment debugging
       return NextResponse.json(response, { status: 503 });
     }
-  }, 'GET /api/health');
+  });
 }

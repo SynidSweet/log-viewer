@@ -1,0 +1,159 @@
+name: Bundle Size Analysis
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'next.config.ts'
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build project
+        run: |
+          # Skip database initialization for CI build
+          export SKIP_DB_INIT=true
+          npm run build
+        env:
+          SKIP_DB_INIT: true
+          
+      - name: Analyze bundle size
+        id: analyze
+        run: |
+          # Get bundle sizes
+          echo "### Bundle Size Report 📊" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check .next/static/chunks directory
+          if [ -d ".next/static/chunks" ]; then
+            echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
+            echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+            
+            # Get sizes of key bundles
+            for file in .next/static/chunks/*.js; do
+              if [ -f "$file" ]; then
+                filename=$(basename "$file")
+                size=$(du -h "$file" | cut -f1)
+                echo "| $filename | $size |" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
+            
+            # Total size
+            total_size=$(du -sh .next/static/chunks | cut -f1)
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Total chunks size:** $total_size" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: Compare with base branch
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Size Comparison 📈" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # This is a placeholder for actual comparison logic
+          # In a real implementation, you would:
+          # 1. Fetch base branch bundle sizes
+          # 2. Compare with current sizes
+          # 3. Report differences
+          
+          echo "ℹ️ Size comparison will be available after base branch analysis is implemented." >> $GITHUB_STEP_SUMMARY
+          
+      - name: Set bundle size limits
+        run: |
+          # Check if any bundle exceeds size limits
+          MAX_BUNDLE_SIZE=250 # KB
+          TOTAL_MAX_SIZE=1500 # KB
+          
+          failed=false
+          
+          # Check individual bundles
+          for file in .next/static/chunks/*.js; do
+            if [ -f "$file" ]; then
+              size_kb=$(du -k "$file" | cut -f1)
+              filename=$(basename "$file")
+              
+              if [ "$size_kb" -gt "$MAX_BUNDLE_SIZE" ]; then
+                echo "❌ $filename exceeds limit: ${size_kb}KB > ${MAX_BUNDLE_SIZE}KB"
+                failed=true
+              fi
+            fi
+          done
+          
+          # Check total size
+          if [ -d ".next/static/chunks" ]; then
+            total_kb=$(du -sk .next/static/chunks | cut -f1)
+            if [ "$total_kb" -gt "$TOTAL_MAX_SIZE" ]; then
+              echo "❌ Total bundle size exceeds limit: ${total_kb}KB > ${TOTAL_MAX_SIZE}KB"
+              failed=true
+            fi
+          fi
+          
+          if [ "$failed" = true ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Bundle size limits exceeded!**" >> $GITHUB_STEP_SUMMARY
+            echo "Consider using code splitting or optimizing imports." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **All bundles within size limits**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build project
+        run: |
+          export SKIP_DB_INIT=true
+          npm run build
+        env:
+          SKIP_DB_INIT: true
+          
+      - name: Run Lighthouse Performance Audit
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            http://localhost:3000
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          
+      - name: Format Lighthouse Results
+        if: always()
+        run: |
+          echo "### Lighthouse Performance Report 🚦" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Performance metrics will be displayed here once Lighthouse CI is configured." >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,316 @@
+name: Performance Benchmarking
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'src/components/log-viewer/**'
+      - 'src/app/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.claude-testing/performance-*'
+      - '.github/workflows/performance.yml'
+
+concurrency:
+  group: performance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  performance-tests:
+    name: Performance Benchmarking
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Needed for performance comparison
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup performance baseline
+        id: baseline
+        run: |
+          echo "BASELINE_REF=main" >> $GITHUB_OUTPUT
+          echo "CURRENT_REF=${{ github.sha }}" >> $GITHUB_OUTPUT
+
+      - name: Run performance monitoring with regression detection
+        id: performance
+        run: |
+          echo "🚀 Running comprehensive performance monitoring..."
+          
+          # Run comprehensive performance monitoring (includes benchmarks, tests, and regression detection)
+          npm run monitor:performance 2>&1 | tee performance-monitor-output.log
+          
+          # Check if performance results exist
+          if [ -f ".claude-testing/performance-results.json" ]; then
+            echo "performance_results_exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "performance_results_exist=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check if regression report exists
+          if [ -f ".claude-testing/regression-report.json" ]; then
+            echo "regression_report_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "regression_report_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Analyze performance results and regressions
+        id: analysis
+        if: steps.performance.outputs.performance_results_exist == 'true'
+        run: |
+          # Create comprehensive performance analysis script
+          cat > analyze-performance.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          
+          try {
+            // Load monitoring report if available (includes regression analysis)
+            let monitoringReport = null;
+            const monitoringPath = '.claude-testing/monitoring-report.json';
+            if (fs.existsSync(monitoringPath)) {
+              monitoringReport = JSON.parse(fs.readFileSync(monitoringPath, 'utf8'));
+            }
+            
+            // Load regression report
+            let regressionReport = null;
+            const regressionPath = '.claude-testing/regression-report.json';
+            if (fs.existsSync(regressionPath)) {
+              regressionReport = JSON.parse(fs.readFileSync(regressionPath, 'utf8'));
+            }
+            
+            // Load performance results
+            const resultsPath = '.claude-testing/performance-results.json';
+            if (!fs.existsSync(resultsPath)) {
+              console.log('::warning::No performance results found');
+              process.exit(0);
+            }
+            
+            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+            const thresholds = {
+              search: 100,        // ms
+              levelFilter: 50,    // ms  
+              sort: 100,          // ms
+              combined: 150,      // ms
+              memoryGrowth: 2.0   // ratio
+            };
+            
+            let passed = true;
+            let hasRegressions = regressionReport?.hasRegressions || false;
+            let summary = '## 🚀 Performance Monitoring Report\n\n';
+            
+            // Add monitoring summary if available
+            if (monitoringReport) {
+              summary += `**Execution Time:** ${monitoringReport.execution_time_ms}ms\n`;
+              summary += `**Environment:** ${monitoringReport.environment.platform} (Node ${monitoringReport.environment.node_version})\n\n`;
+              
+              // Component status
+              summary += '### 🔧 Component Status\n\n';
+              Object.entries(monitoringReport.components).forEach(([component, status]) => {
+                const icon = status.status === 'success' ? '✅' : '❌';
+                summary += `- ${icon} **${component}**: ${status.status}\n`;
+                if (status.error) {
+                  summary += `  - Error: ${status.error}\n`;
+                }
+              });
+              summary += '\n';
+            }
+            
+            // Performance benchmarks
+            if (results.benchmarks && results.benchmarks.length > 0) {
+              const latestBenchmark = results.benchmarks[results.benchmarks.length - 1];
+              
+              summary += `### 📊 Performance Benchmarks (${latestBenchmark.datasetSize} entries)\n\n`;
+              summary += '| Operation | Time (ms) | Threshold | Status |\n';
+              summary += '|-----------|-----------|-----------|--------|\n';
+              
+              Object.entries(latestBenchmark.operations || {}).forEach(([op, time]) => {
+                const threshold = thresholds[op];
+                const status = threshold && time <= threshold ? '✅ PASS' : '❌ FAIL';
+                if (threshold && time > threshold) passed = false;
+                
+                summary += `| ${op} | ${time.toFixed(2)} | ${threshold || 'N/A'} | ${status} |\n`;
+              });
+              
+              summary += '\n### 💾 Memory Analysis\n\n';
+              if (latestBenchmark.memoryUsage) {
+                const memGrowth = latestBenchmark.memoryUsage.growth || 1.0;
+                const memStatus = memGrowth <= thresholds.memoryGrowth ? '✅ PASS' : '❌ FAIL';
+                if (memGrowth > thresholds.memoryGrowth) passed = false;
+                
+                summary += `- Memory Growth Factor: ${memGrowth.toFixed(2)}x (threshold: ${thresholds.memoryGrowth}x) ${memStatus}\n`;
+                summary += `- Peak Memory: ${(latestBenchmark.memoryUsage.peak / 1024 / 1024).toFixed(2)} MB\n`;
+              }
+            }
+            
+            // Regression analysis
+            if (regressionReport) {
+              summary += '\n### 🔍 Regression Analysis\n\n';
+              
+              if (hasRegressions) {
+                summary += `❌ **${regressionReport.analysis.regressions.length} regression(s) detected:**\n\n`;
+                
+                regressionReport.analysis.regressions.forEach(r => {
+                  const severityIcon = r.severity === 'critical' ? '🚨' : 
+                                     r.severity === 'high' ? '⚠️' : '📝';
+                  summary += `${severityIcon} **${r.operation}** (${r.severity}):\n`;
+                  summary += `  - ${r.message}\n`;
+                  summary += `  - Current: ${r.currentTime || r.currentValue}${r.currentTime ? 'ms' : 'x'}\n`;
+                  summary += `  - Baseline: ${r.baselineTime || r.baselineValue}${r.baselineTime ? 'ms' : 'x'}\n\n`;
+                });
+                
+                if (regressionReport.recommendations) {
+                  summary += '**Recommendations:**\n';
+                  regressionReport.recommendations.forEach(rec => {
+                    summary += `- ${rec}\n`;
+                  });
+                }
+              } else {
+                summary += '✅ **No performance regressions detected**\n';
+              }
+            }
+            
+            // Overall verdict
+            summary += '\n### 🎯 Overall Verdict\n\n';
+            if (hasRegressions) {
+              summary += '🚨 **Performance regressions detected!** Review and address the issues above.';
+              passed = false;
+            } else if (passed) {
+              summary += '🎉 **All performance checks PASSED!** The optimization work is effective.';
+            } else {
+              summary += '⚠️ **Some performance thresholds exceeded.** Consider optimizations.';
+            }
+            
+            // Write summary for GitHub comment
+            fs.writeFileSync('performance-summary.md', summary);
+            
+            console.log('PERFORMANCE_PASSED=' + passed);
+            console.log('HAS_REGRESSIONS=' + hasRegressions);
+            console.log('Performance analysis completed');
+            
+          } catch (error) {
+            console.log('::error::Failed to analyze performance results:', error.message);
+            fs.writeFileSync('performance-summary.md', '❌ **Performance analysis failed**: ' + error.message);
+            console.log('PERFORMANCE_PASSED=false');
+            console.log('HAS_REGRESSIONS=false');
+          }
+          EOF
+          
+          # Run analysis
+          node analyze-performance.js | tee analysis-output.log
+          PERF_STATUS=$(grep "PERFORMANCE_PASSED" analysis-output.log | cut -d'=' -f2 || echo "false")
+          HAS_REGRESSIONS=$(grep "HAS_REGRESSIONS" analysis-output.log | cut -d'=' -f2 || echo "false")
+          echo "performance_passed=$PERF_STATUS" >> $GITHUB_OUTPUT
+          echo "has_regressions=$HAS_REGRESSIONS" >> $GITHUB_OUTPUT
+
+      - name: Upload performance artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-results
+          path: |
+            .claude-testing/performance-results.json
+            .claude-testing/performance-test-results.json
+            .claude-testing/regression-report.json
+            .claude-testing/monitoring-report.json
+            .claude-testing/performance-history.json
+            .claude-testing/regression-issue.json
+            performance-monitor-output.log
+            analysis-output.log
+            performance-summary.md
+          retention-days: 30
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let comment = '## 🎯 Performance Benchmark Report\n\n';
+            
+            // Add performance summary if available
+            try {
+              if (fs.existsSync('performance-summary.md')) {
+                const summary = fs.readFileSync('performance-summary.md', 'utf8');
+                comment += summary + '\n\n';
+              } else {
+                comment += '⚠️ Performance summary not available.\n\n';
+              }
+            } catch (error) {
+              comment += `❌ Error reading performance summary: ${error.message}\n\n`;
+            }
+            
+            // Add links to artifacts
+            comment += '### 📊 Detailed Results\n\n';
+            comment += 'Download the [performance artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for detailed analysis.\n\n';
+            
+            comment += '### 🔍 Files Analyzed\n\n';
+            comment += 'This benchmark analyzed performance-critical components:\n';
+            comment += '- `src/components/log-viewer/` - All log viewing components\n';
+            comment += '- Focus: Filtering operations, React.memo optimizations, memory usage\n\n';
+            
+            comment += '---\n';
+            comment += '*Automated performance analysis by CI/CD pipeline*';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Performance gate check
+        if: steps.analysis.outputs.performance_passed == 'false' || steps.analysis.outputs.has_regressions == 'true'
+        run: |
+          if [ "${{ steps.analysis.outputs.has_regressions }}" == "true" ]; then
+            echo "::error::Performance regressions detected compared to baseline"
+            echo "::notice::Review the regression analysis in the performance report"
+            echo "🚨 REGRESSION DETECTED - This indicates performance has degraded compared to historical baseline"
+          fi
+          
+          if [ "${{ steps.analysis.outputs.performance_passed }}" == "false" ]; then
+            echo "::error::Performance benchmarks failed to meet current thresholds" 
+            echo "::notice::Review the performance report for threshold violations"
+            echo "⚠️ THRESHOLD VIOLATIONS - Current performance exceeds acceptable limits"
+          fi
+          
+          echo "This is a soft failure - the workflow will continue but performance issues are detected"
+          echo "Consider reviewing recent changes that may impact performance"
+          
+          # Note: Not using exit 1 to make this a soft failure
+          # Set PERFORMANCE_GATE_ENABLED=true environment variable to make failures block PRs
+          if [ "$PERFORMANCE_GATE_ENABLED" == "true" ]; then
+            echo "Performance gate is ENABLED - failing the build"
+            exit 1
+          else
+            echo "Performance gate: SOFT FAILURE (workflow continues)"
+          fi
+
+      - name: Store performance history
+        if: github.ref == 'refs/heads/main' && steps.performance.outputs.performance_results_exist == 'true'
+        run: |
+          echo "🏆 Storing performance baseline for future comparisons..."
+          
+          # Create performance history directory
+          mkdir -p .performance-history
+          
+          # Copy current results with timestamp
+          TIMESTAMP=$(date -u +"%Y%m%d_%H%M%S")
+          cp .claude-testing/performance-results.json .performance-history/performance-${TIMESTAMP}.json
+          
+          # Keep only last 30 performance snapshots to avoid repo bloat
+          ls -t .performance-history/performance-*.json | tail -n +31 | xargs -r rm
+          
+          echo "Performance history updated with current baseline"

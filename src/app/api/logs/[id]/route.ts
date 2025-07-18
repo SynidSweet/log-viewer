@@ -16,7 +16,7 @@ export async function GET(
     }
     
     return log;
-  }, `GET /api/logs/${logId}`);
+  });
 }
 
 // PATCH /api/logs/[id]
@@ -49,7 +49,7 @@ export async function PATCH(
     }
     
     return updatedLog;
-  }, `PATCH /api/logs/${logId}`);
+  });
 }
 
 // DELETE /api/logs/[id]
@@ -67,5 +67,5 @@ export async function DELETE(
     }
     
     return { success: true };
-  }, `DELETE /api/logs/${logId}`);
+  });
 } 

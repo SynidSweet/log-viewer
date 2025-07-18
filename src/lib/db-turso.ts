@@ -9,8 +9,6 @@ async function withDatabaseOperation<T>(operation: () => Promise<T>, operationTy
     await ensureDatabaseReady();
     return await operation();
   } catch (error) {
-    console.error(`Database operation failed (${operationType}):`, error);
-    
     if (error instanceof Error && 'type' in error) {
       throw error; // Re-throw database errors as-is
     }

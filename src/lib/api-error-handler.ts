@@ -236,7 +236,6 @@ export function classifyAndFormatError(error: unknown): ApiErrorResponse {
   }
   
   // Generic server error
-  console.error('Unhandled error:', error);
   return {
     error: 'Internal server error',
     message: 'An unexpected error occurred. Please try again later.',
@@ -250,13 +249,6 @@ export function classifyAndFormatError(error: unknown): ApiErrorResponse {
 // Create standardized error response
 export function createErrorResponse(error: unknown): NextResponse {
   const errorResponse = classifyAndFormatError(error);
-  
-  // Log error for monitoring
-  console.error('API Error Response:', {
-    error: errorResponse,
-    originalError: error,
-    stack: error instanceof Error ? error.stack : undefined
-  });
   
   return NextResponse.json(errorResponse, { 
     status: errorResponse.statusCode,
@@ -285,14 +277,12 @@ export function createSuccessResponse<T>(data: T, status: number = 200): NextRes
 
 // API route wrapper with standardized error handling
 export async function withApiErrorHandling<T>(
-  operation: () => Promise<T>,
-  operationName: string
+  operation: () => Promise<T>
 ): Promise<NextResponse> {
   try {
     const result = await operation();
     return createSuccessResponse(result);
   } catch (error) {
-    console.error(`API operation failed (${operationName}):`, error);
     return createErrorResponse(error);
   }
 }

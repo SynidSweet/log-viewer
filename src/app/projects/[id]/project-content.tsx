@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { LogViewer } from '@/components/log-viewer'
-import { UploadLogsModal } from '@/components/upload-logs-modal'
+import { LogViewerDynamic as LogViewer } from '@/components/log-viewer/log-viewer-dynamic'
+import { UploadLogsModalDynamic as UploadLogsModal } from '@/components/upload-logs-modal-dynamic'
 import { Button } from '@/components/ui/button'
-import { Upload } from 'lucide-react'
+import { Upload } from '@/components/icons'
 import { Project } from '@/lib/types'
 
 interface ProjectContentProps {

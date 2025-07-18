@@ -1,6 +1,6 @@
 # Development Workflow
 
-*Last updated: 2025-07-16 | Fixed Jest configuration and updated testing infrastructure*
+*Last updated: 2025-07-18 | Updated bundle analysis script - removed deprecated swcMinify option for Next.js 15 compatibility*
 
 ## Environment Setup
 
@@ -65,6 +65,12 @@ npm run lint
 npm run db:init      # Initialize database manually
 npm run db:migrate   # Run pending migrations
 npm run db:status    # Check migration status
+
+# Performance testing
+npm run test:performance      # Run Jest performance test suite
+npm run benchmark:performance # Run standalone performance benchmarks
+npm run ci:performance        # Combined CI/CD performance testing
+npm run validate:performance  # Manual performance validation script
 ```
 
 ### Development Server
@@ -114,11 +120,18 @@ npm test -- --testPathPattern=comprehensive   # Comprehensive API tests
 
 # Run with coverage
 npm test -- --coverage
+
+# Performance testing (from project root)
+cd ..
+npm run test:performance      # Jest performance tests
+npm run benchmark:performance # Standalone benchmarks
+npm run ci:performance        # Combined CI/CD testing
 ```
 
 ### Test Categories
 - **API Tests (Node Environment)**: Database operations, error handling, route logic
 - **Component Tests (jsdom Environment)**: React components, UI interactions, integration tests
+- **Performance Tests**: Filtering optimization benchmarks, React.memo validation, memory usage
 - **Utility Tests**: Helper functions, type safety, module loading
 - **Integration Tests**: End-to-end scenarios across multiple components
 
@@ -133,6 +146,132 @@ npm test -- --coverage
 - [ ] **Read Status**: Mark logs as read/unread
 - [ ] **Log Levels**: Verify LOG, ERROR, INFO, WARN, DEBUG support
 - [ ] **Tag Display**: Check badge rendering for _tags field (when implemented)
+
+## CI/CD Integration
+
+### GitHub Actions Workflows
+
+#### Performance Testing (`.github/workflows/performance.yml`)
+- **Trigger**: Push to main/develop, PRs affecting performance-critical files
+- **Purpose**: Automated performance benchmarking and regression detection
+- **Features**:
+  - **Integration Performance Tests**: Real user interaction testing with LogViewer components
+  - **Performance Benchmarks**: Isolated operation testing (search, filtering, sorting)
+  - **Threshold Validation**: Render <1000ms, selection <200ms, search <150ms, memory <4x
+  - **PR Comment Reports**: Detailed performance analysis with pass/fail status
+  - **Regression Detection**: Automated comparison against historical baselines
+  - **Artifact Storage**: 30-day retention for trend analysis
+  - **Configurable Gates**: Soft failure by default, hard failure option available
+
+#### Performance Monitoring (`.github/workflows/performance-monitoring.yml`)
+- **Trigger**: Daily schedule (02:00 UTC), manual dispatch
+- **Purpose**: Long-term performance trend analysis and regression alerts
+- **Features**:
+  - Historical performance tracking
+  - Automated issue creation for performance regressions
+  - Trend analysis with optimization recommendations
+  - Performance baseline management
+
+### Performance Configuration
+- **Central Config**: `.claude-testing/performance-config.json`
+- **Thresholds**: Configurable performance limits and alerts
+- **CI/CD Settings**: Automated testing parameters and reporting options
+- **Documentation**: `.github/workflows/README.md` for workflow usage
+
+### Integration with Development
+- **Pre-PR Testing**: Run `npm run test:performance:integration` and `npm run ci:performance` before creating PRs
+- **Performance Validation**: Review automated PR comments for performance impact analysis
+- **Regression Monitoring**: Automated GitHub issue creation for performance degradation
+- **Historical Analysis**: Performance trends and detailed reports in GitHub Actions artifacts
+- **CI/CD Documentation**: Complete workflow documentation available in `.github/workflows/README.md`
+
+### CI/CD Workflow Usage
+
+#### Triggering Performance Tests
+**Automatic Triggers**:
+- Push to `main` or `develop` branches
+- Pull requests affecting performance-critical files:
+  - `src/components/log-viewer/**`
+  - `src/app/api/**`
+  - `src/lib/**`
+  - Performance test files in `.claude-testing/`
+
+**Manual Triggers**:
+- Use GitHub Actions "workflow_dispatch" trigger
+- Comment `/run-performance-tests` in PR (if configured)
+
+#### Reading Performance Results
+**PR Comments**: Automated performance analysis includes:
+- **Performance Test Results**: Pass/fail status for each test suite
+- **Threshold Validation**: Comparison against configured performance budgets
+- **Regression Analysis**: Comparison with historical baselines
+- **Detailed Metrics**: Response times, memory usage, render performance
+- **Recommendations**: Optimization suggestions for performance issues
+
+**GitHub Actions Artifacts**: Download detailed reports including:
+- Raw performance data (JSON format)
+- Trend analysis graphs
+- Comprehensive test logs
+- Performance profiling data
+
+#### Configuring Performance Thresholds
+**Edit `.claude-testing/performance-config.json`**:
+```json
+{
+  "thresholds": {
+    "operations": {
+      "search": { "max_time_ms": 100 },
+      "levelFilter": { "max_time_ms": 50 },
+      "sort": { "max_time_ms": 100 },
+      "combined": { "max_time_ms": 150 }
+    },
+    "memory": {
+      "max_growth_factor": 2.0,
+      "max_peak_mb": 100
+    },
+    "integration": {
+      "render_max_ms": 1000,
+      "selection_max_ms": 200,
+      "search_max_ms": 150,
+      "memory_max_factor": 4.0
+    }
+  },
+  "ci": {
+    "enable_performance_gate": false,
+    "fail_on_regression": true,
+    "regression_threshold": 1.2
+  }
+}
+```
+
+#### Debugging Performance Issues in CI/CD
+**Common Issues**:
+1. **Performance Gate Failures**: Review threshold settings and recent changes
+2. **Memory Growth Alerts**: Check for memory leaks in new code
+3. **Render Time Regressions**: Analyze component changes and React optimizations
+4. **Bundle Size Increases**: Review dependency changes and bundle analysis
+
+**Debugging Steps**:
+1. **Download Artifacts**: Access detailed performance reports from GitHub Actions
+2. **Local Reproduction**: Run `npm run test:performance:integration` locally
+3. **Profiling**: Use `npm run profile:react` for React DevTools profiler analysis
+4. **Comparison**: Compare results with baseline using `npm run regression:detect`
+
+#### Handling Performance Regressions
+**Automated Alerts**: GitHub issues are automatically created for:
+- Performance degradation >20% from baseline
+- Memory growth exceeding configured thresholds
+- Bundle size increases beyond limits
+- Critical performance test failures
+
+**Response Process**:
+1. **Triage**: Review automated issue details and performance data
+2. **Analysis**: Identify root cause using provided profiling data
+3. **Fix**: Implement optimizations or adjust thresholds if justified
+4. **Validation**: Verify fix with local testing before PR
+5. **Monitoring**: Track improvement in subsequent CI/CD runs
+
+📖 **See complete CI/CD documentation**: [`.github/workflows/README.md`](../../.github/workflows/README.md)
 
 ## Git Workflow
 
@@ -292,12 +431,31 @@ export default eslintConfig;
 - **Turbopack**: Fast development builds
 - **Selective Compilation**: Only compile changed files
 - **Memory Management**: Efficient hot reload
+- **Performance Testing**: Integrated benchmarking with `npm run test:performance`
 
 ### Production
 - **Code Splitting**: Automatic with Next.js
 - **Image Optimization**: Next.js image component
 - **Static Generation**: Pre-rendered pages where possible
 - **CDN Distribution**: Vercel Edge Network
+
+### Component Performance
+- **React.memo**: Optimized LogEntryList and LogItem components
+- **Memoization**: Timestamp formatting and expensive calculations cached
+- **Callback Stability**: useCallback for event handlers to prevent re-renders
+- **Performance Monitoring**: Automated CI/CD benchmarking and regression detection
+
+### Performance Benchmarking
+- **Automated Testing**: GitHub Actions workflows for continuous performance monitoring
+- **Threshold Validation**: All operations <100ms (actual: <1ms)
+- **Memory Monitoring**: Growth factor tracking (<2.0x threshold)
+- **Regression Detection**: Daily monitoring with automated issue creation
+
+### Bundle Analysis
+- **Analysis Script**: `scripts/analyze-bundle.js` - automated bundle size analysis
+- **Configuration**: Next.js 15 compatible (deprecated `swcMinify` option removed)
+- **Usage**: Run `npm run analyze` to generate bundle reports
+- **Features**: Code splitting visualization, dependency size analysis, optimization recommendations
 
 ## Security Considerations
 

@@ -203,7 +203,6 @@ export async function GET() {
       };
       
       return result;
-    },
-    'checkEnvironmentVariables'
+    }
   );
 }

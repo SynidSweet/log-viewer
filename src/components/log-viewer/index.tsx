@@ -1,62 +1,77 @@
 // components/log-viewer/index.tsx
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { ProjectLog } from '@/lib/types'
 import { LogItem } from './log-item'
 import { LogEntryList } from './log-entry-list'
+import { LogEntryListVirtualized } from './log-entry-list-virtualized'
 import { LogEntryDetails, LogEntry } from './log-entry-details'
+import { LogEntryFilters, EntryFilters } from './log-entry-filters'
+import { useLogOperations } from './use-log-operations'
+import { useDebounce } from '@/hooks/use-debounce'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { ArrowUp, ArrowDown, Filter, ChevronDown, Copy, CheckSquare, Square } from 'lucide-react'
 import { toast } from 'sonner'
+import { PerformanceProfiler } from '@/components/profiler/performance-profiler'
 
-interface LogViewerProps {
+export interface LogViewerProps {
   projectId: string
+  enableVirtualization?: boolean
 }
 
 // Regular expression to parse log lines
 const LOG_PATTERN = /\[(.*?)\] \[(.*?)\] (.*?)( - (.*))?$/;
 
-// Create a cache for log content to avoid repeated fetches
-const logCache: Record<string, string> = {}
-
-export function LogViewer({ projectId }: LogViewerProps) {
+export function LogViewer({ projectId, enableVirtualization = false }: LogViewerProps) {
   const [logs, setLogs] = useState<ProjectLog[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null)
   const [selectedLog, setSelectedLog] = useState<ProjectLog | null>(null)
   const [selectedEntryIndex, setSelectedEntryIndex] = useState<number>(-1)
-  const [loadingLogContent, setLoadingLogContent] = useState(false)
+  // Immediate input state for responsive UI
+  const [logSearchInput, setLogSearchInput] = useState('')
+  const [entrySearchInput, setEntrySearchInput] = useState('')
+  
+  // Debounced search values for actual filtering (300ms delay)
+  const debouncedLogSearch = useDebounce(logSearchInput, 300)
+  const debouncedEntrySearch = useDebounce(entrySearchInput, 300)
+  
   const [logFilters, setLogFilters] = useState({
     searchText: ''
   })
-  const [entryFilters, setEntryFilters] = useState({
+  const [entryFilters, setEntryFilters] = useState<EntryFilters>({
     searchText: '',
     showLog: true,
     showInfo: true,
     showWarn: true,
     showError: true,
     showDebug: true,
-    selectedTags: [] as string[]
+    selectedTags: []
   })
-  // Initialize sort order from localStorage or default to 'asc'
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(() => {
-    if (typeof window !== 'undefined') {
-      const savedSortOrder = localStorage.getItem('logViewer.sortOrder')
-      if (savedSortOrder === 'asc' || savedSortOrder === 'desc') {
-        return savedSortOrder
-      }
-    }
-    return 'asc'
-  })
-  const [tagDropdownOpen, setTagDropdownOpen] = useState(false)
-  const [tagSearchTerm, setTagSearchTerm] = useState('')
+  // Initialize sort order from localStorage or default to 'asc' - optimized for mount performance
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [sortOrderLoaded, setSortOrderLoaded] = useState(false)
   const [selectedEntryIds, setSelectedEntryIds] = useState<Set<string>>(new Set())
+
+  // Cache for parsed entries to avoid re-parsing on every render
+  const parsedEntriesCache = useRef<Map<string, LogEntry[]>>(new Map())
+  const timestampsCache = useRef<Map<string, number>>(new Map())
+
+  // Use the extracted hook for log operations
+  const { 
+    loadingLogContent, 
+    toggleReadStatus, 
+    deleteLog, 
+    handleSelectLog 
+  } = useLogOperations({
+    logs,
+    setLogs,
+    selectedLogId,
+    setSelectedLogId,
+    setSelectedLog,
+    setSelectedEntryIndex
+  })
   
   // Fetch logs list
   useEffect(() => {
@@ -77,7 +92,6 @@ export function LogViewer({ projectId }: LogViewerProps) {
         const data = result.success ? result.data : result
         setLogs(Array.isArray(data) ? data : [])
       } catch (error) {
-        console.error('Failed to fetch logs', error)
         setError((error as Error).message || 'Failed to load logs')
         setLogs([])
       } finally {
@@ -88,14 +102,48 @@ export function LogViewer({ projectId }: LogViewerProps) {
     fetchLogs()
   }, [projectId])
   
-  // Parse the log content into entries
+  // Update actual filter state when debounced values change
+  useEffect(() => {
+    setLogFilters(prev => ({ ...prev, searchText: debouncedLogSearch }))
+  }, [debouncedLogSearch])
+  
+  useEffect(() => {
+    setEntryFilters(prev => ({ ...prev, searchText: debouncedEntrySearch }))
+  }, [debouncedEntrySearch])
+  
+  // Load sort order from localStorage asynchronously after mount to improve mount performance
+  useEffect(() => {
+    if (!sortOrderLoaded && typeof window !== 'undefined') {
+      try {
+        const savedSortOrder = window.localStorage?.getItem('logViewer.sortOrder')
+        if (savedSortOrder === 'asc' || savedSortOrder === 'desc') {
+          setSortOrder(savedSortOrder)
+        }
+      } catch (error) {
+        // Handle localStorage being unavailable or throwing errors
+        console.debug('localStorage unavailable:', error)
+      }
+      setSortOrderLoaded(true)
+    }
+  }, [sortOrderLoaded])
+  
+  // Parse the log content into entries with caching optimization - defer complex work until needed
   const parsedEntries = useMemo(() => {
     if (!selectedLog?.content) return [];
+    
+    // Create cache key from content hash for fast lookup
+    const cacheKey = `${selectedLog.id}_${selectedLog.content.length}_${selectedLog.content.slice(0, 100)}`;
+    
+    // Check cache first for immediate return
+    if (parsedEntriesCache.current.has(cacheKey)) {
+      return parsedEntriesCache.current.get(cacheKey)!;
+    }
     
     const entries: LogEntry[] = [];
     const lines = selectedLog.content.split('\n').filter(line => line.trim());
     
-    for (const line of lines) {
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
       const match = line.match(LOG_PATTERN);
       if (match) {
         const [, timestamp, level, message, , detailsStr] = match;
@@ -116,7 +164,7 @@ export function LogViewer({ projectId }: LogViewerProps) {
         }
         
         entries.push({
-          id: `entry_${entries.length}`,
+          id: `entry_${i}`,
           timestamp,
           level: level as 'LOG' | 'INFO' | 'WARN' | 'ERROR' | 'DEBUG',
           message,
@@ -126,7 +174,7 @@ export function LogViewer({ projectId }: LogViewerProps) {
       } else {
         // If line doesn't match pattern, add it as a raw message
         entries.push({
-          id: `entry_${entries.length}`,
+          id: `entry_${i}`,
           timestamp: new Date().toISOString(),
           level: 'LOG',
           message: line,
@@ -135,210 +183,117 @@ export function LogViewer({ projectId }: LogViewerProps) {
       }
     }
     
-    return entries;
-  }, [selectedLog?.content]);
-  
-  // Filter log entries based on the entry filters (simplified for performance)
-  const filteredEntries = useMemo(() => {
-    let filtered = parsedEntries;
+    // Cache the result
+    parsedEntriesCache.current.set(cacheKey, entries);
     
-    // Level filtering
-    filtered = filtered.filter(entry => {
-      switch (entry.level) {
-        case 'LOG': return entryFilters.showLog;
-        case 'INFO': return entryFilters.showInfo;
-        case 'WARN': return entryFilters.showWarn;
-        case 'ERROR': return entryFilters.showError;
-        case 'DEBUG': return entryFilters.showDebug;
-        default: return true;
+    // Limit cache size to prevent memory leaks
+    if (parsedEntriesCache.current.size > 50) {
+      const firstKey = parsedEntriesCache.current.keys().next().value;
+      if (firstKey !== undefined) {
+        parsedEntriesCache.current.delete(firstKey);
       }
-    });
-    
-    // Search filtering (only if search term exists)
-    if (entryFilters.searchText) {
-      const searchTerm = entryFilters.searchText.toLowerCase();
-      filtered = filtered.filter(entry => 
-        entry.message.toLowerCase().includes(searchTerm) ||
-        (entry.details && String(entry.details).toLowerCase().includes(searchTerm))
-      );
     }
     
-    // Tag filtering (only if tags selected)
-    if (entryFilters.selectedTags.length > 0) {
-      filtered = filtered.filter(entry => 
-        entry.tags?.some(tag => entryFilters.selectedTags.includes(tag))
-      );
-    }
-    
-    // Sort by timestamp
-    filtered.sort((a, b) => {
-      const timeA = new Date(a.timestamp).getTime();
-      const timeB = new Date(b.timestamp).getTime();
-      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+    return entries;
+  }, [selectedLog?.content, selectedLog?.id]);
+  
+  // Memoize parsed timestamps with caching to avoid repeated Date parsing
+  const entriesWithParsedTimestamps = useMemo(() => {
+    return parsedEntries.map(entry => {
+      // Use cached timestamp if available
+      let timestampMs = timestampsCache.current.get(entry.timestamp);
+      if (timestampMs === undefined) {
+        timestampMs = new Date(entry.timestamp).getTime();
+        timestampsCache.current.set(entry.timestamp, timestampMs);
+        
+        // Limit cache size to prevent memory leaks
+        if (timestampsCache.current.size > 1000) {
+          const firstKey = timestampsCache.current.keys().next().value;
+          if (firstKey !== undefined) {
+            timestampsCache.current.delete(firstKey);
+          }
+        }
+      }
+      
+      return {
+        ...entry,
+        _timestampMs: timestampMs
+      };
     });
-    
-    return filtered;
-  }, [parsedEntries, entryFilters.showLog, entryFilters.showInfo, entryFilters.showWarn, entryFilters.showError, entryFilters.showDebug, entryFilters.searchText, entryFilters.selectedTags, sortOrder]);
+  }, [parsedEntries]);
 
-  // Extract all unique tags from parsed entries for the dropdown
+  // Separate filtering steps for better granular memoization
+  const levelFilterSettings = useMemo(() => ({
+    'LOG': entryFilters.showLog,
+    'INFO': entryFilters.showInfo,
+    'WARN': entryFilters.showWarn,
+    'ERROR': entryFilters.showError,
+    'DEBUG': entryFilters.showDebug
+  }), [entryFilters.showLog, entryFilters.showInfo, entryFilters.showWarn, entryFilters.showError, entryFilters.showDebug]);
+
+  // Level filtering - memoized separately to avoid re-computation when other filters change
+  const levelFilteredEntries = useMemo(() => {
+    return entriesWithParsedTimestamps.filter(entry => levelFilterSettings[entry.level] ?? true);
+  }, [entriesWithParsedTimestamps, levelFilterSettings]);
+
+  // Search filtering - memoized separately with optimized string operations
+  const searchFilteredEntries = useMemo(() => {
+    if (!entryFilters.searchText) return levelFilteredEntries;
+    
+    const searchTerm = entryFilters.searchText.toLowerCase();
+    return levelFilteredEntries.filter(entry => {
+      // Pre-compute lowercase versions for better performance
+      const messageMatch = entry.message.toLowerCase().includes(searchTerm);
+      if (messageMatch) return true;
+      
+      // Only check details if message doesn't match
+      return entry.details && String(entry.details).toLowerCase().includes(searchTerm);
+    });
+  }, [levelFilteredEntries, entryFilters.searchText]);
+
+  // Tag filtering - memoized separately with Set optimization
+  const tagFilteredEntries = useMemo(() => {
+    if (entryFilters.selectedTags.length === 0) return searchFilteredEntries;
+    
+    const selectedTagsSet = new Set(entryFilters.selectedTags);
+    return searchFilteredEntries.filter(entry => 
+      entry.tags?.some(tag => selectedTagsSet.has(tag))
+    );
+  }, [searchFilteredEntries, entryFilters.selectedTags]);
+
+  // Final sorting - memoized separately to avoid re-sort when filters change but order doesn't
+  const filteredEntries = useMemo(() => {
+    const sorted = [...tagFilteredEntries];
+    sorted.sort((a, b) => {
+      return sortOrder === 'asc' ? a._timestampMs - b._timestampMs : b._timestampMs - a._timestampMs;
+    });
+    return sorted;
+  }, [tagFilteredEntries, sortOrder]);
+
+  // Extract all unique tags from parsed entries - optimized for mount performance with lazy loading
   const availableTags = useMemo(() => {
+    // Defer tag extraction if no entries to avoid mount overhead
+    if (parsedEntries.length === 0) return [];
+    
     const tagSet = new Set<string>();
     
-    parsedEntries.forEach(entry => {
+    // Use for loop for better performance than forEach
+    for (let i = 0; i < parsedEntries.length; i++) {
+      const entry = parsedEntries[i];
       if (entry.tags) {
-        entry.tags.forEach(tag => tagSet.add(tag));
+        for (let j = 0; j < entry.tags.length; j++) {
+          tagSet.add(entry.tags[j]);
+        }
       }
-    });
+    }
     
     return Array.from(tagSet).sort();
   }, [parsedEntries]);
 
-  // Filter tags based on search term
-  const filteredTags = useMemo(() => {
-    if (!tagSearchTerm) return availableTags;
-    return availableTags.filter(tag => 
-      tag.toLowerCase().includes(tagSearchTerm.toLowerCase())
-    );
-  }, [availableTags, tagSearchTerm]);
-  
-  // Fetch log content when a log is selected
-  const fetchLogContent = useCallback(async (logId: string) => {
-    // If we already have this log in the cache, use it
-    if (logCache[logId]) {
-      const selectedLogItem = logs.find(log => log.id === logId)
-      if (selectedLogItem) {
-        setSelectedLog({
-          ...selectedLogItem,
-          content: logCache[logId]
-        })
-        setSelectedEntryIndex(-1) // Reset entry selection
-        return
-      }
-    }
-    
-    setLoadingLogContent(true)
-    
-    try {
-      const response = await fetch(`/api/logs/${logId}`)
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`)
-      }
-      
-      const response_1 = await response.json()
-      // Fix: Unwrap API response structure (API returns {success: true, data: {...}})
-      const logData = response_1.success ? response_1.data : response_1
-      
-      // Store in cache
-      if (logData.content) {
-        logCache[logId] = logData.content
-      }
-      
-      setSelectedLog(logData)
-      setSelectedEntryIndex(-1) // Reset entry selection
-      
-      // Mark as read if not already
-      if (!logData.isRead) {
-        markLogAsRead(logId)
-      }
-    } catch (error) {
-      console.error('Failed to fetch log content', error)
-      toast.error('Failed to load log content')
-    } finally {
-      setLoadingLogContent(false)
-    }
-  }, [logs])
-  
-  // Mark log as read
-  const markLogAsRead = async (logId: string) => {
-    try {
-      const response = await fetch(`/api/logs/${logId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ isRead: true }),
-      })
-      
-      if (response.ok) {
-        // Update local state
-        setLogs(prevLogs => 
-          prevLogs.map(log => 
-            log.id === logId ? { ...log, isRead: true } : log
-          )
-        )
-      }
-    } catch (error) {
-      console.error('Failed to mark log as read', error)
-    }
-  }
-  
-  // Toggle read status
-  const toggleReadStatus = async (logId: string, currentStatus: boolean) => {
-    try {
-      const response = await fetch(`/api/logs/${logId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ isRead: !currentStatus }),
-      })
-      
-      if (response.ok) {
-        // Update local state
-        setLogs(prevLogs => 
-          prevLogs.map(log => 
-            log.id === logId ? { ...log, isRead: !currentStatus } : log
-          )
-        )
-        toast.success(`Log marked as ${!currentStatus ? 'read' : 'unread'}`)
-      }
-    } catch (error) {
-      console.error('Failed to update read status', error)
-      toast.error('Failed to update read status')
-    }
-  }
-  
-  // Delete a log
-  const deleteLog = async (logId: string) => {
-    try {
-      const response = await fetch(`/api/logs/${logId}`, {
-        method: 'DELETE',
-      })
-      
-      if (response.ok) {
-        // Remove from cache
-        delete logCache[logId]
-        
-        // Update state
-        setLogs(prevLogs => prevLogs.filter(log => log.id !== logId))
-        
-        if (selectedLogId === logId) {
-          setSelectedLogId(null)
-          setSelectedLog(null)
-          setSelectedEntryIndex(-1)
-        }
-        
-        toast.success('Log deleted successfully')
-      } else {
-        throw new Error('Failed to delete log')
-      }
-    } catch (error) {
-      console.error('Failed to delete log', error)
-      toast.error('Failed to delete log')
-    }
-  }
-  
-  // Handle selecting a log
-  const handleSelectLog = (logId: string) => {
-    setSelectedLogId(logId)
-    fetchLogContent(logId)
-  }
-  
   // Handle selecting an entry
-  const handleSelectEntry = (index: number) => {
+  const handleSelectEntry = useCallback((index: number) => {
     setSelectedEntryIndex(index)
-  }
+  }, [])
 
   // Toggle sort order
   const toggleSortOrder = useCallback(() => {
@@ -346,35 +301,15 @@ export function LogViewer({ projectId }: LogViewerProps) {
       const newOrder = prev === 'asc' ? 'desc' : 'asc'
       // Save to localStorage
       if (typeof window !== 'undefined') {
-        localStorage.setItem('logViewer.sortOrder', newOrder)
+        try {
+          window.localStorage?.setItem('logViewer.sortOrder', newOrder)
+        } catch (error) {
+          // Handle localStorage being unavailable or throwing errors
+          console.debug('localStorage unavailable:', error)
+        }
       }
       return newOrder
     })
-  }, [])
-
-  // Tag filtering utility functions
-  const toggleTag = useCallback((tag: string) => {
-    setEntryFilters(prev => ({
-      ...prev,
-      selectedTags: prev.selectedTags.includes(tag)
-        ? prev.selectedTags.filter(t => t !== tag)
-        : [...prev.selectedTags, tag]
-    }))
-  }, [])
-
-  const selectAllTags = useCallback(() => {
-    setEntryFilters(prev => ({
-      ...prev,
-      selectedTags: [...availableTags]
-    }))
-  }, [availableTags])
-
-  const clearAllTags = useCallback(() => {
-    setEntryFilters(prev => ({
-      ...prev,
-      selectedTags: []
-    }))
-    setTagSearchTerm('')
   }, [])
 
   // Selection functions
@@ -391,8 +326,7 @@ export function LogViewer({ projectId }: LogViewerProps) {
   }, [])
 
   const selectAllEntries = useCallback(() => {
-    const allIds = new Set(filteredEntries.map(entry => entry.id))
-    setSelectedEntryIds(allIds)
+    setSelectedEntryIds(new Set(filteredEntries.map(entry => entry.id)))
   }, [filteredEntries])
 
   const clearAllSelections = useCallback(() => {
@@ -423,68 +357,55 @@ export function LogViewer({ projectId }: LogViewerProps) {
     navigator.clipboard.writeText(formattedEntries).then(() => {
       toast.success(`Copied ${selectedEntries.length} log entries to clipboard`)
       setSelectedEntryIds(new Set()) // Clear selection after copying
-    }).catch((error) => {
-      console.error('Failed to copy to clipboard:', error)
+    }).catch(() => {
       toast.error('Failed to copy to clipboard')
     })
   }, [filteredEntries, selectedEntryIds])
   
-  // Add keyboard shortcut for sort toggle
+  // Add keyboard shortcut for sort toggle - defer setup to improve mount performance
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      // Check if the user is typing in an input field
-      const activeElement = document.activeElement;
-      const isInputFocused = activeElement instanceof HTMLInputElement || 
-                            activeElement instanceof HTMLTextAreaElement;
-      
-      // Only trigger if 's' is pressed and user is not typing in an input
-      if (event.key === 's' && !event.ctrlKey && !event.metaKey && !event.altKey && !isInputFocused) {
-        event.preventDefault();
-        toggleSortOrder();
-      }
-    };
+    let cleanupFn: (() => void) | null = null;
+    
+    // Defer keyboard setup to reduce mount blocking
+    const timeoutId = setTimeout(() => {
+      const handleKeyPress = (event: KeyboardEvent) => {
+        // Check if the user is typing in an input field
+        const activeElement = document.activeElement;
+        const isInputFocused = activeElement instanceof HTMLInputElement || 
+                              activeElement instanceof HTMLTextAreaElement;
+        
+        // Only trigger if 's' is pressed and user is not typing in an input
+        if (event.key === 's' && !event.ctrlKey && !event.metaKey && !event.altKey && !isInputFocused) {
+          event.preventDefault();
+          toggleSortOrder();
+        }
+      };
 
-    window.addEventListener('keydown', handleKeyPress);
+      window.addEventListener('keydown', handleKeyPress);
+      
+      cleanupFn = () => {
+        window.removeEventListener('keydown', handleKeyPress);
+      };
+    }, 100); // Defer by 100ms
     
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
+      clearTimeout(timeoutId);
+      // Also call cleanup function if it was set
+      if (cleanupFn) {
+        cleanupFn();
+      }
     };
   }, [toggleSortOrder]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (tagDropdownOpen && event.target instanceof Element) {
-        const dropdown = document.getElementById('tag-dropdown');
-        if (dropdown && !dropdown.contains(event.target)) {
-          setTagDropdownOpen(false);
-          setTagSearchTerm('');
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [tagDropdownOpen]);
   
-  // Filter logs by search text
-  const filteredLogs = logs
-    .filter(log => {
-      // Filter by search text
-      if (logFilters.searchText) {
-        const searchTerm = logFilters.searchText.toLowerCase()
-        const commentMatches = log.comment.toLowerCase().includes(searchTerm)
-        
-        if (!commentMatches) {
-          return false
-        }
-      }
-      
-      return true
-    })
+  // Filter logs by search text - optimized with early return
+  const filteredLogs = useMemo(() => {
+    if (!logFilters.searchText.trim()) return logs;
+    
+    const searchTerm = logFilters.searchText.toLowerCase().trim();
+    return logs.filter(log => 
+      log.comment.toLowerCase().includes(searchTerm)
+    );
+  }, [logs, logFilters.searchText]);
   
   if (loading) {
     return <div className="p-4">Loading logs...</div>
@@ -500,14 +421,15 @@ export function LogViewer({ projectId }: LogViewerProps) {
   }
   
   return (
-    <div className="flex h-full bg-white">
+    <PerformanceProfiler id="LogViewer">
+      <div className="flex h-full bg-white">
       {/* Log List Column (1/5) */}
       <div className="w-1/5 border-r border-gray-200 flex flex-col overflow-hidden">
         <div className="p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0">
           <Input
             placeholder="Search logs..."
-            value={logFilters.searchText}
-            onChange={(e) => setLogFilters(prev => ({ ...prev, searchText: e.target.value }))}
+            value={logSearchInput}
+            onChange={(e) => setLogSearchInput(e.target.value)}
             className="text-sm"
           />
         </div>
@@ -523,9 +445,9 @@ export function LogViewer({ projectId }: LogViewerProps) {
                 key={log.id}
                 log={log}
                 isSelected={log.id === selectedLogId}
-                onClick={() => handleSelectLog(log.id)}
-                onDelete={() => deleteLog(log.id)}
-                onToggleRead={() => toggleReadStatus(log.id, log.isRead)}
+                onSelectLog={handleSelectLog}
+                onDeleteLog={deleteLog}
+                onToggleReadStatus={toggleReadStatus}
               />
             ))
           )}
@@ -534,196 +456,20 @@ export function LogViewer({ projectId }: LogViewerProps) {
       
       {/* Log Entries Column (1/5) */}
       <div className="w-1/5 border-r border-gray-200 flex flex-col overflow-hidden">
-        <div className="p-3 bg-gray-50 border-b border-gray-200 space-y-3 flex-shrink-0">
-          <div className="flex items-center space-x-2">
-            <Input
-              placeholder="Filter entries..."
-              value={entryFilters.searchText}
-              onChange={(e) => setEntryFilters(prev => ({ ...prev, searchText: e.target.value }))}
-              className="text-sm flex-1"
-            />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={toggleSortOrder}
-              className="flex items-center space-x-1"
-              title={`Sort by timestamp ${sortOrder === 'asc' ? 'ascending' : 'descending'} (Press 's' to toggle)`}
-            >
-              {sortOrder === 'asc' ? (
-                <ArrowUp className="h-3 w-3" />
-              ) : (
-                <ArrowDown className="h-3 w-3" />
-              )}
-            </Button>
-          </div>
-          
-          {/* Copy Controls */}
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={selectedEntryIds.size === filteredEntries.length ? clearAllSelections : selectAllEntries}
-              className="flex items-center space-x-1 text-xs"
-              disabled={filteredEntries.length === 0}
-            >
-              {selectedEntryIds.size === filteredEntries.length ? (
-                <CheckSquare className="h-3 w-3" />
-              ) : (
-                <Square className="h-3 w-3" />
-              )}
-              <span>All</span>
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={copySelectedEntries}
-              className="flex items-center space-x-1 text-xs"
-              disabled={selectedEntryIds.size === 0}
-            >
-              <Copy className="h-3 w-3" />
-              <span>Copy</span>
-              {selectedEntryIds.size > 0 && (
-                <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
-                  {selectedEntryIds.size}
-                </Badge>
-              )}
-            </Button>
-          </div>
-
-          {/* Tags Filter Dropdown */}
-          <div className="relative" id="tag-dropdown">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setTagDropdownOpen(!tagDropdownOpen)}
-              className="flex items-center space-x-2 text-xs"
-              disabled={availableTags.length === 0}
-            >
-              <Filter className="h-3 w-3" />
-              <span>Tags</span>
-              {entryFilters.selectedTags.length > 0 && (
-                <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
-                  {entryFilters.selectedTags.length}
-                </Badge>
-              )}
-              <ChevronDown className="h-3 w-3" />
-            </Button>
-            
-            {tagDropdownOpen && availableTags.length > 0 && (
-              <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                {/* Search input */}
-                <div className="p-2 border-b border-gray-200">
-                  <Input
-                    placeholder="Search tags..."
-                    value={tagSearchTerm}
-                    onChange={(e) => setTagSearchTerm(e.target.value)}
-                    className="text-xs h-7"
-                  />
-                </div>
-                
-                {/* Actions */}
-                <div className="p-2 border-b border-gray-200 flex space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={selectAllTags}
-                    className="text-xs h-6 px-2"
-                  >
-                    Select All
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={clearAllTags}
-                    className="text-xs h-6 px-2"
-                  >
-                    Clear All
-                  </Button>
-                </div>
-                
-                {/* Tags list */}
-                <div className="max-h-48 overflow-y-auto">
-                  {filteredTags.length === 0 ? (
-                    <div className="p-3 text-xs text-gray-500">
-                      {tagSearchTerm ? 'No tags match your search' : 'No tags available'}
-                    </div>
-                  ) : (
-                    filteredTags.map(tag => (
-                      <div key={tag} className="flex items-center space-x-2 p-2 hover:bg-gray-50">
-                        <Checkbox
-                          id={`tag-${tag}`}
-                          checked={entryFilters.selectedTags.includes(tag)}
-                          onCheckedChange={() => toggleTag(tag)}
-                        />
-                        <Label htmlFor={`tag-${tag}`} className="text-xs flex-1 cursor-pointer">
-                          {tag}
-                        </Label>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center space-x-4 text-sm">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="show-log" 
-                checked={entryFilters.showLog}
-                onCheckedChange={(checked) => 
-                  setEntryFilters(prev => ({ ...prev, showLog: !!checked }))
-                }
-              />
-              <Label htmlFor="show-log" className="text-xs">LOG</Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="show-info" 
-                checked={entryFilters.showInfo}
-                onCheckedChange={(checked) => 
-                  setEntryFilters(prev => ({ ...prev, showInfo: !!checked }))
-                }
-              />
-              <Label htmlFor="show-info" className="text-xs">INFO</Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="show-warn" 
-                checked={entryFilters.showWarn}
-                onCheckedChange={(checked) => 
-                  setEntryFilters(prev => ({ ...prev, showWarn: !!checked }))
-                }
-              />
-              <Label htmlFor="show-warn" className="text-xs">WARN</Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="show-error" 
-                checked={entryFilters.showError}
-                onCheckedChange={(checked) => 
-                  setEntryFilters(prev => ({ ...prev, showError: !!checked }))
-                }
-              />
-              <Label htmlFor="show-error" className="text-xs">ERROR</Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="show-debug" 
-                checked={entryFilters.showDebug}
-                onCheckedChange={(checked) => 
-                  setEntryFilters(prev => ({ ...prev, showDebug: !!checked }))
-                }
-              />
-              <Label htmlFor="show-debug" className="text-xs">DEBUG</Label>
-            </div>
-          </div>
-        </div>
+        <LogEntryFilters
+          entryFilters={entryFilters}
+          onFiltersChange={setEntryFilters}
+          searchInput={entrySearchInput}
+          onSearchInputChange={setEntrySearchInput}
+          sortOrder={sortOrder}
+          onSortOrderChange={toggleSortOrder}
+          availableTags={availableTags}
+          selectedEntryIds={selectedEntryIds}
+          filteredEntries={filteredEntries}
+          onSelectAllEntries={selectAllEntries}
+          onClearAllSelections={clearAllSelections}
+          onCopySelectedEntries={copySelectedEntries}
+        />
         
         <div className="overflow-y-auto flex-1">
           {loadingLogContent ? (
@@ -738,6 +484,14 @@ export function LogViewer({ projectId }: LogViewerProps) {
             <div className="flex items-center justify-center h-32 text-gray-500">
               No entries match your filters
             </div>
+          ) : enableVirtualization ? (
+            <LogEntryListVirtualized 
+              entries={filteredEntries}
+              selectedIndex={selectedEntryIndex}
+              onSelectEntry={handleSelectEntry}
+              selectedEntryIds={selectedEntryIds}
+              onToggleSelection={toggleEntrySelection}
+            />
           ) : (
             <LogEntryList 
               entries={filteredEntries}
@@ -758,5 +512,6 @@ export function LogViewer({ projectId }: LogViewerProps) {
         />
       </div>
     </div>
+    </PerformanceProfiler>
   )
 }

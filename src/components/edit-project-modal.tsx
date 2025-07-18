@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Project } from '@/lib/types'
 import { toast } from 'sonner'
-import { CopyIcon, CheckIcon, EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons'
+import { CopyIcon, CheckIcon, EyeOpenIcon, EyeClosedIcon } from '@/components/icons'
 
 interface EditProjectModalProps {
   project: Project
@@ -52,8 +52,8 @@ export function EditProjectModal({ project, onProjectUpdated, trigger }: EditPro
             const data = result.success ? result.data : result
             setHasLogs(data.hasLogs)
           }
-        } catch (error) {
-          console.error('Failed to check if project has logs', error)
+        } catch {
+          // Failed to check project logs silently
         }
       }
       

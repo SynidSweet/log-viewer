@@ -1,0 +1,275 @@
+name: Performance Monitoring
+
+on:
+  schedule:
+    # Run daily at 02:00 UTC to monitor performance trends
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      comparison_days:
+        description: 'Number of days to look back for comparison'
+        required: false
+        default: '7'
+        type: string
+
+jobs:
+  performance-trend-analysis:
+    name: Performance Trend Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 30 # Get more history for trend analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run current performance benchmark
+        run: |
+          echo "📊 Running current performance benchmark..."
+          npm run test:performance
+          npm run benchmark:performance
+
+      - name: Analyze performance trends
+        id: trend-analysis
+        run: |
+          # Create trend analysis script
+          cat > analyze-trends.js << 'EOF'
+          const fs = require('fs');
+          const { execSync } = require('child_process');
+          
+          try {
+            const comparisonDays = process.env.COMPARISON_DAYS || '7';
+            const currentResults = JSON.parse(fs.readFileSync('.claude-testing/performance-results.json', 'utf8'));
+            
+            // Get historical performance data from git history
+            const gitLogs = execSync(`git log --since="${comparisonDays} days ago" --pretty=format:"%H %ci"`, { encoding: 'utf8' });
+            const commits = gitLogs.split('\n').filter(line => line.trim()).slice(0, 10); // Last 10 commits
+            
+            let report = '# 📈 Performance Trend Analysis Report\n\n';
+            report += `**Analysis Period**: Last ${comparisonDays} days\n`;
+            report += `**Generated**: ${new Date().toISOString()}\n\n`;
+            
+            if (currentResults.benchmarks && currentResults.benchmarks.length > 0) {
+              const latest = currentResults.benchmarks[currentResults.benchmarks.length - 1];
+              
+              report += '## Current Performance Metrics\n\n';
+              report += '| Operation | Current Time (ms) | Status |\n';
+              report += '|-----------|-------------------|--------|\n';
+              
+              const thresholds = { search: 100, levelFilter: 50, sort: 100, combined: 150 };
+              
+              Object.entries(latest.operations || {}).forEach(([op, time]) => {
+                const threshold = thresholds[op];
+                const status = threshold && time <= threshold ? '✅ Good' : '⚠️ Slow';
+                report += `| ${op} | ${time.toFixed(2)} | ${status} |\n`;
+              });
+              
+              report += '\n## Performance Recommendations\n\n';
+              
+              // Analyze and provide recommendations
+              const slowOperations = Object.entries(latest.operations || {})
+                .filter(([op, time]) => {
+                  const threshold = thresholds[op];
+                  return threshold && time > threshold * 0.8; // 80% of threshold
+                });
+              
+              if (slowOperations.length === 0) {
+                report += '🎉 **All operations performing well!** No optimization needed.\n\n';
+              } else {
+                report += '### Areas for Optimization:\n\n';
+                slowOperations.forEach(([op, time]) => {
+                  const threshold = thresholds[op];
+                  report += `- **${op}**: ${time.toFixed(2)}ms (threshold: ${threshold}ms)\n`;
+                  
+                  // Provide specific recommendations
+                  switch(op) {
+                    case 'search':
+                      report += '  - Consider optimizing search algorithm or adding debouncing\n';
+                      break;
+                    case 'levelFilter':
+                      report += '  - Review filter logic, ensure proper memoization\n';
+                      break;
+                    case 'sort':
+                      report += '  - Check sort algorithm efficiency, consider memoizing sort keys\n';
+                      break;
+                    case 'combined':
+                      report += '  - Review overall component architecture for unnecessary re-renders\n';
+                      break;
+                  }
+                });
+                report += '\n';
+              }
+              
+              // Memory analysis
+              if (latest.memoryUsage) {
+                report += '## Memory Analysis\n\n';
+                const memGrowth = latest.memoryUsage.growth || 1.0;
+                const memStatus = memGrowth <= 2.0 ? '✅ Good' : '⚠️ High';
+                report += `- Memory Growth Factor: ${memGrowth.toFixed(2)}x ${memStatus}\n`;
+                report += `- Peak Memory Usage: ${(latest.memoryUsage.peak / 1024 / 1024).toFixed(2)} MB\n\n`;
+                
+                if (memGrowth > 2.0) {
+                  report += '### Memory Optimization Recommendations:\n';
+                  report += '- Review component lifecycle and cleanup\n';
+                  report += '- Check for memory leaks in event listeners\n';
+                  report += '- Consider implementing virtual scrolling for large datasets\n\n';
+                }
+              }
+              
+            } else {
+              report += '⚠️ No performance data available for analysis.\n\n';
+            }
+            
+            report += '## Next Steps\n\n';
+            report += '1. Review performance metrics regularly\n';
+            report += '2. Set up alerts for performance regressions\n';
+            report += '3. Consider performance budgets in CI/CD\n';
+            report += '4. Monitor user-reported performance issues\n\n';
+            
+            report += '---\n';
+            report += '*Generated by automated performance monitoring*';
+            
+            fs.writeFileSync('performance-trend-report.md', report);
+            console.log('Performance trend analysis completed');
+            
+          } catch (error) {
+            console.log('Error in trend analysis:', error.message);
+            fs.writeFileSync('performance-trend-report.md', `# Performance Trend Analysis Failed\n\nError: ${error.message}`);
+          }
+          EOF
+          
+          COMPARISON_DAYS="${{ github.event.inputs.comparison_days || '7' }}" node analyze-trends.js
+
+      - name: Create performance issue if regression detected
+        id: check-regression
+        run: |
+          # Create regression detection script
+          cat > detect-regression.js << 'EOF'
+          const fs = require('fs');
+          
+          try {
+            const results = JSON.parse(fs.readFileSync('.claude-testing/performance-results.json', 'utf8'));
+            const thresholds = { search: 100, levelFilter: 50, sort: 100, combined: 150 };
+            
+            let hasRegression = false;
+            let regressions = [];
+            
+            if (results.benchmarks && results.benchmarks.length > 0) {
+              const latest = results.benchmarks[results.benchmarks.length - 1];
+              
+              Object.entries(latest.operations || {}).forEach(([op, time]) => {
+                const threshold = thresholds[op];
+                if (threshold && time > threshold) {
+                  hasRegression = true;
+                  regressions.push(`${op}: ${time.toFixed(2)}ms (threshold: ${threshold}ms)`);
+                }
+              });
+              
+              // Check memory regression
+              const memGrowth = latest.memoryUsage?.growth || 1.0;
+              if (memGrowth > 2.0) {
+                hasRegression = true;
+                regressions.push(`Memory growth: ${memGrowth.toFixed(2)}x (threshold: 2.0x)`);
+              }
+            }
+            
+            console.log('HAS_REGRESSION=' + hasRegression);
+            if (hasRegression) {
+              console.log('REGRESSIONS=' + regressions.join(', '));
+            }
+            
+          } catch (error) {
+            console.log('HAS_REGRESSION=false');
+            console.log('Error detecting regression:', error.message);
+          }
+          EOF
+          
+          node detect-regression.js | grep "HAS_REGRESSION" | cut -d'=' -f2 > regression_status.txt
+          REGRESSION_STATUS=$(cat regression_status.txt || echo "false")
+          echo "has_regression=$REGRESSION_STATUS" >> $GITHUB_OUTPUT
+          
+          if [ "$REGRESSION_STATUS" = "true" ]; then
+            node detect-regression.js | grep "REGRESSIONS" | cut -d'=' -f2 > regression_details.txt
+            echo "regression_details=$(cat regression_details.txt)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub issue for performance regression
+        if: steps.check-regression.outputs.has_regression == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            const issueTitle = '🐌 Performance Regression Detected';
+            const regressionDetails = '${{ steps.check-regression.outputs.regression_details }}';
+            
+            let issueBody = '## Performance Regression Alert\n\n';
+            issueBody += '**Detected**: ' + new Date().toISOString() + '\n';
+            issueBody += '**Source**: Automated performance monitoring\n\n';
+            issueBody += '### Regression Details\n\n';
+            issueBody += regressionDetails + '\n\n';
+            issueBody += '### Recommended Actions\n\n';
+            issueBody += '1. Review recent changes to performance-critical components\n';
+            issueBody += '2. Run performance benchmarks locally to reproduce\n';
+            issueBody += '3. Check for recent changes in `src/components/log-viewer/`\n';
+            issueBody += '4. Review memory usage patterns\n';
+            issueBody += '5. Consider rolling back problematic changes\n\n';
+            issueBody += '### Performance Trend Report\n\n';
+            
+            try {
+              if (fs.existsSync('performance-trend-report.md')) {
+                const trendReport = fs.readFileSync('performance-trend-report.md', 'utf8');
+                issueBody += trendReport;
+              }
+            } catch (error) {
+              issueBody += 'Error loading trend report: ' + error.message;
+            }
+            
+            // Check if performance regression issue already exists
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'performance,regression',
+              state: 'open'
+            });
+            
+            if (issues.length === 0) {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: issueTitle,
+                body: issueBody,
+                labels: ['performance', 'regression', 'bug', 'automated']
+              });
+              console.log('Created new performance regression issue');
+            } else {
+              // Update existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues[0].number,
+                body: '## 🔄 Updated Performance Regression Report\n\n' + issueBody
+              });
+              console.log('Updated existing performance regression issue');
+            }
+
+      - name: Upload monitoring artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-monitoring-${{ github.run_number }}
+          path: |
+            .claude-testing/performance-results.json
+            performance-trend-report.md
+          retention-days: 90 # Keep monitoring data longer

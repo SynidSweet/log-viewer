@@ -3,7 +3,7 @@
 import { format } from 'date-fns'
 import { JsonTree } from './json-tree'
 import { Button } from '@/components/ui/button'
-import { Clipboard } from 'lucide-react'
+import { Clipboard } from '../icons'
 import { toast } from 'sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
@@ -20,6 +20,7 @@ export interface LogEntry {
   message: string;
   details?: LogDetails;
   tags?: string[];
+  _timestampMs?: number; // Cached parsed timestamp for performance
 }
 
 interface LogEntryDetailsProps {

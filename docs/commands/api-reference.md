@@ -1,6 +1,6 @@
 # API Reference
 
-*Last updated: 2025-07-16 | Enhanced tag examples with comprehensive use cases and integration patterns*
+*Last updated: 2025-07-18 | Added performance monitoring API endpoints documentation*
 
 ## Overview
 
@@ -719,6 +719,157 @@ curl http://localhost:3000/api/health
 # Get projects (requires session)
 curl http://localhost:3000/api/projects \
   -H "Cookie: next-auth.session-token=..."
+```
+
+## Performance Monitoring
+
+### Get Performance Metrics
+Retrieve real-time performance metrics and monitoring data.
+
+**Endpoint**: `GET /api/monitoring/metrics`
+
+**Authentication**: Session
+
+**Example Request**:
+```bash
+curl http://localhost:3000/api/monitoring/metrics \
+  -H "Cookie: next-auth.session-token=..."
+```
+
+**Success Response** (200 OK):
+```json
+{
+  "metrics": [
+    {
+      "timestamp": "2025-07-18T14:30:00.000Z",
+      "component": "LogViewer",
+      "phase": "mount",
+      "duration": 28.5,
+      "threshold": 33,
+      "status": "pass"
+    }
+  ],
+  "trends": [...],
+  "newAlerts": [...],
+  "budgets": [...],
+  "historical": [...]
+}
+```
+
+### Manage Performance Alerts
+Configure performance alert thresholds and settings.
+
+**Endpoint**: `GET /api/monitoring/alerts`
+
+**Authentication**: Session
+
+**Success Response** (200 OK):
+```json
+{
+  "configs": [
+    {
+      "id": "logviewer-mount-warning",
+      "component": "LogViewer",
+      "metric": "mount",
+      "threshold": 33,
+      "severity": "warning",
+      "enabled": true,
+      "cooldownMinutes": 5,
+      "description": "LogViewer mount time exceeds 30fps threshold"
+    }
+  ],
+  "defaultConfigs": [...]
+}
+```
+
+**Update Alert**: `POST /api/monitoring/alerts`
+```json
+{
+  "action": "update",
+  "configId": "logviewer-mount-warning",
+  "updates": { "threshold": 35 }
+}
+```
+
+### Performance Budgets
+Manage performance budgets with automated enforcement.
+
+**Endpoint**: `GET /api/monitoring/budgets`
+
+**Authentication**: Session
+
+**Success Response** (200 OK):
+```json
+{
+  "budgets": [...],
+  "validations": [
+    {
+      "budgetId": "logviewer-render-30fps",
+      "name": "LogViewer 30fps Render",
+      "currentValue": 28.5,
+      "budgetValue": 33,
+      "unit": "ms",
+      "status": "pass",
+      "percentUsed": 86.4,
+      "remaining": 4.5,
+      "message": "Within budget"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passing": 4,
+    "warnings": 1,
+    "failing": 0
+  }
+}
+```
+
+### Historical Performance Data
+Query and analyze historical performance trends.
+
+**Endpoint**: `GET /api/monitoring/history`
+
+**Authentication**: Session
+
+**Query Parameters**:
+- `component`: Filter by component (default: "all")
+- `metric`: Filter by metric (default: "all")
+- `period`: Time period (e.g., "7d", "30d", "90d")
+- `groupBy`: Group data by interval ("minute", "hour", "day")
+
+**Example Request**:
+```bash
+curl "http://localhost:3000/api/monitoring/history?component=LogViewer&period=7d&groupBy=hour" \
+  -H "Cookie: next-auth.session-token=..."
+```
+
+### Performance Benchmark
+Run automated performance benchmarks.
+
+**Endpoint**: `POST /api/performance/benchmark`
+
+**Authentication**: Session
+
+**Request Body**:
+```json
+{
+  "userId": "user@example.com",
+  "timestamp": "2025-07-18T14:30:00.000Z"
+}
+```
+
+**Success Response** (200 OK):
+```json
+{
+  "success": true,
+  "report": {...},
+  "validation": {
+    "passed": true,
+    "overallScore": 5,
+    "maxScore": 6
+  },
+  "timestamp": "2025-07-18T14:30:00.000Z"
+}
 ```
 
 ## Extended Data Feature
