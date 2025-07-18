@@ -21,8 +21,8 @@ export function ProjectSelector() {
           const projects = data.success ? data.data : data
           setProjects(Array.isArray(projects) ? projects : [])
         }
-      } catch (error) {
-        console.error('Failed to fetch projects', error)
+      } catch {
+        // Error handled by UI state
       } finally {
         setLoading(false)
       }

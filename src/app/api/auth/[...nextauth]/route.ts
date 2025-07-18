@@ -1,7 +1,6 @@
 import NextAuth, { User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-console.log("NextAuth configuration loading...");
 
 // Configure allowed emails - can be moved to environment variables for better security
 const ALLOWED_EMAILS = (process.env.ALLOWED_EMAILS || "").split(",").map(email => email.trim());
@@ -46,13 +45,11 @@ const handler = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      console.log("Sign in callback", { user, account });
       
       // Check if user's email is allowed
       const isAllowed = isUserAllowed(user.email);
       
       if (!isAllowed) {
-        console.warn(`Access denied for email: ${user.email}`);
         return false; // This will redirect to error page with AccessDenied error
       }
       
@@ -81,14 +78,13 @@ const handler = NextAuth({
     },
   },
   logger: {
-    error(code, metadata) {
-      console.error(`[Auth Error] ${code}:`, metadata);
+    error() {
+      // Error logged by NextAuth internally
     },
-    warn(code) {
-      console.warn(`[Auth Warning] ${code}`);
+    warn() {
+      // Warning logged by NextAuth internally
     },
-    debug(code, metadata) {
-      console.log(`[Auth Debug] ${code}:`, metadata);
+    debug() {
     }
   },
   debug: true,

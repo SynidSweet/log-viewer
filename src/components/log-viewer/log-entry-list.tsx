@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo, memo } from 'react'
 import { format } from 'date-fns'
 import { LogEntry } from './log-entry-details'
 import { Badge } from '@/components/ui/badge'
@@ -13,7 +14,12 @@ interface LogEntryListProps {
   onToggleSelection: (entryId: string) => void;
 }
 
-export function LogEntryList({ entries, selectedIndex, onSelectEntry, selectedEntryIds, onToggleSelection }: LogEntryListProps) {
+function LogEntryListComponent({ entries, selectedIndex, onSelectEntry, selectedEntryIds, onToggleSelection }: LogEntryListProps) {
+  // Memoize formatted timestamps to avoid re-formatting on every render
+  const formattedTimestamps = useMemo(() => {
+    return entries.map(entry => format(new Date(entry.timestamp), 'HH:mm:ss'))
+  }, [entries])
+
   return (
     <div className="divide-y divide-gray-200">
       {entries.map((entry, index) => (
@@ -42,7 +48,7 @@ export function LogEntryList({ entries, selectedIndex, onSelectEntry, selectedEn
               {entry.level}
             </span>
             <span className="text-[10px] text-gray-500">
-              {format(new Date(entry.timestamp), 'HH:mm:ss')}
+              {formattedTimestamps[index]}
             </span>
           </div>
           
@@ -77,4 +83,45 @@ export function LogEntryList({ entries, selectedIndex, onSelectEntry, selectedEn
       ))}
     </div>
   )
-} 
+}
+
+// Custom comparison function for React.memo
+function arePropsEqual(prevProps: LogEntryListProps, nextProps: LogEntryListProps): boolean {
+  // Check if entries array length or references have changed
+  if (prevProps.entries.length !== nextProps.entries.length) {
+    return false
+  }
+  
+  // Check if any entry in the array has changed (shallow comparison)
+  for (let i = 0; i < prevProps.entries.length; i++) {
+    if (prevProps.entries[i] !== nextProps.entries[i]) {
+      return false
+    }
+  }
+  
+  // Check if selectedIndex has changed
+  if (prevProps.selectedIndex !== nextProps.selectedIndex) {
+    return false
+  }
+  
+  // Check if selectedEntryIds Set has changed by comparing size and contents
+  if (prevProps.selectedEntryIds.size !== nextProps.selectedEntryIds.size) {
+    return false
+  }
+  
+  // Compare Set contents - if sizes are equal, check if all items match
+  for (const id of prevProps.selectedEntryIds) {
+    if (!nextProps.selectedEntryIds.has(id)) {
+      return false
+    }
+  }
+  
+  // Function props are assumed to be stable (using useCallback in parent)
+  // If they're not stable, this will still provide performance benefits
+  // for the common case where entries and selection state don't change
+  
+  return true
+}
+
+// Export the memoized component
+export const LogEntryList = memo(LogEntryListComponent, arePropsEqual) 

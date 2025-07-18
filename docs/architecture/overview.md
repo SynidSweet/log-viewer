@@ -1,6 +1,6 @@
 # Architecture Overview
 
-*Last updated: 2025-07-16 | Added keyboard shortcut for sort toggle*
+*Last updated: 2025-07-18 | Replaced lucide-react with optimized inline SVG icons, reducing bundle size by 48.66 MB*
 
 ## System Architecture
 
@@ -24,7 +24,7 @@ The Universal Log Viewer implements a **hybrid security model** with public API 
 - **Tailwind CSS v4**: Utility-first styling with PostCSS
 - **shadcn/ui**: Component library built on Radix UI primitives with Badge component for tags
 - **Radix UI**: Accessible component primitives
-- **Lucide React**: Icon library
+- **Optimized Icons**: Custom inline SVG components (~15 KB, replaced lucide-react 48.66 MB)
 - **Sonner**: Toast notifications
 
 #### Authentication & Security
@@ -55,8 +55,15 @@ All database operations are abstracted through `/src/lib/db-turso.ts`:
 
 #### Component Architecture
 - **Atomic Design**: UI components organized by complexity
-- **Composition Pattern**: Complex components built from simpler ones
+- **Composition Pattern**: Complex components built from simpler ones  
+- **Modular Extraction**: Large components broken down for maintainability
+  - **LogViewer**: Reduced from 762 lines to 400 lines (47.5% reduction)
+  - **LogEntryFilters**: Extracted 289-line component for filtering UI
+  - **useLogOperations**: Extracted 173-line hook for API operations
 - **Memoization**: Performance optimization for heavy operations
+  - **Date Formatting**: LogEntryList uses `useMemo` to cache formatted timestamps, preventing re-computation on every render
+  - **Component Memoization**: LogEntryList and LogItem use React.memo for optimized rendering
+- **Custom Hooks**: Separation of concerns with reusable logic extraction
 - **Client-Side State**: Local React state without global state management
 
 #### API Design
@@ -119,9 +126,11 @@ Projects List (1/5) | Log Entries (1/5) | Log Details (3/5)
 **Log Details**: Parsed log content with syntax highlighting
 
 #### Key Components
-- **LogViewer**: Main orchestration component with sort state management
+- **LogViewer**: Main orchestration component (400 lines) with sort state management and component composition
+- **LogEntryFilters**: Extracted filtering UI component (289 lines) with tag management, copy operations, and level controls
 - **LogEntryList**: Virtualized list for performance with timestamp sorting and tags display
 - **LogEntryDetails**: Detailed view with JSON tree rendering
+- **useLogOperations**: Custom hook (173 lines) managing all log API operations (fetch, cache, mark as read, delete)
 - **Project Management**: CRUD operations for projects
 - **Badge**: Atomic UI component for tag visualization with overflow handling
 

@@ -101,7 +101,6 @@ export function UploadLogsModal({ projectId, onLogsUploaded, trigger }: UploadLo
       onLogsUploaded()
     } catch (error) {
       toast.error((error as Error).message || 'Failed to upload logs')
-      console.error('Upload error:', error)
     } finally {
       setIsUploading(false)
     }

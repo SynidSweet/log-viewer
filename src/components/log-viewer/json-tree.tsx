@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronRight, ChevronDown } from 'lucide-react'
+import { ChevronRight, ChevronDown } from '../icons'
 
 interface JsonTreeProps {
   data: unknown

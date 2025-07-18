@@ -14,7 +14,7 @@ export async function GET(
     }
     
     return project;
-  }, `GET /api/projects/${id}`);
+  });
 }
 
 export async function PATCH(
@@ -43,7 +43,7 @@ export async function PATCH(
     
     const updatedProject = await updateProject(id, { name, description, id: newId });
     return updatedProject;
-  }, `PATCH /api/projects/${id}`);
+  });
 }
 
 export async function DELETE(
@@ -68,5 +68,5 @@ export async function DELETE(
       success: true,
       hadLogs: hasLogs 
     };
-  }, `DELETE /api/projects/${id}`);
+  });
 } 

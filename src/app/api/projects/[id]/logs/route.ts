@@ -15,5 +15,5 @@ export async function GET(
     logs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
     
     return logs;
-  }, `GET /api/projects/${projectId}/logs`);
+  });
 } 

@@ -1,0 +1,35 @@
+{
+  "files": [
+    {
+      "path": ".next/static/chunks/main-*.js",
+      "maxSize": "100 KB",
+      "compression": "gzip"
+    },
+    {
+      "path": ".next/static/chunks/pages/_app-*.js",
+      "maxSize": "150 KB",
+      "compression": "gzip"
+    },
+    {
+      "path": ".next/static/chunks/pages/projects/[id]-*.js",
+      "maxSize": "50 KB",
+      "compression": "gzip"
+    },
+    {
+      "path": ".next/static/chunks/webpack-*.js",
+      "maxSize": "30 KB",
+      "compression": "gzip"
+    },
+    {
+      "path": ".next/static/chunks/framework-*.js",
+      "maxSize": "50 KB",
+      "compression": "gzip"
+    }
+  ],
+  "ci": {
+    "trackBranches": ["main", "master"],
+    "buildCommand": "SKIP_DB_INIT=true npm run build",
+    "includeCommitMessage": true,
+    "showDetails": true
+  }
+}

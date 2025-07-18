@@ -19,8 +19,8 @@ function ErrorContent() {
         if (data?.error) {
           setErrorDetails(data.error);
         }
-      } catch (e) {
-        console.error('Failed to fetch session error details', e);
+      } catch {
+        // Session error details fetch failed silently
       }
     };
     

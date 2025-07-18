@@ -28,8 +28,7 @@ export function NavMenu() {
           setIsAuthenticated(false);
           setUserEmail(null);
         }
-      } catch (error) {
-        console.error('Failed to fetch session:', error);
+      } catch {
         setIsAuthenticated(false);
       } finally {
         setIsLoading(false);
@@ -48,6 +47,12 @@ export function NavMenu() {
         <span className="text-sm opacity-70">Loading...</span>
       ) : isAuthenticated ? (
         <div className="flex items-center gap-4">
+          <a
+            href="/monitoring"
+            className="text-sm hover:text-white/80 underline"
+          >
+            Monitoring
+          </a>
           <span className="text-sm">
             {userEmail}
           </span>

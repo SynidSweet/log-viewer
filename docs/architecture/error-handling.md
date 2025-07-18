@@ -1,6 +1,6 @@
 # Error Handling Architecture
 
-*Last updated: 2025-07-10 | Updated with edge case testing validation and error classification fixes*
+*Last updated: 2025-07-18 | Updated withApiErrorHandling usage - now takes single argument*
 
 ## Overview
 
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
     
     // Return data directly - wrapper handles success response
     return result
-  }, 'GET /api/example')
+  })
 }
 ```
 
@@ -159,18 +159,18 @@ async function fetchData(url: string) {
 
 ## Monitoring and Debugging
 
-### Operation Names
+### Error Tracking
 
-Each API endpoint provides an operation name for better debugging:
+The error handler automatically captures and formats errors for consistent tracking:
 
 ```typescript
-withApiErrorHandling(handler, 'POST /api/projects/{id}/logs')
+withApiErrorHandling(handler)
 ```
 
-This operation name appears in error logs and can be used for:
-- Error tracking and monitoring
-- Performance analysis
-- Debugging production issues
+Error tracking includes:
+- Automatic error classification by type
+- Consistent error response format
+- Stack traces in development mode
 
 ### Development vs Production
 
@@ -208,7 +208,7 @@ export async function GET() {
       database: health.connected ? 'connected' : 'disconnected',
       details: health.details
     }
-  }, 'GET /api/health')
+  })
 }
 ```
 

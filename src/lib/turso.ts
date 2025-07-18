@@ -31,16 +31,7 @@ function validateTursoConfig(): { valid: boolean; errors: string[] } {
 // Detailed environment validation for debugging
 const configValidation = validateTursoConfig();
 
-// Log environment variable status for debugging
-if (!hasRequiredEnvVars || !configValidation.valid) {
-  console.error('[Turso] Database configuration issues detected:', {
-    TURSO_DATABASE_URL: TURSO_DATABASE_URL ? 'Set' : 'Missing',
-    TURSO_AUTH_TOKEN: TURSO_AUTH_TOKEN ? 'Set' : 'Missing',
-    NODE_ENV: process.env.NODE_ENV,
-    VERCEL: process.env.VERCEL,
-    validationErrors: configValidation.errors,
-  });
-}
+// Environment validation handled through error responses
 
 // Connection pooling configuration (reserved for future use)
 // const CONNECTION_POOL_SIZE = 5;
@@ -152,8 +143,6 @@ export async function executeQuery(sql: string, args?: InArgs, useCache: boolean
     
     return result;
   } catch (error) {
-    console.error('Query execution failed:', { sql, args, error });
-    
     // Classify database errors for better error reporting
     if (error instanceof Error) {
       const message = error.message.toLowerCase();
@@ -260,7 +249,6 @@ export async function ensureDatabaseReady(): Promise<void> {
 async function initializeWithRetry(): Promise<void> {
   for (let attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
     try {
-      console.log(`Database initialization attempt ${attempt}/${MAX_RETRY_ATTEMPTS}`);
       
       // First validate connection
       const isConnected = await checkDatabaseConnection();
@@ -273,12 +261,9 @@ async function initializeWithRetry(): Promise<void> {
       
       isInitialized = true;
       initializationRetryCount = 0;
-      console.log('Database initialization completed successfully');
       return;
       
     } catch (error) {
-      console.error(`Database initialization attempt ${attempt} failed:`, error);
-      
       if (attempt === MAX_RETRY_ATTEMPTS) {
         initializationRetryCount++;
         throw createDatabaseError('initialization', 
@@ -289,7 +274,6 @@ async function initializeWithRetry(): Promise<void> {
       
       // Wait before retrying with exponential backoff
       const delay = RETRY_DELAY_MS * Math.pow(2, attempt - 1);
-      console.log(`Retrying in ${delay}ms...`);
       await sleep(delay);
     }
   }
@@ -307,8 +291,7 @@ export async function checkDatabaseConnection(): Promise<boolean> {
     
     const result = await Promise.race([connectionCheck, timeout]);
     return result.rows.length > 0;
-  } catch (error) {
-    console.error('Database connection check failed:', error);
+  } catch {
     return false;
   }
 }
@@ -333,8 +316,6 @@ export async function initializeDatabase(): Promise<void> {
     const missingTables = requiredTables.filter(table => !existingTables.includes(table));
     
     if (missingTables.length > 0) {
-      console.log(`Creating missing tables: ${missingTables.join(', ')}`);
-      
       try {
         // Create schema with proper error handling
         const schema = `
@@ -367,9 +348,7 @@ export async function initializeDatabase(): Promise<void> {
         }
         
         await turso.executeMultiple(schema);
-        console.log('Database schema created successfully');
       } catch (schemaError) {
-        console.error('Failed to create database schema:', schemaError);
         throw createDatabaseError('schema', 
           `Failed to create database tables: ${missingTables.join(', ')}. ` +
           `Error: ${schemaError instanceof Error ? schemaError.message : 'Unknown error'}`, 
@@ -377,14 +356,12 @@ export async function initializeDatabase(): Promise<void> {
         );
       }
     } else {
-      console.log('Database schema validation passed');
     }
     
     // Additional schema validation
     await validateDatabaseSchema();
     
   } catch (error) {
-    console.error('Failed to initialize database:', error);
     throw createDatabaseError('initialization', 
       'Database initialization failed', 
       error
@@ -402,7 +379,6 @@ async function validateDatabaseSchema(): Promise<void> {
     // Test foreign key constraints
     await executeQuery('PRAGMA foreign_key_check');
     
-    console.log('Database schema validation completed');
   } catch (error) {
     throw createDatabaseError('schema', 
       'Database schema validation failed', 
@@ -498,7 +474,6 @@ export async function executeBatch(operations: Array<{ sql: string; args?: InArg
     
     return results;
   } catch (error) {
-    console.error('Batch operation failed:', error);
     throw error;
   }
 }
@@ -507,8 +482,7 @@ export async function executeBatch(operations: Array<{ sql: string; args?: InArg
 export async function warmupConnection(): Promise<void> {
   try {
     await executeQuery('SELECT 1', undefined, true);
-    console.log('Database connection warmed up successfully');
-  } catch (error) {
-    console.error('Failed to warm up database connection:', error);
+  } catch {
+    // Connection warmup failure handled silently
   }
 }

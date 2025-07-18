@@ -63,5 +63,5 @@ export async function POST(request: NextRequest) {
       logId: log.id,
       timestamp: log.timestamp
     };
-  }, 'POST /api/logs');
+  });
 } 

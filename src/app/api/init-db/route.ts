@@ -3,7 +3,6 @@ import { withApiErrorHandling } from '@/lib/api-error-handler';
 
 export async function POST() {
   return withApiErrorHandling(async () => {
-    console.log('Initializing database schema...');
     
     // Check if turso client is available
     if (!turso) {
@@ -16,10 +15,8 @@ export async function POST() {
       WHERE type='table' AND name IN ('projects', 'logs')
     `);
     
-    console.log('Existing tables:', tablesResult.rows);
     
     if (tablesResult.rows.length === 0) {
-      console.log('Creating database schema...');
       
       // Create tables
       const schema = `
@@ -48,7 +45,6 @@ export async function POST() {
       `;
       
       await turso!.executeMultiple(schema);
-      console.log('Database schema created successfully');
       
       return {
         success: true,
@@ -56,7 +52,6 @@ export async function POST() {
         tables: ['projects', 'logs']
       };
     } else {
-      console.log('Database schema already exists');
       
       return {
         success: true,
@@ -64,5 +59,5 @@ export async function POST() {
         existingTables: tablesResult.rows.map(row => row.name)
       };
     }
-  }, 'POST /api/init-db');
+  });
 }

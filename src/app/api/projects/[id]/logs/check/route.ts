@@ -12,5 +12,5 @@ export async function GET(
     const hasLogs = await hasProjectLogs(projectId);
     
     return { hasLogs };
-  }, `GET /api/projects/${projectId}/logs/check`);
+  });
 } 
