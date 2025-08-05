@@ -94,14 +94,17 @@ async function readPerformanceData(): Promise<Partial<PerformanceData>> {
       
       // Extract relevant metrics
       if (parsed.measurements) {
-        combinedData.metrics = parsed.measurements.slice(-20).map((m: Record<string, unknown>) => ({
-          timestamp: m.timestamp,
-          component: m.component,
-          phase: m.phase,
-          duration: m.actualDuration,
-          threshold: m.phase === 'mount' ? 33 : 33,
-          status: m.actualDuration <= 33 ? 'pass' : m.actualDuration <= 50 ? 'warning' : 'fail'
-        }))
+        combinedData.metrics = parsed.measurements.slice(-20).map((m: Record<string, unknown>) => {
+          const duration = typeof m.actualDuration === 'number' ? m.actualDuration : 0
+          return {
+            timestamp: m.timestamp,
+            component: m.component,
+            phase: m.phase,
+            duration: duration,
+            threshold: m.phase === 'mount' ? 33 : 33,
+            status: duration <= 33 ? 'pass' : duration <= 50 ? 'warning' : 'fail'
+          }
+        })
       }
       
       if (parsed.alerts) {
