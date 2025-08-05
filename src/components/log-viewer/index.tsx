@@ -53,6 +53,7 @@ export function LogViewer({ projectId, enableVirtualization = false }: LogViewer
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [sortOrderLoaded, setSortOrderLoaded] = useState(false)
   const [selectedEntryIds, setSelectedEntryIds] = useState<Set<string>>(new Set())
+  const lastSelectedEntryIdRef = useRef<string | null>(null)
 
   // Cache for parsed entries to avoid re-parsing on every render
   const parsedEntriesCache = useRef<Map<string, LogEntry[]>>(new Map())
@@ -313,17 +314,41 @@ export function LogViewer({ projectId, enableVirtualization = false }: LogViewer
   }, [])
 
   // Selection functions
-  const toggleEntrySelection = useCallback((entryId: string) => {
-    setSelectedEntryIds(prev => {
-      const newSelection = new Set(prev)
-      if (newSelection.has(entryId)) {
-        newSelection.delete(entryId)
-      } else {
-        newSelection.add(entryId)
+  const toggleEntrySelection = useCallback((entryId: string, shiftKey: boolean = false) => {
+    if (shiftKey && lastSelectedEntryIdRef.current) {
+      // Handle shift+click for range selection
+      const lastId = lastSelectedEntryIdRef.current
+      const currentIndex = filteredEntries.findIndex(entry => entry.id === entryId)
+      const lastIndex = filteredEntries.findIndex(entry => entry.id === lastId)
+      
+      if (currentIndex !== -1 && lastIndex !== -1) {
+        const start = Math.min(currentIndex, lastIndex)
+        const end = Math.max(currentIndex, lastIndex)
+        
+        setSelectedEntryIds(prev => {
+          const newSelection = new Set(prev)
+          // Add all entries in the range
+          for (let i = start; i <= end; i++) {
+            newSelection.add(filteredEntries[i].id)
+          }
+          return newSelection
+        })
       }
-      return newSelection
-    })
-  }, [])
+    } else {
+      // Regular click behavior
+      setSelectedEntryIds(prev => {
+        const newSelection = new Set(prev)
+        if (newSelection.has(entryId)) {
+          newSelection.delete(entryId)
+        } else {
+          newSelection.add(entryId)
+        }
+        return newSelection
+      })
+      // Update last selected entry for future shift+clicks
+      lastSelectedEntryIdRef.current = entryId
+    }
+  }, [filteredEntries])
 
   const selectAllEntries = useCallback(() => {
     setSelectedEntryIds(new Set(filteredEntries.map(entry => entry.id)))

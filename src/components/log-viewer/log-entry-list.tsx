@@ -11,7 +11,7 @@ interface LogEntryListProps {
   selectedIndex: number;
   onSelectEntry: (index: number) => void;
   selectedEntryIds: Set<string>;
-  onToggleSelection: (entryId: string) => void;
+  onToggleSelection: (entryId: string, shiftKey?: boolean) => void;
 }
 
 function LogEntryListComponent({ entries, selectedIndex, onSelectEntry, selectedEntryIds, onToggleSelection }: LogEntryListProps) {
@@ -33,7 +33,12 @@ function LogEntryListComponent({ entries, selectedIndex, onSelectEntry, selected
           <div className="flex items-center mb-1">
             <Checkbox
               checked={selectedEntryIds.has(entry.id)}
-              onCheckedChange={() => onToggleSelection(entry.id)}
+              onCheckedChange={() => {
+                // Get the current shift key state from the event
+                const event = window.event as MouseEvent | KeyboardEvent | null
+                const shiftKey = event?.shiftKey || false
+                onToggleSelection(entry.id, shiftKey)
+              }}
               className="mr-2 h-3 w-3"
               onClick={(e) => e.stopPropagation()} // Prevent entry selection when clicking checkbox
             />

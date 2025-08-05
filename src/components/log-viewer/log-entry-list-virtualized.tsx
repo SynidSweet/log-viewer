@@ -12,7 +12,7 @@ interface LogEntryListProps {
   selectedIndex: number;
   onSelectEntry: (index: number) => void;
   selectedEntryIds: Set<string>;
-  onToggleSelection: (entryId: string) => void;
+  onToggleSelection: (entryId: string, shiftKey?: boolean) => void;
 }
 
 // Calculate item height based on styling:
@@ -31,7 +31,7 @@ interface VirtualizedItemProps {
     selectedIndex: number;
     onSelectEntry: (index: number) => void;
     selectedEntryIds: Set<string>;
-    onToggleSelection: (entryId: string) => void;
+    onToggleSelection: (entryId: string, shiftKey?: boolean) => void;
     formattedTimestamps: string[];
   };
 }
@@ -46,7 +46,10 @@ const VirtualizedItem = memo(({ index, style, data }: VirtualizedItemProps) => {
   }, [onSelectEntry, index]);
 
   const handleCheckboxChange = useCallback(() => {
-    onToggleSelection(entry.id);
+    // Get the current shift key state from the event
+    const event = window.event as MouseEvent | KeyboardEvent | null;
+    const shiftKey = event?.shiftKey || false;
+    onToggleSelection(entry.id, shiftKey);
   }, [onToggleSelection, entry.id]);
 
   const handleCheckboxClick = useCallback((e: React.MouseEvent) => {
