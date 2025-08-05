@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
                 ...budget,
                 id: budgetId,
                 updatedAt: new Date().toISOString(),
-                updatedBy: session.user.email
+                updatedBy: session.user?.email || 'unknown'
               }
             : b
         )
