@@ -1,3 +1,11 @@
-export const react = jest.fn();
-export const @radix-ui/react-tabs = jest.fn();
-export const @/lib/utils = jest.fn();
+// Mock for Tabs component
+const React = require('react');
+
+const Tabs = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'tabs-mock',
+    ...props
+  }, 'Tabs Mock');
+};
+
+module.exports = Tabs;

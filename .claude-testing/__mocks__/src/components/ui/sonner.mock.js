@@ -1,2 +1,6 @@
-export const next-themes = jest.fn();
-export const sonner = jest.fn();
+const next-themes = jest.fn();
+const sonner = jest.fn();
+module.exports = {
+  next,
+  sonner
+};

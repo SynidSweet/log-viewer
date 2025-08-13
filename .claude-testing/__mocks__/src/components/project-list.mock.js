@@ -1,4 +1,11 @@
-export const react = jest.fn();
-export const next/navigation = jest.fn();
-export const @/lib/types = jest.fn();
-export const ./edit-project-modal = jest.fn();
+// Mock for Project-list component
+const React = require('react');
+
+const Project-list = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'project-list-mock',
+    ...props
+  }, 'Project-list Mock');
+};
+
+module.exports = Project-list;

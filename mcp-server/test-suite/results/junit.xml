@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="43" failures="0" errors="0" time="4.172">
+  <testsuite name="MCP Server Basic Validation" errors="0" failures="0" skipped="0" timestamp="2025-08-13T20:16:24" time="0.69" tests="14">
+    <testcase classname="MCP Server Basic Validation Environment Setup Test environment is properly configured" name="MCP Server Basic Validation Environment Setup Test environment is properly configured" time="0.004">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation Environment Setup Performance thresholds are reasonable" name="MCP Server Basic Validation Environment Setup Performance thresholds are reasonable" time="0.002">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation FastMCP Framework FastMCP can be imported and instantiated" name="MCP Server Basic Validation FastMCP Framework FastMCP can be imported and instantiated" time="0.007">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation FastMCP Framework Zod validation library is available" name="MCP Server Basic Validation FastMCP Framework Zod validation library is available" time="0.012">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation Database Dependencies Database connection modules can be imported" name="MCP Server Basic Validation Database Dependencies Database connection modules can be imported" time="0.409">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation Database Dependencies Environment variables are configured" name="MCP Server Basic Validation Database Dependencies Environment variables are configured" time="0.001">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation MCP Server Structure MCP server source files exist" name="MCP Server Basic Validation MCP Server Structure MCP server source files exist" time="0.002">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation MCP Server Structure Core tool definitions are present in source" name="MCP Server Basic Validation MCP Server Structure Core tool definitions are present in source" time="0.006">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation Test Infrastructure Test helper functions are available" name="MCP Server Basic Validation Test Infrastructure Test helper functions are available" time="0.008">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation Test Infrastructure Test data generation works" name="MCP Server Basic Validation Test Infrastructure Test data generation works" time="0.002">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation Test Infrastructure Performance measurement utilities work" name="MCP Server Basic Validation Test Infrastructure Performance measurement utilities work" time="0.012">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation Test Suite Configuration All expected tool names are configured" name="MCP Server Basic Validation Test Suite Configuration All expected tool names are configured" time="0.002">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation Test Suite Configuration Test project configuration is valid" name="MCP Server Basic Validation Test Suite Configuration Test project configuration is valid" time="0.001">
+    </testcase>
+    <testcase classname="MCP Server Basic Validation Test Suite Configuration Test log content is properly formatted" name="MCP Server Basic Validation Test Suite Configuration Test log content is properly formatted" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="MCP Tool Validation Tests" errors="0" failures="0" skipped="0" timestamp="2025-08-13T20:16:24" time="0.098" tests="29">
+    <testcase classname="MCP Tool Validation Tests Health and Monitoring Tools health_check - basic functionality" name="MCP Tool Validation Tests Health and Monitoring Tools health_check - basic functionality" time="0.002">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Health and Monitoring Tools health_check - detailed checks" name="MCP Tool Validation Tests Health and Monitoring Tools health_check - detailed checks" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Health and Monitoring Tools get_metrics - basic metrics" name="MCP Tool Validation Tests Health and Monitoring Tools get_metrics - basic metrics" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Health and Monitoring Tools get_metrics - with trends and alerts" name="MCP Tool Validation Tests Health and Monitoring Tools get_metrics - with trends and alerts" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Health and Monitoring Tools get_active_alerts - all alerts" name="MCP Tool Validation Tests Health and Monitoring Tools get_active_alerts - all alerts" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Health and Monitoring Tools get_active_alerts - severity filtering" name="MCP Tool Validation Tests Health and Monitoring Tools get_active_alerts - severity filtering" time="0">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Health and Monitoring Tools update_alert_thresholds - valid updates" name="MCP Tool Validation Tests Health and Monitoring Tools update_alert_thresholds - valid updates" time="0">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Health and Monitoring Tools update_alert_thresholds - parameter validation" name="MCP Tool Validation Tests Health and Monitoring Tools update_alert_thresholds - parameter validation" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Authentication Tools validate_auth - valid token" name="MCP Tool Validation Tests Authentication Tools validate_auth - valid token" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Authentication Tools validate_auth - invalid token" name="MCP Tool Validation Tests Authentication Tools validate_auth - invalid token" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Authentication Tools validate_auth - missing parameter" name="MCP Tool Validation Tests Authentication Tools validate_auth - missing parameter" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Project Management Tools list_projects - basic functionality" name="MCP Tool Validation Tests Project Management Tools list_projects - basic functionality" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Project Management Tools projects_list - alias functionality" name="MCP Tool Validation Tests Project Management Tools projects_list - alias functionality" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Project Management Tools get_project - valid project" name="MCP Tool Validation Tests Project Management Tools get_project - valid project" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Project Management Tools get_project - invalid project" name="MCP Tool Validation Tests Project Management Tools get_project - invalid project" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Project Management Tools project_get - alias functionality" name="MCP Tool Validation Tests Project Management Tools project_get - alias functionality" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Project Management Tools create_project - valid project" name="MCP Tool Validation Tests Project Management Tools create_project - valid project" time="0.002">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Project Management Tools create_project - missing name parameter" name="MCP Tool Validation Tests Project Management Tools create_project - missing name parameter" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Log Management Tools get_project_logs - valid project" name="MCP Tool Validation Tests Log Management Tools get_project_logs - valid project" time="0.009">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Log Management Tools logs_list - alias functionality" name="MCP Tool Validation Tests Log Management Tools logs_list - alias functionality" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Log Management Tools get_log_content - valid log" name="MCP Tool Validation Tests Log Management Tools get_log_content - valid log" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Log Management Tools create_log_entry - valid entry" name="MCP Tool Validation Tests Log Management Tools create_log_entry - valid entry" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Log Search Tools entries_query - basic search" name="MCP Tool Validation Tests Log Search Tools entries_query - basic search" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Log Search Tools entries_query - level filtering" name="MCP Tool Validation Tests Log Search Tools entries_query - level filtering" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Log Search Tools entries_query - time filtering" name="MCP Tool Validation Tests Log Search Tools entries_query - time filtering" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Log Search Tools entries_query - invalid parameters" name="MCP Tool Validation Tests Log Search Tools entries_query - invalid parameters" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Log Search Tools entries_latest - convenience tool" name="MCP Tool Validation Tests Log Search Tools entries_latest - convenience tool" time="0.001">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Parameter Validation All tools handle missing required parameters" name="MCP Tool Validation Tests Parameter Validation All tools handle missing required parameters" time="0.003">
+    </testcase>
+    <testcase classname="MCP Tool Validation Tests Parameter Validation All tools respond within performance threshold" name="MCP Tool Validation Tests Parameter Validation All tools respond within performance threshold" time="0.004">
+    </testcase>
+  </testsuite>
+</testsuites>

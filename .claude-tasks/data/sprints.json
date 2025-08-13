@@ -1,8 +1,127 @@
 {
-  "sprints": [],
+  "sprints": [
+    {
+      "id": "SPRINT-2025-Q3-DEV01",
+      "title": "Log Viewer Infrastructure Sprint",
+      "description": "Focus on setting up core MCP infrastructure and project-level tools for the log viewer system",
+      "status": "completed",
+      "created_at": "2025-08-13T20:19:02.136308",
+      "updated_at": "2025-08-13T20:45:31.386548",
+      "start_date": "2025-08-13T20:19:08.110001",
+      "end_date": null,
+      "task_ids": [
+        "TASK-2025-002"
+      ],
+      "focus": {
+        "primary_objective": "Log Viewer Infrastructure Sprint",
+        "validation_criteria": [],
+        "scope_boundaries": {
+          "in_scope": [],
+          "out_of_scope": []
+        },
+        "documentation_references": [],
+        "focus_guidelines": []
+      },
+      "validation_metrics": {
+        "criteria": [],
+        "validation_gates": [],
+        "success_threshold": 0.8
+      },
+      "scope_protection": {
+        "boundaries": {
+          "in_scope": [],
+          "out_of_scope": []
+        },
+        "escalation_triggers": [],
+        "approved_changes": []
+      },
+      "progress": {
+        "total_tasks": 1,
+        "completed_tasks": 1,
+        "remaining_tasks": 0,
+        "completion_percentage": 100.0
+      },
+      "history": [
+        {
+          "timestamp": "2025-08-13T20:19:02.136308",
+          "event": "created",
+          "actor": "mcp-server",
+          "details": "Sprint created: Log Viewer Infrastructure Sprint",
+          "context": {}
+        }
+      ]
+    },
+    {
+      "id": "SPRINT-2025-Q3-DEV02",
+      "title": "MCP MVP Completion Sprint",
+      "description": "Complete the MCP (Model Context Protocol) MVP by implementing remaining core functionality for production readiness. Primary objective: Deliver fully functional MCP server with comprehensive log search capabilities, Claude Code integration, automated testing, and production deployment configuration. Validation criteria: All 11+ MCP tools operational, comprehensive test suite with 90%+ coverage, Claude Code integration working, production environment configured with monitoring. In-scope: log entry search tools, Claude Code integration, comprehensive testing infrastructure, production environment setup, documentation completion. Out-of-scope: advanced analytics features, custom dashboards, additional authentication methods, performance optimization beyond basic requirements.",
+      "status": "active",
+      "created_at": "2025-08-13T20:45:03.285915",
+      "updated_at": "2025-08-13T20:50:27.514997",
+      "start_date": "2025-08-13T20:45:31.386563",
+      "end_date": null,
+      "task_ids": [
+        "TASK-2025-008",
+        "TASK-2025-011",
+        "TASK-2025-004",
+        "TASK-2025-009",
+        "TASK-2025-005",
+        "TASK-2025-007",
+        "TASK-2025-010",
+        "TASK-2025-012"
+      ],
+      "focus": {
+        "primary_objective": "MCP MVP Completion Sprint",
+        "validation_criteria": [],
+        "scope_boundaries": {
+          "in_scope": [],
+          "out_of_scope": []
+        },
+        "documentation_references": [],
+        "focus_guidelines": []
+      },
+      "validation_metrics": {
+        "criteria": [],
+        "validation_gates": [],
+        "success_threshold": 0.8
+      },
+      "scope_protection": {
+        "boundaries": {
+          "in_scope": [],
+          "out_of_scope": []
+        },
+        "escalation_triggers": [],
+        "approved_changes": []
+      },
+      "progress": {
+        "total_tasks": 8,
+        "completed_tasks": 0,
+        "remaining_tasks": 0,
+        "completion_percentage": 0.0,
+        "task_status_counts": {
+          "pending": 0,
+          "in_progress": 0,
+          "blocked": 0,
+          "completed": 0,
+          "failed": 0
+        },
+        "metrics_snapshot": {}
+      },
+      "history": [
+        {
+          "timestamp": "2025-08-13T20:45:03.285915",
+          "event": "created",
+          "actor": "mcp-server",
+          "details": "Sprint created: MCP MVP Completion Sprint",
+          "context": {}
+        }
+      ]
+    }
+  ],
   "metadata": {
     "created_at": "2025-07-16T21:53:46.353726Z",
     "version": "1.0.0",
-    "project_initialized": true
+    "project_initialized": true,
+    "updated_at": "2025-08-13T20:50:27.517477Z"
   }
 }

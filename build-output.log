@@ -1,0 +1,27 @@
+
+> log-viewer@0.1.0 build
+> npm run db:init && next build
+
+
+> log-viewer@0.1.0 db:init
+> node scripts/init-db-deploy.js
+
+🚀 Starting database initialization for deployment...
+Environment: development (Local)
+🎯 Database Deployment Initialization Starting...
+🔍 Validating environment variables...
+❌ Environment validation failed:
+   - TURSO_DATABASE_URL is missing
+   - TURSO_AUTH_TOKEN is missing
+
+💥 Database initialization failed!
+⏱️  Duration: 0ms
+❌ Error: Environment validation failed: TURSO_DATABASE_URL is missing, TURSO_AUTH_TOKEN is missing
+
+🔧 Deployment Troubleshooting:
+1. Check environment variables in your deployment platform
+2. Verify Turso database is accessible from your deployment region
+3. Ensure your Turso auth token has write permissions
+4. Check deployment logs for additional error details
+
+📖 For more help, see: /docs/deployment/troubleshooting.md

@@ -1,2 +1,8 @@
-export const next/server = jest.fn();
-export const ./turso = jest.fn();
+// Mock for API error handler
+const mockApiErrorHandler = jest.fn();
+const mockTurso = jest.fn();
+
+module.exports = {
+  mockApiErrorHandler,
+  mockTurso
+};

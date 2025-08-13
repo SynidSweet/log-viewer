@@ -1,4 +1,11 @@
-export const react = jest.fn();
-export const @radix-ui/react-select = jest.fn();
-export const lucide-react = jest.fn();
-export const @/lib/utils = jest.fn();
+// Mock for Select component
+const React = require('react');
+
+const Select = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'select-mock',
+    ...props
+  }, 'Select Mock');
+};
+
+module.exports = Select;

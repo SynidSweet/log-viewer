@@ -1,0 +1,54 @@
+
+> log-viewer@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.3.1 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.243:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+Slow filesystem detected. If /code/personal/log-viewer/.next is a network drive, consider moving it to a local folder. If you have an antivirus enabled, consider excluding your project directory.
+ ○ Compiling middleware ...
+ ✓ Compiled middleware in 993ms
+ ✓ Ready in 3.5s
+ ○ Compiling / ...
+ ✓ Compiled / in 8.7s
+ GET / 200 in 9509ms
+ ○ Compiling /api/projects ...
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 4048ms
+ ✓ Compiled /api/projects in 4.1s
+ GET /api/projects 200 in 5180ms
+ GET /api/auth/session 200 in 5223ms
+ GET /api/auth/session 200 in 77ms
+ ○ Compiling /projects/[id] ...
+ ✓ Compiled /projects/[id] in 4.7s
+ ○ Compiling /_not-found/page ...
+ GET /projects/waltero-installer 200 in 6735ms
+ ✓ Compiled /_not-found/page in 4.5s
+ GET /api/projects/waltero-installer/logs 200 in 4103ms
+ GET /api/projects/waltero-installer/logs 200 in 133ms
+ GET / 200 in 79ms
+ GET /api/auth/session 200 in 166ms
+ GET /api/projects 200 in 259ms
+ GET /api/auth/session 200 in 86ms
+ GET /api/projects 200 in 85ms
+ GET /projects/waltero-installer 200 in 123ms
+ GET /api/projects/waltero-installer/logs 200 in 160ms
+ GET /api/projects/waltero-installer/logs 200 in 116ms
+ GET / 200 in 122ms
+ GET /api/projects 200 in 98ms
+ GET /api/auth/session 200 in 193ms
+ GET /api/auth/session 200 in 75ms
+ GET / 200 in 155ms
+ GET /api/auth/session 200 in 122ms
+ GET /api/projects 200 in 126ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 301ms
+ GET /api/auth/session 200 in 80ms
+ GET /projects/waltero-installer 200 in 245ms
+ GET /api/projects/waltero-installer/logs 200 in 111ms
+ GET /api/projects/waltero-installer/logs 200 in 75ms
+ ○ Compiling /api/logs/[id] ...
+ ✓ Compiled /api/logs/[id] in 1589ms
+ GET /api/logs/5GQXiTwipQuAh4ChTjE7i 200 in 3037ms
+[?25h

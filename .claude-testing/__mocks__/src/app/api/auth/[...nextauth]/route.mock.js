@@ -1,2 +1,6 @@
-export const next-auth = jest.fn();
-export const next-auth/providers/google = jest.fn();
+const next-auth = jest.fn();
+const next-auth/providers/google = jest.fn();
+module.exports = {
+  next,
+  next
+};

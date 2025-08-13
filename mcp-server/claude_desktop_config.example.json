@@ -1,0 +1,52 @@
+{
+  "mcpServers": {
+    "log-viewer": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/log-viewer/mcp-server/dist/index.js"
+      ],
+      "env": {
+        "TURSO_DATABASE_URL": "libsql://your-database-name-your-username.turso.io",
+        "TURSO_AUTH_TOKEN": "your-turso-auth-token",
+        "NODE_ENV": "production",
+        "LOG_LEVEL": "info",
+        "ENABLE_METRICS": "true",
+        "HEALTH_CHECK_INTERVAL": "30000"
+      }
+    },
+    "log-viewer-dev": {
+      "command": "npx",
+      "args": [
+        "ts-node",
+        "/absolute/path/to/log-viewer/mcp-server/src/index.ts"
+      ],
+      "env": {
+        "TURSO_DATABASE_URL": "libsql://your-database-name-your-username.turso.io",
+        "TURSO_AUTH_TOKEN": "your-turso-auth-token",
+        "NODE_ENV": "development",
+        "LOG_LEVEL": "debug",
+        "ENABLE_METRICS": "true",
+        "LOG_REQUESTS": "true",
+        "HEALTH_CHECK_INTERVAL": "30000"
+      }
+    },
+    "log-viewer-test": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/log-viewer/mcp-server/src/index.js"
+      ],
+      "env": {
+        "NODE_ENV": "development",
+        "PROJECT_ID": "test-project",
+        "API_TOKEN": "test-token-12345",
+        "LOG_LEVEL": "debug"
+      }
+    }
+  },
+  "globalShortcuts": [
+    {
+      "key": "cmd+shift+m",
+      "action": "openMcp"
+    }
+  ]
+}

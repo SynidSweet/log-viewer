@@ -1,0 +1,10 @@
+{
+  "testType": "quick",
+  "duration": "7.95",
+  "timestamp": "2025-08-13T20:03:35.853Z",
+  "environment": {
+    "nodeVersion": "v23.11.1",
+    "platform": "linux",
+    "arch": "x64"
+  }
+}

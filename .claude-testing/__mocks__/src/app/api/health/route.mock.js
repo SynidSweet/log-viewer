@@ -1,3 +1,14 @@
-export const next/server = jest.fn();
-export const @/lib/turso = jest.fn();
-export const @/lib/api-error-handler = jest.fn();
+// Mock for API route
+const NextRequest = jest.fn();
+const NextResponse = jest.fn();
+const mockDb = jest.fn();
+const mockApiErrorHandler = jest.fn();
+const mockTurso = jest.fn();
+
+module.exports = {
+  NextRequest,
+  NextResponse,
+  mockDb,
+  mockApiErrorHandler,
+  mockTurso
+};

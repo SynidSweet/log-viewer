@@ -12,17 +12,17 @@
  */
 
 import { NextRequest } from 'next/server';
-import { POST } from '../../../src/app/api/logs/route';
-import { withApiErrorHandling } from '../../../src/lib/api-error-handler';
-import { getProject, createLog } from '../../../src/lib/db-turso';
-import { DatabaseError } from '../../../src/lib/turso';
+import { POST } from '@/app/api/logs/route';
+import { withApiErrorHandling } from '@/lib/api-error-handler';
+import { getProject, createLog } from '@/lib/db-turso';
+import { DatabaseError } from '@/lib/turso';
 
 // Mock dependencies
-jest.mock('../../../src/lib/api-error-handler', () => ({
+jest.mock('@/lib/api-error-handler', () => ({
   withApiErrorHandling: jest.fn()
 }));
 
-jest.mock('../../../src/lib/db-turso', () => ({
+jest.mock('@/lib/db-turso', () => ({
   getProject: jest.fn(),
   createLog: jest.fn()
 }));
@@ -60,7 +60,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
       const mockCreatedLog = {
@@ -68,7 +68,7 @@ describe('Logs API Comprehensive Tests', () => {
         projectId: 'project-1',
         content: '[2025-01-01, 10:30:00] [LOG] Test message',
         comment: 'Test comment',
-        createdAt: '2025-01-01T00:00:00Z'
+        timestamp: '2025-01-01T00:00:00Z'
       };
 
       mockGetProject.mockResolvedValue(mockProject);
@@ -91,23 +91,24 @@ describe('Logs API Comprehensive Tests', () => {
 
       expect(mockWithApiErrorHandling).toHaveBeenCalledWith(
         expect.any(Function),
-        'create-log'
+        'POST /api/logs'
       );
 
       const operationFunction = mockWithApiErrorHandling.mock.calls[0][0];
       const result = await operationFunction();
 
       expect(result).toEqual({
-        message: 'Log created successfully',
-        logId: 'log-1'
+        success: true,
+        logId: 'log-1',
+        timestamp: expect.any(String)
       });
 
       expect(mockGetProject).toHaveBeenCalledWith('project-1');
-      expect(mockCreateLog).toHaveBeenCalledWith({
-        projectId: 'project-1',
-        content: '[2025-01-01, 10:30:00] [LOG] Test message',
-        comment: 'Test comment'
-      });
+      expect(mockCreateLog).toHaveBeenCalledWith(
+        'project-1',
+        '[2025-01-01, 10:30:00] [LOG] Test message',
+        'Test comment'
+      );
     });
 
     it('should accept log without optional comment', async () => {
@@ -115,14 +116,14 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
       const mockCreatedLog = {
         id: 'log-1',
         projectId: 'project-1',
         content: '[2025-01-01, 10:30:00] [INFO] Info message',
-        createdAt: '2025-01-01T00:00:00Z'
+        timestamp: '2025-01-01T00:00:00Z'
       };
 
       mockGetProject.mockResolvedValue(mockProject);
@@ -144,11 +145,11 @@ describe('Logs API Comprehensive Tests', () => {
       const operationFunction = mockWithApiErrorHandling.mock.calls[0][0];
       const result = await operationFunction();
 
-      expect(mockCreateLog).toHaveBeenCalledWith({
-        projectId: 'project-1',
-        content: '[2025-01-01, 10:30:00] [INFO] Info message',
-        comment: undefined
-      });
+      expect(mockCreateLog).toHaveBeenCalledWith(
+        'project-1',
+        '[2025-01-01, 10:30:00] [INFO] Info message',
+        ''
+      );
     });
 
     it('should accept multi-line log content', async () => {
@@ -156,14 +157,14 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
       const mockCreatedLog = {
         id: 'log-1',
         projectId: 'project-1',
         content: '[2025-01-01, 10:30:00] [LOG] First message\n[2025-01-01, 10:30:01] [ERROR] Second message',
-        createdAt: '2025-01-01T00:00:00Z'
+        timestamp: '2025-01-01T00:00:00Z'
       };
 
       mockGetProject.mockResolvedValue(mockProject);
@@ -185,7 +186,9 @@ describe('Logs API Comprehensive Tests', () => {
       const operationFunction = mockWithApiErrorHandling.mock.calls[0][0];
       const result = await operationFunction();
 
-      expect(result.message).toBe('Log created successfully');
+      expect(result.success).toBe(true);
+      expect(result.logId).toBeDefined();
+      expect(result.timestamp).toBeDefined();
     });
 
     it('should accept logs with JSON data', async () => {
@@ -193,14 +196,14 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
       const mockCreatedLog = {
         id: 'log-1',
         projectId: 'project-1',
         content: '[2025-01-01, 10:30:00] [LOG] Message - {"key": "value", "nested": {"data": 123}}',
-        createdAt: '2025-01-01T00:00:00Z'
+        timestamp: '2025-01-01T00:00:00Z'
       };
 
       mockGetProject.mockResolvedValue(mockProject);
@@ -222,7 +225,9 @@ describe('Logs API Comprehensive Tests', () => {
       const operationFunction = mockWithApiErrorHandling.mock.calls[0][0];
       const result = await operationFunction();
 
-      expect(result.message).toBe('Log created successfully');
+      expect(result.success).toBe(true);
+      expect(result.logId).toBeDefined();
+      expect(result.timestamp).toBeDefined();
     });
   });
 
@@ -391,7 +396,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
       mockGetProject.mockResolvedValue(mockProject);
@@ -452,7 +457,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
       const createError: DatabaseError = {
@@ -536,14 +541,14 @@ describe('Logs API Comprehensive Tests', () => {
           id: 'project-1',
           name: 'Test Project',
           description: 'Test',
-          createdAt: '2025-01-01T00:00:00Z',
+          timestamp: '2025-01-01T00:00:00Z',
           apiKey: 'valid-api-key'
         };
         const mockCreatedLog = {
           id: `log-${index + 1}`,
           projectId: 'project-1',
           content,
-          createdAt: '2025-01-01T00:00:00Z'
+          timestamp: '2025-01-01T00:00:00Z'
         };
 
         mockGetProject.mockResolvedValue(mockProject);
@@ -565,7 +570,9 @@ describe('Logs API Comprehensive Tests', () => {
         const operationFunction = mockWithApiErrorHandling.mock.calls[0][0];
         const result = await operationFunction();
 
-        expect(result.message).toBe('Log created successfully');
+        expect(result.success).toBe(true);
+      expect(result.logId).toBeDefined();
+      expect(result.timestamp).toBeDefined();
         jest.clearAllMocks();
       });
     });
@@ -604,7 +611,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
       const largeContent = '[2025-01-01, 10:30:00] [LOG] ' + 'A'.repeat(100000);
@@ -612,7 +619,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'log-1',
         projectId: 'project-1',
         content: largeContent,
-        createdAt: '2025-01-01T00:00:00Z'
+        timestamp: '2025-01-01T00:00:00Z'
       };
 
       mockGetProject.mockResolvedValue(mockProject);
@@ -634,7 +641,9 @@ describe('Logs API Comprehensive Tests', () => {
       const operationFunction = mockWithApiErrorHandling.mock.calls[0][0];
       const result = await operationFunction();
 
-      expect(result.message).toBe('Log created successfully');
+      expect(result.success).toBe(true);
+      expect(result.logId).toBeDefined();
+      expect(result.timestamp).toBeDefined();
     });
 
     it('should handle special characters in log content', async () => {
@@ -642,7 +651,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
       const specialContent = '[2025-01-01, 10:30:00] [LOG] Special chars: àáâãäåæçèé €£¥ 中文 🚀';
@@ -650,7 +659,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'log-1',
         projectId: 'project-1',
         content: specialContent,
-        createdAt: '2025-01-01T00:00:00Z'
+        timestamp: '2025-01-01T00:00:00Z'
       };
 
       mockGetProject.mockResolvedValue(mockProject);
@@ -672,7 +681,9 @@ describe('Logs API Comprehensive Tests', () => {
       const operationFunction = mockWithApiErrorHandling.mock.calls[0][0];
       const result = await operationFunction();
 
-      expect(result.message).toBe('Log created successfully');
+      expect(result.success).toBe(true);
+      expect(result.logId).toBeDefined();
+      expect(result.timestamp).toBeDefined();
     });
 
     it('should handle concurrent log submissions', async () => {
@@ -680,7 +691,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
 
@@ -719,7 +730,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'project-1',
         name: 'Test Project',
         description: 'Test',
-        createdAt: '2025-01-01T00:00:00Z',
+        timestamp: '2025-01-01T00:00:00Z',
         apiKey: 'valid-api-key'
       };
       mockGetProject.mockResolvedValue(mockProject);
@@ -727,7 +738,7 @@ describe('Logs API Comprehensive Tests', () => {
         id: 'log-1',
         projectId: 'project-1',
         content: '[2025-01-01, 10:30:00] [LOG] Test',
-        createdAt: '2025-01-01T00:00:00Z'
+        timestamp: '2025-01-01T00:00:00Z'
       });
 
       const requestBody = {
@@ -746,11 +757,11 @@ describe('Logs API Comprehensive Tests', () => {
       expect(mockWithApiErrorHandling).toHaveBeenCalledTimes(1);
       expect(mockWithApiErrorHandling).toHaveBeenCalledWith(
         expect.any(Function),
-        'create-log'
+        'POST /api/logs'
       );
 
       const [operationFunction, operationName] = mockWithApiErrorHandling.mock.calls[0];
-      expect(operationName).toBe('create-log');
+      expect(operationName).toBe('POST /api/logs');
       expect(typeof operationFunction).toBe('function');
     });
   });

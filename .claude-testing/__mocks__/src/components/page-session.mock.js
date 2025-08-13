@@ -1,2 +1,6 @@
-export const next-auth/react = jest.fn();
-export const react = jest.fn();
+const next-auth/react = jest.fn();
+const react = jest.fn();
+module.exports = {
+  next,
+  react
+};

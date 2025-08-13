@@ -1,0 +1,10 @@
+{
+  "testType": "tools",
+  "duration": "7.41",
+  "timestamp": "2025-08-13T20:16:13.067Z",
+  "environment": {
+    "nodeVersion": "v23.11.1",
+    "platform": "linux",
+    "arch": "x64"
+  }
+}

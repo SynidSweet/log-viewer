@@ -1,6 +1,11 @@
-export const react = jest.fn();
-export const @/components/ui/button = jest.fn();
-export const @/components/ui/textarea = jest.fn();
-export const @/components/ui/input = jest.fn();
-export const @/components/ui/label = jest.fn();
-export const sonner = jest.fn();
+// Mock for Upload-logs-modal component
+const React = require('react');
+
+const Upload-logs-modal = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'upload-logs-modal-mock',
+    ...props
+  }, 'Upload-logs-modal Mock');
+};
+
+module.exports = Upload-logs-modal;

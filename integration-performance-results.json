@@ -1,0 +1,2231 @@
+[
+  {
+    "timestamp": "2025-07-17T20:25:14.077Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 16699830272
+    },
+    "tests": [
+      {
+        "name": "integration-performance.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance.test.tsx",
+        "status": "failed",
+        "duration": 3137,
+        "memoryUsage": {
+          "start": {
+            "rss": 182919168,
+            "heapTotal": 89923584,
+            "heapUsed": 60447640,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 265871360,
+            "heapTotal": 145477632,
+            "heapUsed": 91362584,
+            "external": 7836063,
+            "arrayBuffers": 5376965
+          },
+          "peak": {
+            "rss": 265498624,
+            "heapTotal": 145612800,
+            "heapUsed": 122885152,
+            "external": 7836084,
+            "arrayBuffers": 5419039
+          },
+          "growth": 30914944
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should respond to log entry clicks within 100ms",
+            "status": "failed",
+            "duration": 1029,
+            "failureMessages": [
+              "Error: expect(element).not.toBeInTheDocument()\n\nexpected document not to contain element, found <p>Error loading logs: fetch is not defined</p> instead\n\nIgnored nodes: comments, script, style\n\u001b[36m<html>\u001b[39m\n  \u001b[36m<head />\u001b[39m\n  \u001b[36m<body>\u001b[39m\n    \u001b[36m<div>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"p-4 text-red-500\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<p>\u001b[39m\n          \u001b[0mError loading logs: \u001b[0m\n          \u001b[0mfetch is not defined\u001b[0m\n        \u001b[36m</p>\u001b[39m\n        \u001b[36m<p\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm mt-2\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[0mPlease try again later or contact support if the problem persists.\u001b[0m\n        \u001b[36m</p>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</div>\u001b[39m\n  \u001b[36m</body>\u001b[39m\n\u001b[36m</html>\u001b[39m...\n    at toBeInTheDocument (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance.test.tsx:79:27)\n    at runWithExpensiveErrorDiagnosticsDisabled (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/config.js:47:12)\n    at checkCallback (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:124:77)\n    at checkRealTimersCallback (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:118:16)\n    at Timeout.task [as _onTimeout] (/code/personal/log-viewer/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)\n    at listOnTimeout (node:internal/timers:608:17)\n    at processTimers (node:internal/timers:543:7)"
+            ]
+          },
+          {
+            "title": "should handle rapid sequential clicks efficiently",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should filter large datasets efficiently",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle complex multi-filter scenarios",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle large log lists with smooth scrolling",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle keyboard navigation efficiently",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage during normal operations",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount without memory leaks",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle typical log analysis workflow efficiently",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle concurrent user interactions",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain consistent performance across multiple test runs",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 1,
+      "passedTests": 0,
+      "failedTests": 1,
+      "totalTime": 3137,
+      "averageTime": 3137,
+      "memoryUsage": {
+        "initial": {
+          "rss": 182788096,
+          "heapTotal": 89923584,
+          "heapUsed": 59815536,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 265498624,
+          "heapTotal": 145612800,
+          "heapUsed": 122885152,
+          "external": 7836084,
+          "arrayBuffers": 5419039
+        },
+        "final": {
+          "rss": 265871360,
+          "heapTotal": 145477632,
+          "heapUsed": 91404216,
+          "external": 7836063,
+          "arrayBuffers": 5376965
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-17T20:25:59.950Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 16610832384
+    },
+    "tests": [
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 1365,
+        "memoryUsage": {
+          "start": {
+            "rss": 185245696,
+            "heapTotal": 90185728,
+            "heapUsed": 60445704,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 207679488,
+            "heapTotal": 106803200,
+            "heapUsed": 69302224,
+            "external": 5576083,
+            "arrayBuffers": 3159059
+          },
+          "peak": {
+            "rss": 184983552,
+            "heapTotal": 90185728,
+            "heapUsed": 59810480,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "growth": 8856520
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "passed",
+            "duration": 43,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "passed",
+            "duration": 15,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 56,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 1,
+      "passedTests": 1,
+      "failedTests": 0,
+      "totalTime": 1365,
+      "averageTime": 1365,
+      "memoryUsage": {
+        "initial": {
+          "rss": 184983552,
+          "heapTotal": 90185728,
+          "heapUsed": 59810480,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 184983552,
+          "heapTotal": 90185728,
+          "heapUsed": 59810480,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "final": {
+          "rss": 207679488,
+          "heapTotal": 106803200,
+          "heapUsed": 69728240,
+          "external": 5576083,
+          "arrayBuffers": 3159059
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-17T20:55:27.592Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 16856428544
+    },
+    "tests": [
+      {
+        "name": "integration-performance-full.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx",
+        "status": "failed",
+        "duration": 14182,
+        "memoryUsage": {
+          "start": {
+            "rss": 183496704,
+            "heapTotal": 89960448,
+            "heapUsed": 60453872,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 302100480,
+            "heapTotal": 140980224,
+            "heapUsed": 98294640,
+            "external": 7733080,
+            "arrayBuffers": 5316056
+          },
+          "peak": {
+            "rss": 300662784,
+            "heapTotal": 177922048,
+            "heapUsed": 153204424,
+            "external": 7733101,
+            "arrayBuffers": 5316056
+          },
+          "growth": 37840768
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should load LogViewer with project data within 2 seconds",
+            "status": "passed",
+            "duration": 131,
+            "failureMessages": []
+          },
+          {
+            "title": "should render all three columns efficiently",
+            "status": "failed",
+            "duration": 1073,
+            "failureMessages": [
+              "Error: Unable to find an element with the text: User login attempt. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n            \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n            \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:00\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mUser authentication logs\u001b[0m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<circle\u001b[39m\n                      \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:05\u001b[0m\n              \u001b[36m</span>\u001b[39m\n      ...\n    at waitForWrapper (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:163:27)\n    at /code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:165:22\n    at fn (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:126:11)\n    at Object.measurePerformance (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:160:32)"
+            ]
+          },
+          {
+            "title": "should handle log selection within 100ms",
+            "status": "failed",
+            "duration": 264,
+            "failureMessages": [
+              "Error: expect(element).toHaveClass(\"bg-blue-50\")\n\nExpected the element to have class:\n  bg-blue-50\nReceived:\n  text-sm font-medium truncate max-w-[80%]\n\nIgnored nodes: comments, script, style\n\u001b[36m<html>\u001b[39m\n  \u001b[36m<head />\u001b[39m\n  \u001b[36m<body>\u001b[39m\n    \u001b[36m<div>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<input\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n              \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n              \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n              \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m07/17 12:00\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<span\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                    \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                  \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                  \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mUser authentication logs\u001b[0m\n                \u001b[36m</div>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                    \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<svg\u001b[39m\n                      \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                      \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                      \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                      \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                      \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                      \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<circle\u001b[39m\n                        \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                        \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                        \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                    \u001b[36m</svg>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                    \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<svg\u001b[39m\n                      \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                      \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                      \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                      \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                      \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                      \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<line\u001b[39m\n                        \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                        \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                        \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                        \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<line\u001b[39m\n                        \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                        \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                        \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                        \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                    \u001b[36m</svg>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n              \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n   ...\n    at toHaveClass (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:193:32)\n    at runWithExpensiveErrorDiagnosticsDisabled (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/config.js:47:12)\n    at checkCallback (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:124:77)\n    at checkRealTimersCallback (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:118:16)\n    at Timeout.task [as _onTimeout] (/code/personal/log-viewer/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)\n    at listOnTimeout (node:internal/timers:608:17)\n    at processTimers (node:internal/timers:543:7)"
+            ]
+          },
+          {
+            "title": "should handle rapid log switching efficiently",
+            "status": "passed",
+            "duration": 269,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle entry selection within 50ms",
+            "status": "failed",
+            "duration": 1058,
+            "failureMessages": [
+              "Error: Unable to find an element with the text: User login attempt. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n            \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n            \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:00\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mUser authentication logs\u001b[0m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<circle\u001b[39m\n                      \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:05\u001b[0m\n              \u001b[36m</span>\u001b[39m\n      ...\n    at waitForWrapper (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:163:27)\n    at Object.<anonymous> (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:239:20)"
+            ]
+          },
+          {
+            "title": "should handle search filtering within 200ms",
+            "status": "failed",
+            "duration": 1059,
+            "failureMessages": [
+              "Error: Unable to find an element with the text: User login attempt. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n            \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n            \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:00\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mUser authentication logs\u001b[0m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<circle\u001b[39m\n                      \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:05\u001b[0m\n              \u001b[36m</span>\u001b[39m\n      ...\n    at waitForWrapper (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:163:27)\n    at Object.<anonymous> (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:278:20)"
+            ]
+          },
+          {
+            "title": "should handle level filtering within 100ms",
+            "status": "failed",
+            "duration": 1077,
+            "failureMessages": [
+              "Error: Unable to find an element with the text: User login attempt. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n            \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n            \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:00\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mUser authentication logs\u001b[0m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<circle\u001b[39m\n                      \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:05\u001b[0m\n              \u001b[36m</span>\u001b[39m\n      ...\n    at waitForWrapper (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:163:27)\n    at Object.<anonymous> (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:304:20)"
+            ]
+          },
+          {
+            "title": "should handle tag filtering within 150ms",
+            "status": "failed",
+            "duration": 1065,
+            "failureMessages": [
+              "Error: Unable to find an element with the text: User login attempt. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n            \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n            \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:00\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mUser authentication logs\u001b[0m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<circle\u001b[39m\n                      \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:05\u001b[0m\n              \u001b[36m</span>\u001b[39m\n      ...\n    at waitForWrapper (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:163:27)\n    at Object.<anonymous> (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:331:20)"
+            ]
+          },
+          {
+            "title": "should handle sort order toggle within 50ms",
+            "status": "failed",
+            "duration": 1050,
+            "failureMessages": [
+              "Error: Unable to find an element with the text: User login attempt. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n            \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n            \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:00\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mUser authentication logs\u001b[0m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<circle\u001b[39m\n                      \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:05\u001b[0m\n              \u001b[36m</span>\u001b[39m\n      ...\n    at waitForWrapper (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:163:27)\n    at Object.<anonymous> (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:369:20)"
+            ]
+          },
+          {
+            "title": "should handle keyboard sort shortcut within 30ms",
+            "status": "failed",
+            "duration": 1061,
+            "failureMessages": [
+              "Error: Unable to find an element with the text: User login attempt. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n            \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n            \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:00\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mUser authentication logs\u001b[0m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<circle\u001b[39m\n                      \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:05\u001b[0m\n              \u001b[36m</span>\u001b[39m\n      ...\n    at waitForWrapper (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:163:27)\n    at Object.<anonymous> (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:394:20)"
+            ]
+          },
+          {
+            "title": "should maintain stable memory usage during normal operations",
+            "status": "failed",
+            "duration": 1066,
+            "failureMessages": [
+              "Error: expect(element).toHaveClass(\"bg-blue-50\")\n\nExpected the element to have class:\n  bg-blue-50\nReceived:\n  text-sm font-medium truncate max-w-[80%]\n\nIgnored nodes: comments, script, style\n\u001b[36m<html>\u001b[39m\n  \u001b[36m<head />\u001b[39m\n  \u001b[36m<body>\u001b[39m\n    \u001b[36m<div>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<input\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n              \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n              \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n              \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m07/17 12:00\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<span\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                    \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                  \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                  \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mUser authentication logs\u001b[0m\n                \u001b[36m</div>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                    \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<svg\u001b[39m\n                      \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                      \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                      \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                      \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                      \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                      \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<circle\u001b[39m\n                        \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                        \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                        \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                    \u001b[36m</svg>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                    \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<svg\u001b[39m\n                      \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                      \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                      \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                      \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                      \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                      \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<line\u001b[39m\n                        \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                        \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                        \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                        \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<line\u001b[39m\n                        \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                        \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                        \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                        \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                    \u001b[36m</svg>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n              \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n   ...\n    at toHaveClass (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:425:30)\n    at runWithExpensiveErrorDiagnosticsDisabled (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/config.js:47:12)\n    at checkCallback (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:124:77)\n    at checkRealTimersCallback (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:118:16)\n    at Timeout.task [as _onTimeout] (/code/personal/log-viewer/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)\n    at listOnTimeout (node:internal/timers:608:17)\n    at processTimers (node:internal/timers:543:7)"
+            ]
+          },
+          {
+            "title": "should handle component unmount without memory leaks",
+            "status": "failed",
+            "duration": 62,
+            "failureMessages": [
+              "Error: expect(received).toBeLessThan(expected)\n\nExpected: < 2000000\nReceived:   48859288\n    at Object.toBeLessThan (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:463:42)"
+            ]
+          },
+          {
+            "title": "should handle complete log analysis workflow efficiently",
+            "status": "failed",
+            "duration": 1067,
+            "failureMessages": [
+              "Error: Unable to find an element with the text: User login attempt. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n            \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n            \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:00\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mUser authentication logs\u001b[0m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<circle\u001b[39m\n                      \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:05\u001b[0m\n              \u001b[36m</span>\u001b[39m\n      ...\n    at waitForWrapper (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:163:27)\n    at /code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:478:22\n    at fn (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:126:11)\n    at Object.measurePerformance (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:473:34)"
+            ]
+          },
+          {
+            "title": "should handle concurrent user interactions smoothly",
+            "status": "failed",
+            "duration": 1055,
+            "failureMessages": [
+              "Error: Unable to find an element with the text: User login attempt. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.\n\nIgnored nodes: comments, script, style\n\u001b[36m<body>\u001b[39m\n  \u001b[36m<div>\u001b[39m\n    \u001b[36m<div\u001b[39m\n      \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n    \u001b[36m>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<input\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n            \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n            \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n            \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n          \u001b[36m/>\u001b[39m\n        \u001b[36m</div>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:00\u001b[0m\n              \u001b[36m</span>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mUser authentication logs\u001b[0m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<circle\u001b[39m\n                      \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                      \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n                \u001b[36m<button\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                  \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<svg\u001b[39m\n                    \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                    \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                    \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                    \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                    \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                    \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                    \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                    \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<path\u001b[39m\n                      \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                    \u001b[36m<line\u001b[39m\n                      \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                      \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                      \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                    \u001b[36m/>\u001b[39m\n                  \u001b[36m</svg>\u001b[39m\n                \u001b[36m</button>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n            \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<span\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0m07/17 12:05\u001b[0m\n              \u001b[36m</span>\u001b[39m\n      ...\n    at waitForWrapper (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:163:27)\n    at Object.<anonymous> (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:533:20)"
+            ]
+          },
+          {
+            "title": "should maintain consistent performance across multiple operations",
+            "status": "failed",
+            "duration": 1062,
+            "failureMessages": [
+              "Error: expect(element).toHaveClass(\"bg-blue-50\")\n\nExpected the element to have class:\n  bg-blue-50\nReceived:\n  text-sm font-medium truncate max-w-[80%]\n\nIgnored nodes: comments, script, style\n\u001b[36m<html>\u001b[39m\n  \u001b[36m<head />\u001b[39m\n  \u001b[36m<body>\u001b[39m\n    \u001b[36m<div>\u001b[39m\n      \u001b[36m<div\u001b[39m\n        \u001b[33mclass\u001b[39m=\u001b[32m\"flex h-full bg-white\"\u001b[39m\n      \u001b[36m>\u001b[39m\n        \u001b[36m<div\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"w-1/5 border-r border-gray-200 flex flex-col overflow-hidden\"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<input\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-sm\"\u001b[39m\n              \u001b[33mdata-slot\u001b[39m=\u001b[32m\"input\"\u001b[39m\n              \u001b[33mplaceholder\u001b[39m=\u001b[32m\"Search logs...\"\u001b[39m\n              \u001b[33mvalue\u001b[39m=\u001b[32m\"\"\u001b[39m\n            \u001b[36m/>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n          \u001b[36m<div\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"overflow-y-auto flex-1\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 bg-blue-100 border-l-4 border-l-blue-500 shadow-sm\"\u001b[39m\n              \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex justify-between items-center mb-1\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<span\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-xs text-gray-500\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0m07/17 12:00\u001b[0m\n                \u001b[36m</span>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<span\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"mr-1.5 bg-blue-500 h-2 w-2 rounded-full\"\u001b[39m\n                    \u001b[33mtitle\u001b[39m=\u001b[32m\"Unread log\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n              \u001b[36m<div\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"flex items-center justify-between\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-medium truncate max-w-[80%]\"\u001b[39m\n                  \u001b[33mdata-slot\u001b[39m=\u001b[32m\"tooltip-trigger\"\u001b[39m\n                  \u001b[33mdata-state\u001b[39m=\u001b[32m\"closed\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mUser authentication logs\u001b[0m\n                \u001b[36m</div>\u001b[39m\n                \u001b[36m<div\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"flex space-x-1.5\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-blue-500\"\u001b[39m\n                    \u001b[33mtitle\u001b[39m=\u001b[32m\"Mark as read\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<svg\u001b[39m\n                      \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-eye h-3.5 w-3.5\"\u001b[39m\n                      \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                      \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                      \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                      \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                      \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<circle\u001b[39m\n                        \u001b[33mcx\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                        \u001b[33mcy\u001b[39m=\u001b[32m\"12\"\u001b[39m\n                        \u001b[33mr\u001b[39m=\u001b[32m\"3\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                    \u001b[36m</svg>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                  \u001b[36m<button\u001b[39m\n                    \u001b[33mclass\u001b[39m=\u001b[32m\"text-gray-500 hover:text-red-500\"\u001b[39m\n                    \u001b[33mtitle\u001b[39m=\u001b[32m\"Delete log\"\u001b[39m\n                  \u001b[36m>\u001b[39m\n                    \u001b[36m<svg\u001b[39m\n                      \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                      \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-trash2 lucide-trash-2 h-3.5 w-3.5\"\u001b[39m\n                      \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                      \u001b[33mheight\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                      \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                      \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                      \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                      \u001b[33mwidth\u001b[39m=\u001b[32m\"24\"\u001b[39m\n                      \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                    \u001b[36m>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M3 6h18\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<path\u001b[39m\n                        \u001b[33md\u001b[39m=\u001b[32m\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<line\u001b[39m\n                        \u001b[33mx1\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                        \u001b[33mx2\u001b[39m=\u001b[32m\"10\"\u001b[39m\n                        \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                        \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                      \u001b[36m<line\u001b[39m\n                        \u001b[33mx1\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                        \u001b[33mx2\u001b[39m=\u001b[32m\"14\"\u001b[39m\n                        \u001b[33my1\u001b[39m=\u001b[32m\"11\"\u001b[39m\n                        \u001b[33my2\u001b[39m=\u001b[32m\"17\"\u001b[39m\n                      \u001b[36m/>\u001b[39m\n                    \u001b[36m</svg>\u001b[39m\n                  \u001b[36m</button>\u001b[39m\n                \u001b[36m</div>\u001b[39m\n              \u001b[36m</div>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"py-1.5 px-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 \"\u001b[39m\n              \u001b[33mdata-testid\u001b[39m=\u001b[32m\"log-item\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<div\u001b[39m\n   ...\n    at toHaveClass (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx:574:32)\n    at runWithExpensiveErrorDiagnosticsDisabled (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/config.js:47:12)\n    at checkCallback (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:124:77)\n    at checkRealTimersCallback (/code/personal/log-viewer/.claude-testing/node_modules/@testing-library/dom/dist/wait-for.js:118:16)\n    at Timeout.task [as _onTimeout] (/code/personal/log-viewer/node_modules/jsdom/lib/jsdom/browser/Window.js:520:19)\n    at listOnTimeout (node:internal/timers:608:17)\n    at processTimers (node:internal/timers:543:7)"
+            ]
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 1,
+      "passedTests": 0,
+      "failedTests": 1,
+      "totalTime": 14182,
+      "averageTime": 14182,
+      "memoryUsage": {
+        "initial": {
+          "rss": 183365632,
+          "heapTotal": 89960448,
+          "heapUsed": 59820328,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 300662784,
+          "heapTotal": 177922048,
+          "heapUsed": 153204424,
+          "external": 7733101,
+          "arrayBuffers": 5316056
+        },
+        "final": {
+          "rss": 302100480,
+          "heapTotal": 140980224,
+          "heapUsed": 98330448,
+          "external": 7733080,
+          "arrayBuffers": 5316056
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-17T20:56:55.254Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 16850051072
+    },
+    "tests": [
+      {
+        "name": "integration-performance-full.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-full.test.tsx",
+        "status": "passed",
+        "duration": 1958,
+        "memoryUsage": {
+          "start": {
+            "rss": 186445824,
+            "heapTotal": 92606464,
+            "heapUsed": 62694856,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 269750272,
+            "heapTotal": 149999616,
+            "heapUsed": 92522280,
+            "external": 7733164,
+            "arrayBuffers": 5316140
+          },
+          "peak": {
+            "rss": 263995392,
+            "heapTotal": 146202624,
+            "heapUsed": 120487272,
+            "external": 7758875,
+            "arrayBuffers": 5341830
+          },
+          "growth": 29827424
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should load LogViewer with project data within 2 seconds",
+            "status": "passed",
+            "duration": 131,
+            "failureMessages": []
+          },
+          {
+            "title": "should render all three columns efficiently",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 100ms",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid log switching efficiently",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle entry selection within 50ms",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search filtering within 200ms",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle level filtering within 100ms",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle tag filtering within 150ms",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle sort order toggle within 50ms",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle keyboard sort shortcut within 30ms",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage during normal operations",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount without memory leaks",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle complete log analysis workflow efficiently",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle concurrent user interactions smoothly",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain consistent performance across multiple operations",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          }
+        ]
+      },
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 213,
+        "memoryUsage": {
+          "start": {
+            "rss": 269750272,
+            "heapTotal": 149999616,
+            "heapUsed": 92578536,
+            "external": 7733164,
+            "arrayBuffers": 5316140
+          },
+          "end": {
+            "rss": 270929920,
+            "heapTotal": 141774848,
+            "heapUsed": 93926664,
+            "external": 10856105,
+            "arrayBuffers": 3167251
+          },
+          "peak": {
+            "rss": 263995392,
+            "heapTotal": 146202624,
+            "heapUsed": 120487272,
+            "external": 7758875,
+            "arrayBuffers": 5341830
+          },
+          "growth": 1348128
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "pending",
+            "duration": null,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTime": 2171,
+      "averageTime": 1085.5,
+      "memoryUsage": {
+        "initial": {
+          "rss": 186314752,
+          "heapTotal": 92606464,
+          "heapUsed": 62061280,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 263995392,
+          "heapTotal": 146202624,
+          "heapUsed": 120487272,
+          "external": 7758875,
+          "arrayBuffers": 5341830
+        },
+        "final": {
+          "rss": 270929920,
+          "heapTotal": 141774848,
+          "heapUsed": 94342848,
+          "external": 10856105,
+          "arrayBuffers": 3167251
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-17T20:58:35.688Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 16781778944
+    },
+    "tests": [
+      {
+        "name": "integration-performance-focused.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx",
+        "status": "failed",
+        "duration": 3532,
+        "memoryUsage": {
+          "start": {
+            "rss": 185671680,
+            "heapTotal": 92344320,
+            "heapUsed": 62845128,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 276819968,
+            "heapTotal": 141012992,
+            "heapUsed": 95958104,
+            "external": 7531750,
+            "arrayBuffers": 5114726
+          },
+          "peak": {
+            "rss": 272670720,
+            "heapTotal": 155828224,
+            "heapUsed": 132176064,
+            "external": 7531771,
+            "arrayBuffers": 5114726
+          },
+          "growth": 33112976
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should render LogViewer within 1 second",
+            "status": "passed",
+            "duration": 129,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 200ms",
+            "status": "passed",
+            "duration": 161,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle multiple log selections efficiently",
+            "status": "passed",
+            "duration": 193,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search input efficiently",
+            "status": "failed",
+            "duration": 169,
+            "failureMessages": [
+              "Error: expect(received).toBeLessThan(expected)\n\nExpected: < 100\nReceived:   107.7439559999998\n    at Object.toBeLessThan (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx:163:26)"
+            ]
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 215,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount cleanly",
+            "status": "passed",
+            "duration": 88,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid user interactions",
+            "status": "passed",
+            "duration": 203,
+            "failureMessages": []
+          },
+          {
+            "title": "should demonstrate consistent performance across runs",
+            "status": "passed",
+            "duration": 306,
+            "failureMessages": []
+          },
+          {
+            "title": "should meet all core performance thresholds",
+            "status": "failed",
+            "duration": 279,
+            "failureMessages": [
+              "Error: expect(received).toBeLessThan(expected)\n\nExpected: < 100\nReceived:   112.74351599999954\n    at Object.toBeLessThan (/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx:325:34)"
+            ]
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 1,
+      "passedTests": 0,
+      "failedTests": 1,
+      "totalTime": 3532,
+      "averageTime": 3532,
+      "memoryUsage": {
+        "initial": {
+          "rss": 185540608,
+          "heapTotal": 92344320,
+          "heapUsed": 62207384,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 272670720,
+          "heapTotal": 155828224,
+          "heapUsed": 132176064,
+          "external": 7531771,
+          "arrayBuffers": 5114726
+        },
+        "final": {
+          "rss": 276819968,
+          "heapTotal": 141012992,
+          "heapUsed": 95991712,
+          "external": 7531750,
+          "arrayBuffers": 5114726
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-17T20:58:55.559Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 16805961728
+    },
+    "tests": [
+      {
+        "name": "integration-performance-focused.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx",
+        "status": "passed",
+        "duration": 3479,
+        "memoryUsage": {
+          "start": {
+            "rss": 182919168,
+            "heapTotal": 90185728,
+            "heapUsed": 60623800,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 275165184,
+            "heapTotal": 138915840,
+            "heapUsed": 95085832,
+            "external": 7531750,
+            "arrayBuffers": 5114726
+          },
+          "peak": {
+            "rss": 268349440,
+            "heapTotal": 151371776,
+            "heapUsed": 128346168,
+            "external": 7531771,
+            "arrayBuffers": 5114726
+          },
+          "growth": 34462032
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should render LogViewer within 1 second",
+            "status": "passed",
+            "duration": 123,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 200ms",
+            "status": "passed",
+            "duration": 160,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle multiple log selections efficiently",
+            "status": "passed",
+            "duration": 186,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search input efficiently",
+            "status": "passed",
+            "duration": 159,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 235,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount cleanly",
+            "status": "passed",
+            "duration": 83,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid user interactions",
+            "status": "passed",
+            "duration": 192,
+            "failureMessages": []
+          },
+          {
+            "title": "should demonstrate consistent performance across runs",
+            "status": "passed",
+            "duration": 298,
+            "failureMessages": []
+          },
+          {
+            "title": "should meet all core performance thresholds",
+            "status": "passed",
+            "duration": 250,
+            "failureMessages": []
+          }
+        ]
+      },
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 288,
+        "memoryUsage": {
+          "start": {
+            "rss": 275165184,
+            "heapTotal": 138915840,
+            "heapUsed": 95132016,
+            "external": 7531750,
+            "arrayBuffers": 5114726
+          },
+          "end": {
+            "rss": 278401024,
+            "heapTotal": 141438976,
+            "heapUsed": 97845112,
+            "external": 5584275,
+            "arrayBuffers": 3167251
+          },
+          "peak": {
+            "rss": 268349440,
+            "heapTotal": 151371776,
+            "heapUsed": 128346168,
+            "external": 7531771,
+            "arrayBuffers": 5114726
+          },
+          "growth": 2713096
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "passed",
+            "duration": 15,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "passed",
+            "duration": 7,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 65,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTime": 3767,
+      "averageTime": 1883.5,
+      "memoryUsage": {
+        "initial": {
+          "rss": 182788096,
+          "heapTotal": 90185728,
+          "heapUsed": 59990216,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 268349440,
+          "heapTotal": 151371776,
+          "heapUsed": 128346168,
+          "external": 7531771,
+          "arrayBuffers": 5114726
+        },
+        "final": {
+          "rss": 278401024,
+          "heapTotal": 141438976,
+          "heapUsed": 98272784,
+          "external": 5584275,
+          "arrayBuffers": 3167251
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-17T23:22:58.160Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 19513274368
+    },
+    "tests": [
+      {
+        "name": "integration-performance-focused.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx",
+        "status": "passed",
+        "duration": 3542,
+        "memoryUsage": {
+          "start": {
+            "rss": 186974208,
+            "heapTotal": 93990912,
+            "heapUsed": 64328960,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 277692416,
+            "heapTotal": 139964416,
+            "heapUsed": 95166784,
+            "external": 7531593,
+            "arrayBuffers": 5114569
+          },
+          "peak": {
+            "rss": 272826368,
+            "heapTotal": 154968064,
+            "heapUsed": 128802424,
+            "external": 7531614,
+            "arrayBuffers": 5114569
+          },
+          "growth": 30837824
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should render LogViewer within 1 second",
+            "status": "passed",
+            "duration": 133,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 200ms",
+            "status": "passed",
+            "duration": 162,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle multiple log selections efficiently",
+            "status": "passed",
+            "duration": 179,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search input efficiently",
+            "status": "passed",
+            "duration": 145,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 199,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount cleanly",
+            "status": "passed",
+            "duration": 89,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid user interactions",
+            "status": "passed",
+            "duration": 196,
+            "failureMessages": []
+          },
+          {
+            "title": "should demonstrate consistent performance across runs",
+            "status": "passed",
+            "duration": 295,
+            "failureMessages": []
+          },
+          {
+            "title": "should meet all core performance thresholds",
+            "status": "passed",
+            "duration": 266,
+            "failureMessages": []
+          }
+        ]
+      },
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 355,
+        "memoryUsage": {
+          "start": {
+            "rss": 277692416,
+            "heapTotal": 139964416,
+            "heapUsed": 95212968,
+            "external": 7531593,
+            "arrayBuffers": 5114569
+          },
+          "end": {
+            "rss": 279072768,
+            "heapTotal": 141963264,
+            "heapUsed": 97898816,
+            "external": 5584275,
+            "arrayBuffers": 3167251
+          },
+          "peak": {
+            "rss": 272826368,
+            "heapTotal": 154968064,
+            "heapUsed": 128802424,
+            "external": 7531614,
+            "arrayBuffers": 5114569
+          },
+          "growth": 2685848
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "passed",
+            "duration": 19,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "passed",
+            "duration": 8,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 70,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTime": 3897,
+      "averageTime": 1948.5,
+      "memoryUsage": {
+        "initial": {
+          "rss": 186843136,
+          "heapTotal": 93990912,
+          "heapUsed": 63692096,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 272826368,
+          "heapTotal": 154968064,
+          "heapUsed": 128802424,
+          "external": 7531614,
+          "arrayBuffers": 5114569
+        },
+        "final": {
+          "rss": 279072768,
+          "heapTotal": 141963264,
+          "heapUsed": 98331528,
+          "external": 5584275,
+          "arrayBuffers": 3167251
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-17T23:33:24.518Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 19474022400
+    },
+    "tests": [
+      {
+        "name": "integration-performance-focused.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx",
+        "status": "passed",
+        "duration": 3565,
+        "memoryUsage": {
+          "start": {
+            "rss": 183197696,
+            "heapTotal": 87789568,
+            "heapUsed": 58667216,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 275841024,
+            "heapTotal": 138391552,
+            "heapUsed": 95164960,
+            "external": 7531593,
+            "arrayBuffers": 5114569
+          },
+          "peak": {
+            "rss": 270102528,
+            "heapTotal": 151896064,
+            "heapUsed": 127732312,
+            "external": 7531614,
+            "arrayBuffers": 5114569
+          },
+          "growth": 36497744
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should render LogViewer within 1 second",
+            "status": "passed",
+            "duration": 130,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 200ms",
+            "status": "passed",
+            "duration": 157,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle multiple log selections efficiently",
+            "status": "passed",
+            "duration": 163,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search input efficiently",
+            "status": "passed",
+            "duration": 159,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 246,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount cleanly",
+            "status": "passed",
+            "duration": 86,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid user interactions",
+            "status": "passed",
+            "duration": 190,
+            "failureMessages": []
+          },
+          {
+            "title": "should demonstrate consistent performance across runs",
+            "status": "passed",
+            "duration": 291,
+            "failureMessages": []
+          },
+          {
+            "title": "should meet all core performance thresholds",
+            "status": "passed",
+            "duration": 271,
+            "failureMessages": []
+          }
+        ]
+      },
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 312,
+        "memoryUsage": {
+          "start": {
+            "rss": 275841024,
+            "heapTotal": 138391552,
+            "heapUsed": 95211144,
+            "external": 7531593,
+            "arrayBuffers": 5114569
+          },
+          "end": {
+            "rss": 279699456,
+            "heapTotal": 141438976,
+            "heapUsed": 97896240,
+            "external": 5584275,
+            "arrayBuffers": 3167251
+          },
+          "peak": {
+            "rss": 270102528,
+            "heapTotal": 151896064,
+            "heapUsed": 127732312,
+            "external": 7531614,
+            "arrayBuffers": 5114569
+          },
+          "growth": 2685096
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "passed",
+            "duration": 17,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "passed",
+            "duration": 7,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 63,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTime": 3877,
+      "averageTime": 1938.5,
+      "memoryUsage": {
+        "initial": {
+          "rss": 183066624,
+          "heapTotal": 87789568,
+          "heapUsed": 58032968,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 270102528,
+          "heapTotal": 151896064,
+          "heapUsed": 127732312,
+          "external": 7531614,
+          "arrayBuffers": 5114569
+        },
+        "final": {
+          "rss": 279699456,
+          "heapTotal": 141438976,
+          "heapUsed": 98325816,
+          "external": 5584275,
+          "arrayBuffers": 3167251
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-17T23:34:47.290Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 19316449280
+    },
+    "tests": [
+      {
+        "name": "integration-performance-focused.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx",
+        "status": "passed",
+        "duration": 3533,
+        "memoryUsage": {
+          "start": {
+            "rss": 182067200,
+            "heapTotal": 87789568,
+            "heapUsed": 58582112,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 275976192,
+            "heapTotal": 139177984,
+            "heapUsed": 95235368,
+            "external": 7533949,
+            "arrayBuffers": 5116925
+          },
+          "peak": {
+            "rss": 271384576,
+            "heapTotal": 153993216,
+            "heapUsed": 127810920,
+            "external": 7533970,
+            "arrayBuffers": 5116925
+          },
+          "growth": 36653256
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should render LogViewer within 1 second",
+            "status": "passed",
+            "duration": 140,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 200ms",
+            "status": "passed",
+            "duration": 164,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle multiple log selections efficiently",
+            "status": "passed",
+            "duration": 188,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search input efficiently",
+            "status": "passed",
+            "duration": 154,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 215,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount cleanly",
+            "status": "passed",
+            "duration": 83,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid user interactions",
+            "status": "passed",
+            "duration": 200,
+            "failureMessages": []
+          },
+          {
+            "title": "should demonstrate consistent performance across runs",
+            "status": "passed",
+            "duration": 311,
+            "failureMessages": []
+          },
+          {
+            "title": "should meet all core performance thresholds",
+            "status": "passed",
+            "duration": 271,
+            "failureMessages": []
+          }
+        ]
+      },
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 345,
+        "memoryUsage": {
+          "start": {
+            "rss": 275976192,
+            "heapTotal": 139177984,
+            "heapUsed": 95281552,
+            "external": 7533949,
+            "arrayBuffers": 5116925
+          },
+          "end": {
+            "rss": 279920640,
+            "heapTotal": 141963264,
+            "heapUsed": 97969528,
+            "external": 5584275,
+            "arrayBuffers": 3167251
+          },
+          "peak": {
+            "rss": 271384576,
+            "heapTotal": 153993216,
+            "heapUsed": 127810920,
+            "external": 7533970,
+            "arrayBuffers": 5116925
+          },
+          "growth": 2687976
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "passed",
+            "duration": 18,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "passed",
+            "duration": 8,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 68,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTime": 3878,
+      "averageTime": 1939,
+      "memoryUsage": {
+        "initial": {
+          "rss": 181936128,
+          "heapTotal": 87789568,
+          "heapUsed": 57945408,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 271384576,
+          "heapTotal": 153993216,
+          "heapUsed": 127810920,
+          "external": 7533970,
+          "arrayBuffers": 5116925
+        },
+        "final": {
+          "rss": 279920640,
+          "heapTotal": 141963264,
+          "heapUsed": 98395680,
+          "external": 5584275,
+          "arrayBuffers": 3167251
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-18T14:11:48.884Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 18789507072
+    },
+    "tests": [
+      {
+        "name": "integration-performance-focused.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx",
+        "status": "passed",
+        "duration": 3908,
+        "memoryUsage": {
+          "start": {
+            "rss": 164229120,
+            "heapTotal": 72269824,
+            "heapUsed": 47978808,
+            "external": 2153182,
+            "arrayBuffers": 52566
+          },
+          "end": {
+            "rss": 254877696,
+            "heapTotal": 130555904,
+            "heapUsed": 89066528,
+            "external": 6791799,
+            "arrayBuffers": 4374775
+          },
+          "peak": {
+            "rss": 251539456,
+            "heapTotal": 150089728,
+            "heapUsed": 127651696,
+            "external": 6791799,
+            "arrayBuffers": 4374775
+          },
+          "growth": 41087720
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should render LogViewer within 1 second",
+            "status": "passed",
+            "duration": 121,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 200ms",
+            "status": "passed",
+            "duration": 159,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle multiple log selections efficiently",
+            "status": "passed",
+            "duration": 203,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search input efficiently",
+            "status": "passed",
+            "duration": 157,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 207,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount cleanly",
+            "status": "passed",
+            "duration": 87,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid user interactions",
+            "status": "passed",
+            "duration": 240,
+            "failureMessages": []
+          },
+          {
+            "title": "should demonstrate consistent performance across runs",
+            "status": "passed",
+            "duration": 295,
+            "failureMessages": []
+          },
+          {
+            "title": "should meet all core performance thresholds",
+            "status": "passed",
+            "duration": 256,
+            "failureMessages": []
+          }
+        ]
+      },
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 372,
+        "memoryUsage": {
+          "start": {
+            "rss": 254877696,
+            "heapTotal": 130555904,
+            "heapUsed": 89112712,
+            "external": 6791799,
+            "arrayBuffers": 4374775
+          },
+          "end": {
+            "rss": 262074368,
+            "heapTotal": 136224768,
+            "heapUsed": 91673440,
+            "external": 5584275,
+            "arrayBuffers": 3167251
+          },
+          "peak": {
+            "rss": 251539456,
+            "heapTotal": 150089728,
+            "heapUsed": 127651696,
+            "external": 6791799,
+            "arrayBuffers": 4374775
+          },
+          "growth": 2560728
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "passed",
+            "duration": 18,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "passed",
+            "duration": 8,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 67,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTime": 4280,
+      "averageTime": 2140,
+      "memoryUsage": {
+        "initial": {
+          "rss": 163835904,
+          "heapTotal": 72269824,
+          "heapUsed": 47345040,
+          "external": 2153182,
+          "arrayBuffers": 52566
+        },
+        "peak": {
+          "rss": 251539456,
+          "heapTotal": 150089728,
+          "heapUsed": 127651696,
+          "external": 6791799,
+          "arrayBuffers": 4374775
+        },
+        "final": {
+          "rss": 262074368,
+          "heapTotal": 136224768,
+          "heapUsed": 92079040,
+          "external": 5584275,
+          "arrayBuffers": 3167251
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-18T14:59:15.073Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 18446970880
+    },
+    "tests": [
+      {
+        "name": "integration-performance-focused.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx",
+        "status": "passed",
+        "duration": 3580,
+        "memoryUsage": {
+          "start": {
+            "rss": 165945344,
+            "heapTotal": 73269248,
+            "heapUsed": 46226504,
+            "external": 2148455,
+            "arrayBuffers": 47839
+          },
+          "end": {
+            "rss": 259457024,
+            "heapTotal": 133177344,
+            "heapUsed": 89111880,
+            "external": 6791999,
+            "arrayBuffers": 4374975
+          },
+          "peak": {
+            "rss": 251400192,
+            "heapTotal": 148254720,
+            "heapUsed": 125981392,
+            "external": 6815100,
+            "arrayBuffers": 4398076
+          },
+          "growth": 42885376
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should render LogViewer within 1 second",
+            "status": "passed",
+            "duration": 124,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 200ms",
+            "status": "passed",
+            "duration": 162,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle multiple log selections efficiently",
+            "status": "passed",
+            "duration": 187,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search input efficiently",
+            "status": "passed",
+            "duration": 168,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 236,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount cleanly",
+            "status": "passed",
+            "duration": 84,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid user interactions",
+            "status": "passed",
+            "duration": 232,
+            "failureMessages": []
+          },
+          {
+            "title": "should demonstrate consistent performance across runs",
+            "status": "passed",
+            "duration": 298,
+            "failureMessages": []
+          },
+          {
+            "title": "should meet all core performance thresholds",
+            "status": "passed",
+            "duration": 254,
+            "failureMessages": []
+          }
+        ]
+      },
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 299,
+        "memoryUsage": {
+          "start": {
+            "rss": 259457024,
+            "heapTotal": 133177344,
+            "heapUsed": 89158080,
+            "external": 6791999,
+            "arrayBuffers": 4374975
+          },
+          "end": {
+            "rss": 262381568,
+            "heapTotal": 136224768,
+            "heapUsed": 91659952,
+            "external": 5584275,
+            "arrayBuffers": 3167251
+          },
+          "peak": {
+            "rss": 251400192,
+            "heapTotal": 148254720,
+            "heapUsed": 125981392,
+            "external": 6815100,
+            "arrayBuffers": 4398076
+          },
+          "growth": 2501872
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "passed",
+            "duration": 16,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "passed",
+            "duration": 7,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 66,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTime": 3879,
+      "averageTime": 1939.5,
+      "memoryUsage": {
+        "initial": {
+          "rss": 165945344,
+          "heapTotal": 73269248,
+          "heapUsed": 45593080,
+          "external": 2148455,
+          "arrayBuffers": 47839
+        },
+        "peak": {
+          "rss": 251400192,
+          "heapTotal": 148254720,
+          "heapUsed": 125981392,
+          "external": 6815100,
+          "arrayBuffers": 4398076
+        },
+        "final": {
+          "rss": 262381568,
+          "heapTotal": 136224768,
+          "heapUsed": 92065960,
+          "external": 5584275,
+          "arrayBuffers": 3167251
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-18T15:00:11.622Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 19225755648
+    },
+    "tests": [
+      {
+        "name": "integration-performance-focused.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx",
+        "status": "passed",
+        "duration": 3601,
+        "memoryUsage": {
+          "start": {
+            "rss": 166121472,
+            "heapTotal": 73793536,
+            "heapUsed": 46588080,
+            "external": 2149304,
+            "arrayBuffers": 48688
+          },
+          "end": {
+            "rss": 254672896,
+            "heapTotal": 132915200,
+            "heapUsed": 89072592,
+            "external": 6791999,
+            "arrayBuffers": 4374975
+          },
+          "peak": {
+            "rss": 253345792,
+            "heapTotal": 152186880,
+            "heapUsed": 125456864,
+            "external": 6791999,
+            "arrayBuffers": 4374975
+          },
+          "growth": 42484512
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should render LogViewer within 1 second",
+            "status": "passed",
+            "duration": 121,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 200ms",
+            "status": "passed",
+            "duration": 161,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle multiple log selections efficiently",
+            "status": "passed",
+            "duration": 189,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search input efficiently",
+            "status": "passed",
+            "duration": 167,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 230,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount cleanly",
+            "status": "passed",
+            "duration": 86,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid user interactions",
+            "status": "passed",
+            "duration": 259,
+            "failureMessages": []
+          },
+          {
+            "title": "should demonstrate consistent performance across runs",
+            "status": "passed",
+            "duration": 296,
+            "failureMessages": []
+          },
+          {
+            "title": "should meet all core performance thresholds",
+            "status": "passed",
+            "duration": 277,
+            "failureMessages": []
+          }
+        ]
+      },
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 305,
+        "memoryUsage": {
+          "start": {
+            "rss": 254672896,
+            "heapTotal": 132915200,
+            "heapUsed": 89118792,
+            "external": 6791999,
+            "arrayBuffers": 4374975
+          },
+          "end": {
+            "rss": 262209536,
+            "heapTotal": 135438336,
+            "heapUsed": 91639032,
+            "external": 5584275,
+            "arrayBuffers": 3167251
+          },
+          "peak": {
+            "rss": 253345792,
+            "heapTotal": 152186880,
+            "heapUsed": 125456864,
+            "external": 6791999,
+            "arrayBuffers": 4374975
+          },
+          "growth": 2520240
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "passed",
+            "duration": 17,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "passed",
+            "duration": 6,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 60,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTime": 3906,
+      "averageTime": 1953,
+      "memoryUsage": {
+        "initial": {
+          "rss": 165990400,
+          "heapTotal": 73793536,
+          "heapUsed": 45954728,
+          "external": 2149304,
+          "arrayBuffers": 48688
+        },
+        "peak": {
+          "rss": 253345792,
+          "heapTotal": 152186880,
+          "heapUsed": 125456864,
+          "external": 6791999,
+          "arrayBuffers": 4374975
+        },
+        "final": {
+          "rss": 262209536,
+          "heapTotal": 135438336,
+          "heapUsed": 92046840,
+          "external": 5584275,
+          "arrayBuffers": 3167251
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2025-07-18T15:00:38.654Z",
+    "environment": {
+      "nodeVersion": "v23.11.1",
+      "platform": "linux",
+      "arch": "x64",
+      "cpus": 8,
+      "totalMemory": 33578057728,
+      "freeMemory": 19203440640
+    },
+    "tests": [
+      {
+        "name": "integration-performance-focused.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-focused.test.tsx",
+        "status": "passed",
+        "duration": 3524,
+        "memoryUsage": {
+          "start": {
+            "rss": 166989824,
+            "heapTotal": 73531392,
+            "heapUsed": 46760184,
+            "external": 2149326,
+            "arrayBuffers": 48710
+          },
+          "end": {
+            "rss": 255340544,
+            "heapTotal": 131342336,
+            "heapUsed": 89100176,
+            "external": 6791999,
+            "arrayBuffers": 4374975
+          },
+          "peak": {
+            "rss": 253378560,
+            "heapTotal": 151662592,
+            "heapUsed": 126262024,
+            "external": 6792000,
+            "arrayBuffers": 4374976
+          },
+          "growth": 42339992
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should render LogViewer within 1 second",
+            "status": "passed",
+            "duration": 136,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle log selection within 200ms",
+            "status": "passed",
+            "duration": 164,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle multiple log selections efficiently",
+            "status": "passed",
+            "duration": 186,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle search input efficiently",
+            "status": "passed",
+            "duration": 155,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 232,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle component unmount cleanly",
+            "status": "passed",
+            "duration": 82,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid user interactions",
+            "status": "passed",
+            "duration": 216,
+            "failureMessages": []
+          },
+          {
+            "title": "should demonstrate consistent performance across runs",
+            "status": "passed",
+            "duration": 294,
+            "failureMessages": []
+          },
+          {
+            "title": "should meet all core performance thresholds",
+            "status": "passed",
+            "duration": 263,
+            "failureMessages": []
+          }
+        ]
+      },
+      {
+        "name": "integration-performance-simple.test.tsx",
+        "fullPath": "/code/personal/log-viewer/.claude-testing/src/components/log-viewer/integration-performance-simple.test.tsx",
+        "status": "passed",
+        "duration": 296,
+        "memoryUsage": {
+          "start": {
+            "rss": 255340544,
+            "heapTotal": 131342336,
+            "heapUsed": 89146376,
+            "external": 6791999,
+            "arrayBuffers": 4374975
+          },
+          "end": {
+            "rss": 261591040,
+            "heapTotal": 135438336,
+            "heapUsed": 91641912,
+            "external": 5584275,
+            "arrayBuffers": 3167251
+          },
+          "peak": {
+            "rss": 253378560,
+            "heapTotal": 151662592,
+            "heapUsed": 126262024,
+            "external": 6792000,
+            "arrayBuffers": 4374976
+          },
+          "growth": 2495536
+        },
+        "performanceMetrics": [],
+        "assertionResults": [
+          {
+            "title": "should measure basic click response time",
+            "status": "passed",
+            "duration": 16,
+            "failureMessages": []
+          },
+          {
+            "title": "should handle rapid clicks efficiently",
+            "status": "passed",
+            "duration": 6,
+            "failureMessages": []
+          },
+          {
+            "title": "should maintain stable memory usage",
+            "status": "passed",
+            "duration": 59,
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalTests": 2,
+      "passedTests": 2,
+      "failedTests": 0,
+      "totalTime": 3820,
+      "averageTime": 1910,
+      "memoryUsage": {
+        "initial": {
+          "rss": 166727680,
+          "heapTotal": 73531392,
+          "heapUsed": 46127104,
+          "external": 2149326,
+          "arrayBuffers": 48710
+        },
+        "peak": {
+          "rss": 253378560,
+          "heapTotal": 151662592,
+          "heapUsed": 126262024,
+          "external": 6792000,
+          "arrayBuffers": 4374976
+        },
+        "final": {
+          "rss": 261591040,
+          "heapTotal": 135438336,
+          "heapUsed": 92060520,
+          "external": 5584275,
+          "arrayBuffers": 3167251
+        }
+      }
+    }
+  }
+]

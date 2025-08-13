@@ -1,4 +1,11 @@
-export const react = jest.fn();
-export const @radix-ui/react-checkbox = jest.fn();
-export const lucide-react = jest.fn();
-export const @/lib/utils = jest.fn();
+// Mock for Checkbox component
+const React = require('react');
+
+const Checkbox = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'checkbox-mock',
+    ...props
+  }, 'Checkbox Mock');
+};
+
+module.exports = Checkbox;

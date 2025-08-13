@@ -1,3 +1,8 @@
-export const next/navigation = jest.fn();
-export const @/lib/db-turso = jest.fn();
-export const ./project-content = jest.fn();
+// Mock for page component
+const React = require('react');
+
+const MockPage = () => {
+  return React.createElement('div', { 'data-testid': 'page-mock' }, 'Page Mock');
+};
+
+module.exports = MockPage;

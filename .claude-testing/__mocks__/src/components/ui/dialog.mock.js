@@ -1,4 +1,11 @@
-export const react = jest.fn();
-export const @radix-ui/react-dialog = jest.fn();
-export const lucide-react = jest.fn();
-export const @/lib/utils = jest.fn();
+// Mock for Dialog component
+const React = require('react');
+
+const Dialog = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'dialog-mock',
+    ...props
+  }, 'Dialog Mock');
+};
+
+module.exports = Dialog;

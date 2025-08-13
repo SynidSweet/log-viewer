@@ -1,2 +1,6 @@
-export const react = jest.fn();
-export const lucide-react = jest.fn();
+const react = jest.fn();
+const lucide-react = jest.fn();
+module.exports = {
+  react,
+  lucide
+};

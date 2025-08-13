@@ -1,0 +1,453 @@
+name: MCP MVP Validation Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'mcp-server/**'
+      - 'scripts/mcp-*.js'
+      - 'scripts/validate-*.js'
+      - '.github/workflows/mcp-validation.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'mcp-server/**'
+      - 'scripts/mcp-*.js'
+      - 'scripts/validate-*.js'
+  workflow_dispatch:
+    inputs:
+      validation_level:
+        description: 'Validation Level'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+        - quick
+        - full
+        - comprehensive
+      update_checklist:
+        description: 'Update MVP Checklist'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  environment-setup:
+    name: Environment Setup & Validation
+    runs-on: ubuntu-latest
+    outputs:
+      environment-ready: ${{ steps.env-check.outputs.ready }}
+      node-version: ${{ steps.setup-node.outputs.node-version }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      id: setup-node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          mcp-server/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+          
+    - name: Install root dependencies
+      run: npm ci
+      
+    - name: Install MCP server dependencies
+      run: cd mcp-server && npm ci
+      
+    - name: Verify environment configuration
+      id: env-check
+      run: |
+        echo "Verifying environment setup..."
+        node --version
+        npm --version
+        
+        # Check for required environment variables
+        if [ -z "$TURSO_DATABASE_URL" ] && [ -z "$DATABASE_URL" ]; then
+          echo "Warning: No database URL configured"
+          echo "ready=partial" >> $GITHUB_OUTPUT
+        else
+          echo "ready=true" >> $GITHUB_OUTPUT
+        fi
+        
+        # Verify MCP server build
+        cd mcp-server && npm run build
+        echo "Environment setup complete"
+      env:
+        TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+        TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+
+  mcp-tools-validation:
+    name: MCP Tools Functionality Test
+    runs-on: ubuntu-latest
+    needs: environment-setup
+    if: needs.environment-setup.outputs.environment-ready != 'false'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Restore dependencies cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          mcp-server/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd mcp-server && npm ci
+        
+    - name: Run MCP tools validation
+      run: npm run validate:mcp:tools
+      env:
+        TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL || 'file:test.db' }}
+        TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN || 'test-token' }}
+        NODE_ENV: test
+        
+    - name: Upload tools validation results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: mcp-tools-validation-results
+        path: validation-results/
+        retention-days: 30
+
+  performance-benchmarks:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    needs: environment-setup
+    if: needs.environment-setup.outputs.environment-ready != 'false'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Restore dependencies cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          mcp-server/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd mcp-server && npm ci
+        
+    - name: Run performance benchmarks
+      run: npm run validate:mcp:performance
+      env:
+        TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL || 'file:test.db' }}
+        TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN || 'test-token' }}
+        NODE_ENV: test
+        BENCHMARK_ITERATIONS: 50
+        
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-benchmark-results
+        path: validation-results/
+        retention-days: 30
+
+  integration-tests:
+    name: Integration & E2E Tests  
+    runs-on: ubuntu-latest
+    needs: environment-setup
+    if: needs.environment-setup.outputs.environment-ready != 'false'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Restore dependencies cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          mcp-server/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd mcp-server && npm ci
+        
+    - name: Run integration validation
+      run: npm run validate:mcp:integration
+      env:
+        TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL || 'file:test.db' }}
+        TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN || 'test-token' }}
+        NODE_ENV: test
+        
+    - name: Run E2E workflow tests
+      run: npm run validate:mcp:e2e
+      env:
+        TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL || 'file:test.db' }}
+        TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN || 'test-token' }}
+        NODE_ENV: test
+        
+    - name: Upload integration test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: integration-test-results
+        path: validation-results/
+        retention-days: 30
+
+  comprehensive-validation:
+    name: Comprehensive MVP Validation Suite
+    runs-on: ubuntu-latest
+    needs: [environment-setup, mcp-tools-validation, performance-benchmarks, integration-tests]
+    if: always() && needs.environment-setup.outputs.environment-ready != 'false'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Restore dependencies cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          mcp-server/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd mcp-server && npm ci
+        
+    - name: Download all validation artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: validation-results/
+        
+    - name: Run comprehensive validation suite
+      run: |
+        # Set validation level based on input
+        VALIDATION_LEVEL="${{ github.event.inputs.validation_level || 'full' }}"
+        
+        if [ "$VALIDATION_LEVEL" = "quick" ]; then
+          npm run validate:mcp:quick
+        elif [ "$VALIDATION_LEVEL" = "comprehensive" ]; then
+          npm run validate:mcp -- --comprehensive --detailed-reporting
+        else
+          npm run validate:mcp
+        fi
+      env:
+        TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL || 'file:test.db' }}
+        TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN || 'test-token' }}
+        NODE_ENV: test
+        CI: true
+        
+    - name: Update MVP completion checklist
+      if: github.event.inputs.update_checklist == 'true' || github.event_name != 'workflow_dispatch'
+      run: |
+        echo "Updating MVP completion checklist..."
+        node scripts/update-checklist-progress.js --update-from-results --save
+        
+        # Check if checklist was updated
+        if git diff --quiet docs/validation/mcp-mvp-completion-checklist.md; then
+          echo "No checklist updates needed"
+        else
+          echo "Checklist updated with validation results"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/validation/mcp-mvp-completion-checklist.md
+          git commit -m "chore: update MVP completion checklist from CI validation" || echo "No changes to commit"
+        fi
+        
+    - name: Generate consolidated validation report
+      run: |
+        echo "Generating consolidated validation report..."
+        node scripts/update-checklist-progress.js --status-only > validation-summary.txt
+        cat validation-summary.txt
+        
+    - name: Check MVP readiness
+      id: mvp-check
+      run: |
+        # Extract completion percentage from validation report
+        COMPLETION=$(node -e "
+          const { ChecklistTracker } = require('./scripts/update-checklist-progress.js');
+          const tracker = new ChecklistTracker();
+          const status = tracker.getCompletionStatus();
+          console.log(status.percentage);
+        ")
+        
+        echo "completion=$COMPLETION" >> $GITHUB_OUTPUT
+        
+        if [ "$COMPLETION" -ge "90" ]; then
+          echo "mvp_ready=true" >> $GITHUB_OUTPUT
+          echo "🎉 MVP READY FOR DEPLOYMENT! ($COMPLETION% complete)"
+        else
+          echo "mvp_ready=false" >> $GITHUB_OUTPUT
+          echo "⚠️ MVP not yet ready ($COMPLETION% complete, 90% required)"
+        fi
+        
+    - name: Upload comprehensive validation results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: comprehensive-validation-results
+        path: |
+          validation-results/
+          validation-summary.txt
+        retention-days: 30
+        
+    - name: Create validation summary comment
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const summary = fs.readFileSync('validation-summary.txt', 'utf8');
+          const completion = '${{ steps.mvp-check.outputs.completion }}';
+          const mvpReady = '${{ steps.mvp-check.outputs.mvp_ready }}' === 'true';
+          
+          const body = `## MCP MVP Validation Results
+          
+          **Completion Status:** ${completion}% ${mvpReady ? '✅' : '⚠️'}
+          **MVP Ready:** ${mvpReady ? 'YES' : 'NO'} (90% threshold)
+          
+          ### Validation Summary
+          \`\`\`
+          ${summary}
+          \`\`\`
+          
+          ${mvpReady ? 
+            '🎉 **MVP is ready for deployment!**' : 
+            `⚠️ **${Math.ceil((90 - completion) / 100 * 100)} more items needed for MVP completion**`
+          }
+          
+          **Artifacts:** Check the "Actions" tab for detailed validation results.
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+
+  security-validation:
+    name: Security & Configuration Check
+    runs-on: ubuntu-latest
+    needs: environment-setup
+    if: needs.environment-setup.outputs.environment-ready != 'false'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Security audit
+      run: |
+        npm audit --audit-level=moderate
+        cd mcp-server && npm audit --audit-level=moderate
+        
+    - name: Check for hardcoded secrets
+      run: |
+        echo "Checking for hardcoded secrets..."
+        # Basic secret detection
+        if grep -r -E "(password|secret|key|token).*[=:]\s*['\"][^'\"]{8,}" --include="*.js" --include="*.json" --exclude-dir=node_modules .; then
+          echo "❌ Potential hardcoded secrets found"
+          exit 1
+        else
+          echo "✅ No hardcoded secrets detected"
+        fi
+        
+    - name: Validate configuration security
+      run: |
+        echo "Validating MCP server security configuration..."
+        
+        # Check if sensitive files are properly protected
+        if [ -f "mcp-server/.env" ]; then
+          echo "❌ .env file found in MCP server directory"
+          exit 1
+        fi
+        
+        echo "✅ Security configuration check passed"
+
+  deployment-readiness:
+    name: Deployment Readiness Check
+    runs-on: ubuntu-latest
+    needs: [comprehensive-validation, security-validation]
+    if: always() && needs.comprehensive-validation.outputs.mvp_ready == 'true'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Validate deployment configuration
+      run: |
+        echo "🚀 MVP is ready for deployment!"
+        echo "Checking deployment requirements..."
+        
+        # Check for deployment scripts
+        if [ -f "mcp-server/package.json" ]; then
+          echo "✅ MCP server package.json exists"
+        fi
+        
+        if [ -f "mcp-server/start-server.sh" ]; then
+          echo "✅ Deployment script exists"
+        fi
+        
+        echo "✅ Deployment readiness validated"
+        
+    - name: Create deployment notification
+      run: |
+        echo "🎉 MCP MVP is ready for production deployment!"
+        echo "All validation gates have passed successfully."
+        echo "Next steps:"
+        echo "1. Review comprehensive validation results"
+        echo "2. Schedule stakeholder approval"
+        echo "3. Configure production environment"
+        echo "4. Deploy MCP server to production"

@@ -1,4 +1,11 @@
-export const react = jest.fn();
-export const @radix-ui/react-alert-dialog = jest.fn();
-export const @/lib/utils = jest.fn();
-export const @/components/ui/button = jest.fn();
+// Mock for Alert-dialog component
+const React = require('react');
+
+const Alert-dialog = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'alert-dialog-mock',
+    ...props
+  }, 'Alert-dialog Mock');
+};
+
+module.exports = Alert-dialog;

@@ -1,2 +1,6 @@
-export const clsx = jest.fn();
-export const tailwind-merge = jest.fn();
+const clsx = jest.fn();
+const tailwind-merge = jest.fn();
+module.exports = {
+  clsx,
+  tailwind
+};

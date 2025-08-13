@@ -1,0 +1,48 @@
+{
+  "name": "log-viewer-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Log Viewer application",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "NODE_ENV=production node dist/index.js",
+    "start:dev": "NODE_ENV=development node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "nodemon --exec ts-node src/index.ts",
+    "deploy": "./deploy-production.sh",
+    "verify": "./verify-production.sh",
+    "health": "node -e \"const {exec} = require('child_process'); exec('echo \"health_check\" | node dist/index.js', (err, stdout) => console.log(stdout))\"",
+    "metrics": "node -e \"const {exec} = require('child_process'); exec('echo \"get_metrics\" | node dist/index.js', (err, stdout) => console.log(stdout))\"",
+    "test:build": "npm run build && node -e \"require('./dist/index.js'); console.log('Build test passed')\"",
+    "test": "./test-suite/run-tests.js comprehensive",
+    "test:quick": "./test-suite/run-tests.js quick",
+    "test:mcp": "./test-suite/run-tests.js comprehensive --coverage",
+    "test:mcp:tools": "./test-suite/run-tests.js tools --verbose",
+    "test:mcp:integration": "./test-suite/run-tests.js integration --verbose",
+    "test:mcp:performance": "./test-suite/run-tests.js performance --verbose",
+    "test:mcp:errors": "./test-suite/run-tests.js errors --verbose",
+    "test:mcp:e2e": "./test-suite/run-tests.js integration --verbose",
+    "test:mcp:comprehensive": "./test-suite/run-tests.js comprehensive --coverage --verbose",
+    "test:watch": "./test-suite/run-tests.js comprehensive --watch",
+    "validate:mcp": "npm run test:mcp:comprehensive",
+    "validate:mcp:quick": "npm run test:quick"
+  },
+  "dependencies": {
+    "fastmcp": "^3.14.4",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20",
+    "dotenv": "^16.6.1",
+    "jest": "^29.7.0",
+    "jest-junit": "^16.0.0",
+    "nodemon": "^3.0.1",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

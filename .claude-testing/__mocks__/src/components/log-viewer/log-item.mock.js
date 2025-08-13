@@ -1,4 +1,13 @@
-export const @/lib/types = jest.fn();
-export const date-fns = jest.fn();
-export const lucide-react = jest.fn();
-export const @/components/ui/tooltip = jest.fn();
+// Mock for LogItem component
+const React = require('react');
+
+const LogItem = ({ log, isSelected, onSelectLog, onDeleteLog, onToggleReadStatus }) => {
+  return React.createElement('div', { 
+    'data-testid': `log-item-${log.id}`,
+    onClick: () => onSelectLog && onSelectLog(log.id),
+    className: isSelected ? 'selected' : ''
+  }, log.comment || 'LogItem Mock');
+};
+
+module.exports = LogItem;
+module.exports.LogItem = LogItem;

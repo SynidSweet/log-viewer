@@ -1,7 +1,11 @@
-export const react = jest.fn();
-export const @/components/ui/button = jest.fn();
-export const @/components/ui/input = jest.fn();
-export const @/components/ui/textarea = jest.fn();
-export const @/lib/types = jest.fn();
-export const sonner = jest.fn();
-export const @radix-ui/react-icons = jest.fn();
+// Mock for Edit-project-modal component
+const React = require('react');
+
+const Edit-project-modal = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'edit-project-modal-mock',
+    ...props
+  }, 'Edit-project-modal Mock');
+};
+
+module.exports = Edit-project-modal;

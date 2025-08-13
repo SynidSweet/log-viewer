@@ -1,6 +1,11 @@
-export const date-fns = jest.fn();
-export const ./json-tree = jest.fn();
-export const @/components/ui/button = jest.fn();
-export const lucide-react = jest.fn();
-export const sonner = jest.fn();
-export const @/components/ui/tabs = jest.fn();
+// Mock for Log-entry-details component
+const React = require('react');
+
+const Log-entry-details = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'log-entry-details-mock',
+    ...props
+  }, 'Log-entry-details Mock');
+};
+
+module.exports = Log-entry-details;

@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-08-13T19:32:32.641Z",
+  "mode": "quick",
+  "phases": {
+    "setup": {
+      "status": "passed",
+      "duration_ms": 1,
+      "result": {
+        "files_verified": 5
+      },
+      "error": null
+    },
+    "environment": {
+      "status": "passed",
+      "duration_ms": 1,
+      "result": {
+        "node_version": "v23.11.1",
+        "missing_env_vars": 2,
+        "ci_mode": false
+      },
+      "error": null
+    },
+    "validation": {
+      "status": "failed",
+      "duration_ms": 0,
+      "result": null,
+      "error": "Cannot access 'process' before initialization"
+    }
+  },
+  "validation_files": [],
+  "artifacts_generated": 0
+}

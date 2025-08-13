@@ -19,8 +19,8 @@ import {
   validateEnvironmentVariables,
   ApiErrorResponse,
   ApiSuccessResponse
-} from '../../../src/lib/api-error-handler';
-import { DatabaseError } from '../../../src/lib/turso';
+} from '@/lib/api-error-handler';
+import { DatabaseError } from '@/lib/turso';
 
 // Mock Next.js dependencies
 jest.mock('next/server', () => ({
@@ -297,29 +297,39 @@ describe('API Error Handler Comprehensive Tests', () => {
       );
     });
 
-    it('should log error for monitoring', () => {
+    it('should create error response without logging', () => {
       const error = new Error('Test error with stack');
       error.stack = 'Error: Test error\\n    at test';
 
-      createErrorResponse(error);
+      const response = createErrorResponse(error);
 
-      expect(console.error).toHaveBeenCalledWith('API Error Response:', {
-        error: expect.any(Object),
-        originalError: error,
-        stack: error.stack
+      expect(response.json).toEqual({
+        error: 'Internal server error',
+        message: 'An unexpected error occurred. Please try again later.',
+        type: 'server_error',
+        retryable: true,
+        timestamp: expect.any(String),
+        statusCode: 500
       });
+      expect(response.status).toBe(500);
+      expect(console.error).not.toHaveBeenCalled();
     });
 
     it('should handle errors without stack traces', () => {
       const error = { message: 'No stack trace' };
 
-      createErrorResponse(error);
+      const response = createErrorResponse(error);
 
-      expect(console.error).toHaveBeenCalledWith('API Error Response:', {
-        error: expect.any(Object),
-        originalError: error,
-        stack: undefined
+      expect(response.json).toEqual({
+        error: 'Internal server error',
+        message: 'An unexpected error occurred. Please try again later.',
+        type: 'server_error',
+        retryable: true,
+        timestamp: expect.any(String),
+        statusCode: 500
       });
+      expect(response.status).toBe(500);
+      expect(console.error).not.toHaveBeenCalled();
     });
   });
 

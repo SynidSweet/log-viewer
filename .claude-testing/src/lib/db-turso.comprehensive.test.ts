@@ -16,7 +16,7 @@ import {
   executeQuery, 
   executeBatch,
   DatabaseError 
-} from '../../../src/lib/turso';
+} from '@/lib/turso';
 
 import {
   getProjects,
@@ -30,10 +30,10 @@ import {
   getLog,
   updateLog,
   deleteLog
-} from '../../../src/lib/db-turso';
+} from '@/lib/db-turso';
 
 // Mock the turso module
-jest.mock('../../../src/lib/turso', () => ({
+jest.mock('@/lib/turso', () => ({
   ensureDatabaseReady: jest.fn(),
   createDatabaseError: jest.fn(),
   executeQuery: jest.fn(),

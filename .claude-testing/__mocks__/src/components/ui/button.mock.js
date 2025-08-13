@@ -1,4 +1,11 @@
-export const react = jest.fn();
-export const @radix-ui/react-slot = jest.fn();
-export const class-variance-authority = jest.fn();
-export const @/lib/utils = jest.fn();
+// Mock for Button component
+const React = require('react');
+
+const Button = (props) => {
+  return React.createElement('div', { 
+    'data-testid': 'button-mock',
+    ...props
+  }, 'Button Mock');
+};
+
+module.exports = Button;
