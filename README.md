@@ -18,6 +18,7 @@ A modern, React-based log viewer application that allows you to collect, store, 
 - **Multi-line Support**: Process multiple log entries in a single API request
 - **Modern UI**: Clean, responsive interface built with shadcn/ui components
 - **Google Authentication**: Secure user access with Google Sign-In while keeping API endpoints public
+- **MCP Server Integration**: Production-ready FastMCP server with monitoring, metrics, and deployment automation
 
 ## 🛠️ Technologies
 
@@ -28,6 +29,8 @@ A modern, React-based log viewer application that allows you to collect, store, 
 - **Vercel**: Hosting and deployment platform
 - **Tailwind CSS**: Utility-first CSS framework
 - **NextAuth.js**: Authentication with Google provider
+- **FastMCP v3.14.4**: Model Context Protocol server with stdio transport for external integrations
+- **Zod**: Runtime type validation and comprehensive schema definition
 
 ## 📋 Prerequisites
 
@@ -296,6 +299,86 @@ This feature is useful for:
 - Keeping log messages concise while still capturing detailed debug information
 - Storing stack traces, request payloads, or other verbose data
 - Organizing log data with a clear separation between summary and details
+
+## 🤖 MCP Server Integration
+
+The Log Viewer includes a production-ready MCP (Model Context Protocol) server built with FastMCP v3.14.4 that provides programmatic access for external tools and AI agents via stdio transport.
+
+### Quick Start
+
+```bash
+# Start MCP server with automatic configuration
+./mcp-server/start-server.sh
+
+# Or manual start
+cd mcp-server
+npm install  # First time only
+npm run dev  # Development mode
+npm start    # Production mode
+```
+
+The server operates in stdio mode for MCP client integration, providing comprehensive access to all log viewer functionality with backwards-compatible API naming.
+
+### Available MCP Tools
+
+**Health & Authentication**:
+- **`health_check`** - Server status and database connectivity
+- **`validate_auth`** - API token validation
+
+**Project Management** (with backwards-compatible aliases):
+- **`list_projects`** / **`projects_list`** - Get all projects (without API keys)
+- **`get_project`** / **`project_get`** - Get project details (including API key)
+- **`create_project`** - Create a new project with auto-generated API key
+
+**Log Management**:
+- **`get_project_logs`** / **`logs_list`** - Get log entries for a project (metadata only)
+- **`get_log_content`** - Get full content of a specific log entry
+- **`create_log_entry`** - Create new log entries for projects
+
+### Usage Examples
+
+**Health Check**:
+```json
+{"tool": "health_check", "arguments": {}}
+```
+
+**Create Project**:
+```json
+{
+  "tool": "create_project",
+  "arguments": {
+    "name": "My Application",
+    "description": "Production application logs"
+  }
+}
+```
+
+**Get Project Logs**:
+```json
+{
+  "tool": "get_project_logs",
+  "arguments": {"project_id": "my-application"}
+}
+```
+
+### Configuration
+
+Create `mcp-server/.env` from `mcp-server/.env.example`:
+```bash
+PROJECT_ID=your-default-project-id  # Optional
+API_TOKEN=your-default-api-token    # Optional
+PORT=3001                          # Server port
+```
+
+### Integration Benefits
+
+- **Database Sharing**: Uses the same Turso database as the web application
+- **Authentication**: Full API key validation and project verification
+- **Performance**: Query caching and optimized batch operations
+- **Compatibility**: Both TypeScript and JavaScript implementations
+- **Documentation**: Complete usage examples and tool reference
+
+📖 **See complete MCP documentation**: [`./mcp-server/README.md`](./mcp-server/README.md)
 
 ## 🔧 Troubleshooting
 

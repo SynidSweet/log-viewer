@@ -1,13 +1,13 @@
 # Project Context & AI Agent Guide
 
-*Last updated: 2025-07-18 | Fixed Jest configuration duplicate test file issue*
+*Last updated: 2025-08-13 | MCP server v1.2.0 with enhanced monitoring and health check capabilities*
 
 ## 🎯 Project Overview
 
 ### Core Purpose
 Universal Log Viewer is a Next.js web application that provides secure log management - external applications send logs via REST API while authenticated users view and analyze them through a web interface.
 
-**Current Status**: Active development with core features implemented
+**Current Status**: Active MCP MVP completion sprint - Claude Code integration completed (87% complete) with full documentation and automated setup tools
 
 ### Key Value Proposition
 - **Hybrid Security**: UI requires Google OAuth, API uses project-specific keys
@@ -15,11 +15,12 @@ Universal Log Viewer is a Next.js web application that provides secure log manag
 - **Real-time Analysis**: Client-side parsing for flexible log format handling
 - **High-Performance Virtualization**: React Window handles 5000+ entries with smooth 30fps performance
 - **Scalable Architecture**: Built on Turso SQLite for performance and reliability
+- **Production-Ready MCP Integration**: FastMCP v3.14.4 server with stdio transport, Claude Code integration, enhanced monitoring tools, and comprehensive health checks
 
 ## 🏗️ Architecture & Technical Stack
 
 ### Quick Overview
-**Stack**: Next.js 15.3.1, React 19, TypeScript, Turso SQLite, NextAuth.js, Tailwind CSS v4, shadcn/ui, React Window
+**Stack**: Next.js 15.3.1, React 19, TypeScript, Turso SQLite, NextAuth.js, Tailwind CSS v4, shadcn/ui, React Window, FastMCP v3.14.4, Zod
 
 **Key Patterns**:
 - **App Router** with server-side rendering
@@ -27,6 +28,7 @@ Universal Log Viewer is a Next.js web application that provides secure log manag
 - **Client-side Parsing** for log format flexibility
 - **Component-based UI** with shadcn/ui atomic components
 - **Virtualized Rendering** with React Window for large datasets
+- **MCP Protocol** with FastMCP v3.14.4 framework using stdio transport for reliable external integrations
 
 📖 **See detailed architecture**: [`./docs/architecture/overview.md`](./docs/architecture/overview.md)
 
@@ -70,6 +72,20 @@ npm run memory:monitor          # Comprehensive memory monitoring for large data
 npm run test:memory            # Component-level memory testing (Jest-based)
 npm run memory:validate        # Combined memory validation (tests + monitoring)
 npm run memory:full            # Complete memory testing suite
+
+# MCP Validation Commands
+npm run validate:mcp           # Complete MCP validation suite
+npm run validate:mcp:tools     # MCP tool functionality testing  
+npm run validate:mcp:performance # MCP performance benchmarks
+npm run validate:mcp:e2e       # MCP end-to-end workflow testing
+npm run validate:mcp:integration # MCP integration validation
+npm run validate:mcp:quick     # Quick MCP health check
+
+# MCP Automation Commands  
+npm run validate:mcp:orchestrated # Advanced workflow orchestration with intelligent failure handling
+npm run validate:mcp:orchestrated:comprehensive # Comprehensive validation with all test suites
+npm run checklist:update      # Automated MVP completion checklist updates
+npm run checklist:status      # Current MVP completion status and progress
 npm run monitor:real-time      # Real-time performance monitoring with automated alerts
 npm run monitor:real-time:dashboard # Real-time monitoring with dashboard mode
 npm run monitor:real-time:alerts    # Enhanced real-time monitoring with custom alert thresholds
@@ -77,6 +93,13 @@ npm run monitor:enhanced       # Unified real-time monitoring command
 npm run analyze                # Run bundle analysis with visual reports
 npm run analyze:server         # Analyze server-side bundles
 npm run analyze:browser        # Analyze browser bundles
+
+# MCP Server Commands
+npm run mcp:install            # Install MCP server dependencies
+npm run mcp:build              # Build MCP server
+npm run mcp:dev                # Run MCP server in development mode with stdio transport
+npm run mcp:start              # Run MCP server in production mode with stdio transport
+./mcp-server/start-server.sh   # Quick start production-ready MCP server
 ```
 
 📖 **See development workflow**: [`./docs/development/workflow.md`](./docs/development/workflow.md)  
@@ -84,7 +107,17 @@ npm run analyze:browser        # Analyze browser bundles
 📖 **See performance monitoring**: [`./docs/development/performance.md`](./docs/development/performance.md)  
 📖 **See real-time monitoring**: [`./docs/development/real-time-performance-monitoring.md`](./docs/development/real-time-performance-monitoring.md)  
 📖 **See memory monitoring**: [`./docs/development/memory-monitoring.md`](./docs/development/memory-monitoring.md)  
-📖 **See React DevTools profiler**: [`./docs/development/react-devtools-profiler.md`](./docs/development/react-devtools-profiler.md)
+📖 **See React DevTools profiler**: [`./docs/development/react-devtools-profiler.md`](./docs/development/react-devtools-profiler.md)  
+📖 **See MCP server setup**: [`./mcp-server/README.md`](./mcp-server/README.md)  
+📖 **See MCP monitoring guide**: [`./docs/monitoring/mcp-server-monitoring.md`](./docs/monitoring/mcp-server-monitoring.md)
+
+## 📚 Work History
+*Work history tracked in journal system - use MCP tools for detailed session information*
+
+📖 **Recent work**: `mcp__claude-tasks__journal_get_recent --limit 5`  
+📖 **Search history**: `mcp__claude-tasks__journal_search --query "monitoring"`  
+📖 **Milestones**: `mcp__claude-tasks__journal_get_milestones`  
+📖 **Full changelog**: `./docs/CHANGELOG.md`
 
 ## ⚠️ Critical Constraints
 
@@ -98,6 +131,11 @@ npm run analyze:browser        # Analyze browser bundles
 ### Key Files & Locations
 - **API Routes**: `src/app/api/` - REST endpoints for logs and projects
 - **Database Layer**: `src/lib/db-turso.ts` - All database operations
+- **MCP Server**: `mcp-server/` - External programmatic access
+  - `src/index.ts` - Enhanced TypeScript MCP server v1.2.0 with subsystem monitoring
+  - `start-server.sh` - Automated startup script
+  - `README.md` - Complete MCP documentation and usage examples
+  - `PRODUCTION.md` - Production deployment and monitoring guide
 - **Log Viewer**: `src/components/log-viewer/` - Modular log viewing system
   - `index.tsx` - Main LogViewer component (400 lines) ✅ **Enhanced with virtualization support and enableVirtualization prop**
   - `log-entry-list.tsx` - Standard LogEntryList component with React.memo optimization
@@ -378,28 +416,21 @@ The project includes comprehensive CI/CD integration for automated performance t
 📖 **See planning**: [`./docs/planning/`](./docs/planning/) for current tasks and roadmap  
 📖 **See virtualization**: [`./docs/virtualization-implementation.md`](./docs/virtualization-implementation.md) for React Window implementation details
 
-## Recent Updates
-- **2025-07-18**: ✅ **JEST CONFIGURATION DUPLICATE TEST FILES FIXED** - TASK-2025-156 completed: Fixed Jest configuration issue where duplicate test files were appearing in test output. Root cause was overlapping testMatch patterns between main configuration and project-specific patterns. Removed main testMatch pattern and enhanced project-specific patterns to ensure proper test coverage. Validated fix: all 82 test files now detected without duplicates, proper test environment assignment maintained.
-- **2025-07-18**: ✅ **TESTING INFRASTRUCTURE SPRINT 100% COMPLETE** - TASK-2025-155 completed: Created comprehensive Next.js testing patterns documentation (`docs/development/nextjs-testing-patterns.md`). All 10 sprint tasks completed successfully, achieving full testing infrastructure stabilization with React 19 support, standardized mocking, and documented best practices.
-- **2025-07-18**: ✅ **SERVER COMPONENT TESTING PATTERNS FIXED** - TASK-2025-032 completed: Fixed 6 component tests with proper Client Component testing patterns. Added NextAuth/Next.js navigation mocking, required props for all components, and fixed circular dependency issues. All 30 component test suites now pass (146/146 tests).
-- **2025-07-18**: ✅ **E2E PRODUCTION READINESS TESTS FIXED** - TASK-2025-042 completed: Fixed ES module import path generation, Jest configuration for ES modules, accessibility test expectations. Claude testing infrastructure now generates 100% executable tests (76/76 passing) with proper .jsx extension handling.
+## 📚 Recent Work History
+*All work history tracked in journal system - use MCP tools for detailed session information*
+
+📖 **Recent sessions**: `mcp__claude-tasks__journal_get_recent --limit 5`  
+📖 **Search work**: `mcp__claude-tasks__journal_search --query "sprint"`  
+📖 **Major milestones**: `mcp__claude-tasks__journal_get_milestones`
 
 ## 📊 Current Task Status
 
 ### Sprint Status
-- **Current Sprint**: No active sprint - ✅ **COMPLETED** Testing Infrastructure & Technical Debt Sprint (SPRINT-2025-Q3-DEV05) with 100% success rate
-- **Latest Achievement**: ✅ **TESTING INFRASTRUCTURE SPRINT 100% COMPLETE** - All 10 tasks completed successfully, achieving full testing infrastructure stabilization
-- **Sprint Accomplishments**:
-  - React 19 testing environment: ✅ **RESOLVED** - Component mocking and async patterns established (TASK-2025-047)
-  - API mocking infrastructure: ✅ **RESOLVED** - ES6/CommonJS conversion completed (TASK-2025-028)
-  - Health check API tests: ✅ **RESOLVED** - Test expectations aligned with implementation (TASK-2025-152)
-  - AI integration test timeouts: ✅ **RESOLVED** - Jest timing dependencies fixed (TASK-2025-041)
-  - Authentication module tests: ✅ **RESOLVED** - NextAuth mocking created, all tests passing (TASK-2025-035)
-  - Next.js mocking: ✅ **RESOLVED** - Enhanced component test mocking, all 30 test suites passing (TASK-2025-030)
-  - Technical debt cleanup: ✅ **RESOLVED** - Task deduplication reviewed, no action needed (TASK-2025-061)
-  - Production readiness: ✅ **RESOLVED** - E2E test failures fixed, ES module support added (TASK-2025-042)
-  - Component test patterns: ✅ **RESOLVED** - Server Component testing patterns fixed (TASK-2025-032)
-  - Documentation: ✅ **COMPLETED** - Comprehensive Next.js testing patterns documentation created (TASK-2025-155)
+- **Current Sprint**: 🚧 **MCP MVP Completion Sprint** (SPRINT-2025-Q3-DEV02) - 62% complete
+- **Primary Objective**: Complete MCP server MVP with comprehensive validation, testing, and production readiness
+- **Recent Progress**: ✅ Comprehensive automation framework with CI/CD pipeline, checklist tracking, and orchestration completed
+- **Current Focus**: Search tools implementation, Claude Code integration, and comprehensive test suite
+- **Sprint Tasks**: 8 total (5 completed, 3 remaining) focused on MCP server production readiness
 
 ### Task Backlog
 - **Total pending**: 37 tasks system-wide (0 in active sprint)
